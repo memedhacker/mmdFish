@@ -26,6 +26,9 @@ Aether/
 ├── Forms/
 │   └── MainForm.cs      ← Uygulama ana penceresi (shell/navigator)
 │
+├── Helpers/
+│   └── FishFilterTableBuilder.cs ← FishBot filtresi için dinamik tablo oluşturucu (static)
+│
 ├── Models/
 │   ├── ClientModel.cs   ← Client veri modeli (domain)
 │   └── ClientInfo.cs    ← State katmanı için hafif DTO
