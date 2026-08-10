@@ -41,7 +41,6 @@ namespace Aether.Pages
             closeGameCheckBox = new Sunny.UI.UICheckBox();
             label2 = new Label();
             uıPanel2 = new Sunny.UI.UIPanel();
-            channelsLine = new Sunny.UI.UILine();
             changeChannelMinuteUpDown = new Sunny.UI.UIUpDownTextBox();
             ch6CheckBox = new Sunny.UI.UICheckBox();
             ch3CheckBox = new Sunny.UI.UICheckBox();
@@ -52,6 +51,7 @@ namespace Aether.Pages
             selectAllChannelsCheckBox = new Sunny.UI.UICheckBox();
             changeChannelCheckBox = new Sunny.UI.UICheckBox();
             label3 = new Label();
+            channelsLine = new Sunny.UI.UILine();
             uıPanel3 = new Sunny.UI.UIPanel();
             characterScreenUpDown = new Sunny.UI.UIUpDownTextBox();
             characterScreenCheckBox = new Sunny.UI.UICheckBox();
@@ -71,8 +71,9 @@ namespace Aether.Pages
             inventoryPageSelectUpDown = new Sunny.UI.UIUpDownTextBox();
             label8 = new Label();
             uıPanel8 = new Sunny.UI.UIPanel();
-            fishBotStatus = new Label();
             fishBotTime = new Label();
+            fishBotStatus = new Label();
+            uıLine1 = new Sunny.UI.UILine();
             panelHeader.SuspendLayout();
             clientPanel.SuspendLayout();
             uıPanel1.SuspendLayout();
@@ -279,7 +280,7 @@ namespace Aether.Pages
             // uıPanel2
             // 
             uıPanel2.BackColor = Color.FromArgb(30, 30, 35);
-            uıPanel2.Controls.Add(channelsLine);
+            uıPanel2.Controls.Add(uıLine1);
             uıPanel2.Controls.Add(changeChannelMinuteUpDown);
             uıPanel2.Controls.Add(ch6CheckBox);
             uıPanel2.Controls.Add(ch3CheckBox);
@@ -303,19 +304,6 @@ namespace Aether.Pages
             uıPanel2.TabIndex = 4;
             uıPanel2.Text = null;
             uıPanel2.TextAlignment = ContentAlignment.MiddleCenter;
-            // 
-            // channelsLine
-            // 
-            channelsLine.BackColor = Color.Transparent;
-            channelsLine.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            channelsLine.ForeColor = Color.FromArgb(99, 168, 71);
-            channelsLine.LineColor = Color.FromArgb(99, 168, 71);
-            channelsLine.Location = new Point(14, 93);
-            channelsLine.MinimumSize = new Size(1, 1);
-            channelsLine.Name = "channelsLine";
-            channelsLine.Size = new Size(378, 29);
-            channelsLine.TabIndex = 3;
-            channelsLine.Text = "Kanal Seç";
             // 
             // changeChannelMinuteUpDown
             // 
@@ -466,6 +454,19 @@ namespace Aether.Pages
             label3.TabIndex = 1;
             label3.Text = "Dakika sonra";
             // 
+            // channelsLine
+            // 
+            channelsLine.BackColor = Color.Transparent;
+            channelsLine.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            channelsLine.ForeColor = Color.FromArgb(99, 168, 71);
+            channelsLine.LineColor = Color.FromArgb(99, 168, 71);
+            channelsLine.Location = new Point(15, 572);
+            channelsLine.MinimumSize = new Size(1, 1);
+            channelsLine.Name = "channelsLine";
+            channelsLine.Size = new Size(649, 29);
+            channelsLine.TabIndex = 3;
+            channelsLine.Text = "Balık Filtresi";
+            // 
             // uıPanel3
             // 
             uıPanel3.BackColor = Color.FromArgb(30, 30, 35);
@@ -539,7 +540,7 @@ namespace Aether.Pages
             uıPanel4.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel4.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel4.Location = new Point(15, 476);
+            uıPanel4.Location = new Point(15, 466);
             uıPanel4.Margin = new Padding(4, 5, 4, 5);
             uıPanel4.MinimumSize = new Size(1, 1);
             uıPanel4.Name = "uıPanel4";
@@ -603,7 +604,7 @@ namespace Aether.Pages
             uıPanel5.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel5.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel5.Location = new Point(250, 476);
+            uıPanel5.Location = new Point(250, 466);
             uıPanel5.Margin = new Padding(4, 5, 4, 5);
             uıPanel5.MinimumSize = new Size(1, 1);
             uıPanel5.Name = "uıPanel5";
@@ -666,7 +667,7 @@ namespace Aether.Pages
             uıPanel6.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel6.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel6.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel6.Location = new Point(466, 476);
+            uıPanel6.Location = new Point(466, 466);
             uıPanel6.Margin = new Padding(4, 5, 4, 5);
             uıPanel6.MinimumSize = new Size(1, 1);
             uıPanel6.Name = "uıPanel6";
@@ -772,17 +773,6 @@ namespace Aether.Pages
             uıPanel8.Text = null;
             uıPanel8.TextAlignment = ContentAlignment.MiddleCenter;
             // 
-            // fishBotStatus
-            // 
-            fishBotStatus.AutoSize = true;
-            fishBotStatus.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-            fishBotStatus.ForeColor = SystemColors.ControlLightLight;
-            fishBotStatus.Location = new Point(13, 16);
-            fishBotStatus.Name = "fishBotStatus";
-            fishBotStatus.Size = new Size(161, 28);
-            fishBotStatus.TabIndex = 1;
-            fishBotStatus.Text = "Çalışıyor/Durdu";
-            // 
             // fishBotTime
             // 
             fishBotTime.AutoSize = true;
@@ -794,11 +784,36 @@ namespace Aether.Pages
             fishBotTime.TabIndex = 1;
             fishBotTime.Text = "00:00:00";
             // 
+            // fishBotStatus
+            // 
+            fishBotStatus.AutoSize = true;
+            fishBotStatus.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            fishBotStatus.ForeColor = SystemColors.ControlLightLight;
+            fishBotStatus.Location = new Point(13, 16);
+            fishBotStatus.Name = "fishBotStatus";
+            fishBotStatus.Size = new Size(161, 28);
+            fishBotStatus.TabIndex = 1;
+            fishBotStatus.Text = "Çalışıyor/Durdu";
+            // 
+            // uıLine1
+            // 
+            uıLine1.BackColor = Color.Transparent;
+            uıLine1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            uıLine1.ForeColor = Color.FromArgb(99, 168, 71);
+            uıLine1.LineColor = Color.FromArgb(99, 168, 71);
+            uıLine1.Location = new Point(14, 89);
+            uıLine1.MinimumSize = new Size(1, 1);
+            uıLine1.Name = "uıLine1";
+            uıLine1.Size = new Size(378, 29);
+            uıLine1.TabIndex = 3;
+            uıLine1.Text = "Kanal Seç";
+            // 
             // FishBotPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(24, 24, 27);
+            Controls.Add(channelsLine);
             Controls.Add(uıPanel2);
             Controls.Add(uıPanel6);
             Controls.Add(uıPanel5);
@@ -810,7 +825,7 @@ namespace Aether.Pages
             Controls.Add(clientPanel);
             Controls.Add(panelHeader);
             Name = "FishBotPage";
-            Size = new Size(680, 877);
+            Size = new Size(680, 947);
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             clientPanel.ResumeLayout(false);
@@ -881,5 +896,6 @@ namespace Aether.Pages
         private Sunny.UI.UIPanel uıPanel8;
         private Label fishBotTime;
         private Label fishBotStatus;
+        private Sunny.UI.UILine uıLine1;
     }
 }
