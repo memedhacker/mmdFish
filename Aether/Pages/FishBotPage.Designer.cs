@@ -74,6 +74,7 @@ namespace Aether.Pages
             fishBotTime = new Label();
             fishBotStatus = new Label();
             uıLine1 = new Sunny.UI.UILine();
+            fishFilterPanel = new Sunny.UI.UIPanel();
             panelHeader.SuspendLayout();
             clientPanel.SuspendLayout();
             uıPanel1.SuspendLayout();
@@ -808,11 +809,29 @@ namespace Aether.Pages
             uıLine1.TabIndex = 3;
             uıLine1.Text = "Kanal Seç";
             // 
+            // fishFilterPanel
+            // 
+            fishFilterPanel.BackColor = Color.FromArgb(24, 24, 27);
+            fishFilterPanel.FillColor = Color.FromArgb(24, 24, 27);
+            fishFilterPanel.FillColor2 = Color.FromArgb(24, 24, 27);
+            fishFilterPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            fishFilterPanel.Location = new Point(15, 608);
+            fishFilterPanel.Margin = new Padding(0);
+            fishFilterPanel.MinimumSize = new Size(1, 1);
+            fishFilterPanel.Name = "fishFilterPanel";
+            fishFilterPanel.Radius = 0;
+            fishFilterPanel.RectColor = Color.Transparent;
+            fishFilterPanel.Size = new Size(649, 1200);
+            fishFilterPanel.TabIndex = 5;
+            fishFilterPanel.Text = null;
+            fishFilterPanel.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
             // FishBotPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(24, 24, 27);
+            Controls.Add(fishFilterPanel);
             Controls.Add(channelsLine);
             Controls.Add(uıPanel2);
             Controls.Add(uıPanel6);
@@ -825,7 +844,7 @@ namespace Aether.Pages
             Controls.Add(clientPanel);
             Controls.Add(panelHeader);
             Name = "FishBotPage";
-            Size = new Size(680, 947);
+            Size = new Size(680, 1850);
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             clientPanel.ResumeLayout(false);
@@ -897,5 +916,6 @@ namespace Aether.Pages
         private Label fishBotTime;
         private Label fishBotStatus;
         private Sunny.UI.UILine uıLine1;
+        private Sunny.UI.UIPanel fishFilterPanel;
     }
 }
