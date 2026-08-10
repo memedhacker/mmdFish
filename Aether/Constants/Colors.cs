@@ -4,19 +4,6 @@ namespace Aether.Constants
 {
     /// <summary>
     /// Proje genelinde kullanılan sabit renk tanımlamaları.
-    /// 
-    /// KULLANIM ÖRNEKLERİ:
-    /// ------------------------------------------------------------------------
-    /// 1. Sayfanın en üstüne namespace'i ekleyerek kullanım:
-    ///    using Aether.Constants;
-    ///    
-    ///    cardPanel.RectColor = Colors.YesilKoyu;
-    ///    button.BackColor = Colors.MaviKoyu;
-    ///    label.ForeColor = Colors.PembeAcik;
-    /// 
-    /// 2. Direct (namespace eklemeden) kullanım:
-    ///    this.BackColor = Aether.Constants.Colors.MaviAcik;
-    /// ------------------------------------------------------------------------
     /// </summary>
     public static class Colors
     {
@@ -40,5 +27,19 @@ namespace Aether.Constants
 
         /// <summary> Yeşil Açık (#87C16D - RGB: 135, 193, 109) </summary>
         public static readonly Color YesilAcik = Color.FromArgb(135, 193, 109);
+
+        // Turuncu Renkler
+        /// <summary> Turuncu (#FFB400 - RGB: 255, 180, 0) </summary>
+        public static readonly Color Turuncu = Color.FromArgb(255, 180, 0);
+
+        // Arka Plan ve Çizgi Renkleri
+        /// <summary> Arka Plan Koyu (#18181B - RGB: 24, 24, 27) </summary>
+        public static readonly Color ArkaPlanKoyu = Color.FromArgb(24, 24, 27);
+
+        /// <summary> Arka Plan Açık (#1E1E23 - RGB: 30, 30, 35) </summary>
+        public static readonly Color ArkaPlanAcik = Color.FromArgb(30, 30, 35);
+
+        /// <summary> Çizgi Rengi (#3C3C41 - RGB: 60, 60, 65) </summary>
+        public static readonly Color CizgiRengi = Color.FromArgb(60, 60, 65);
     }
 }

@@ -12,8 +12,8 @@ Balık ve diğer ikonlar aşağıdaki dizinlerde kategorize edilmiştir:
 - **`Assets/FishIcons/others/`**: Balık dışındaki eşyalara (Anahtar, Saç Boyası, Pelerin vb.) ait `.png` ikonları.
 - **`Assets/FishIcons/others/deadFishLoot/`**: Ölü balık kırıldığında/açıldığında elde edilen eşyalara (İnci, İstiridye, Taş Parçası) ait `.png` ikonları.
 
-### İsimlerin Formatlanması
-Dosya isimlerindeki alt tire (`_`) karakterleri temizlenerek her kelimenin ilk harfi büyük, kalan harfleri küçük olacak şekilde düzeltilmiştir (Örn: `Beyaz_İnci.png` ➔ `Beyaz İnci`).
+### Jenerik Konfigürasyon Yapısı
+Tablo başlıkları, renkleri, sütun düzenleri ve varsayılan durumları **`Assets/fish_filter_config.json`** dosyasından dinamik olarak okunur. Yeni bir kategori veya sütun eklemek için C# kodunu değiştirmeden yalnızca bu JSON dosyasını güncellemek yeterlidir.
 
 ---
 
@@ -32,7 +32,6 @@ Dosya isimlerindeki alt tire (`_`) karakterleri temizlenerek her kelimenin ilk h
 3. **Yere At** (Pembe Checkbox): `Checked = false`
 
 ### C. Ölü Balık Ganimetleri (Dead Fish Loot) Tablosu (1 Sütun)
-Tabloların en altında **"Ölü Balık Ganimetleri (Dead Fish Loot)"** başlığı ile konumlandırılmıştır.
 1. **İkon & Öğe Adı** (Sol): Öğenin ikonu ve ismi (`İstiridye`, `Beyaz İnci`, `Mavi İnci`, `Kankırmızı İnci`, `Taş Parçası`).
 2. **Yere At** (Pembe Checkbox): Öğenin yere atılıp atılmayacağını belirler. (Varsayılan: `Checked = false`)
 
@@ -40,8 +39,8 @@ Tabloların en altında **"Ölü Balık Ganimetleri (Dead Fish Loot)"** başlı�
 
 ## 💻 3. İlgili Kod Dosyaları ve Değişiklikler
 
-- **[FishBotPage.Designer.cs](file:///c:/Users/mehme/Documents/GitHub/mmdFish/Aether/Pages/FishBotPage.Designer.cs)**:
-  - `fishFilterPanel` (`Sunny.UI.UIPanel`) dinamik alan olarak konumlandırıldı.
+- **[fish_filter_config.json](file:///c:/Users/mehme/Documents/GitHub/mmdFish/Aether/Assets/fish_filter_config.json)**:
+  - Tablo başlıklarını, sütun koordinatlarını, renk kodlarını ve varsayılan seçim durumlarını tanımlar.
 
-- **[FishBotPage.cs](file:///c:/Users/mehme/Documents/GitHub/mmdFish/Aether/Pages/FishBotPage.cs)**:
-  - `BuildFishFilterTable()`, `CreateFishCategoryTable()`, `CreateOthersCategoryTable()` ve `CreateSingleOptionCategoryTable()` metodlarıyla 4 farklı tablo dinamik olarak yüklenir ve boyutlandırılır.
+- **[FishFilterTableBuilder.cs](file:///c:/Users/mehme/Documents/GitHub/mmdFish/Aether/Helpers/FishFilterTableBuilder.cs)**:
+  - `fish_filter_config.json` dosyasını ayrıştırarak tüm tabloları ve alt elemanlarını jenerik şekilde oluşturan yardımcı sınıftır. Kod karmaşıklığı 524 satırdan 198 satıra düşürülmüştür.

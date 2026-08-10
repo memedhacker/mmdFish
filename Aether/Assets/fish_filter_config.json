@@ -1,0 +1,49 @@
+[
+  {
+    "id": "rare",
+    "title": "Nadir Balıklar (Rare)",
+    "folderPath": "rare",
+    "categoryColor": "#FF8BA4",
+    "nameHeader": "Balık Adı",
+    "columns": [
+      { "headerText": "Balığı Tut", "headerColor": "#87C16D", "x": 245, "defaultChecked": true },
+      { "headerText": "Pişir", "headerColor": "#FFB400", "x": 350, "defaultChecked": false },
+      { "headerText": "Öldür", "headerColor": "#59BDFF", "x": 455, "defaultChecked": false },
+      { "headerText": "Yere At", "headerColor": "#FF8BA4", "x": 560, "defaultChecked": false }
+    ]
+  },
+  {
+    "id": "common",
+    "title": "Yaygın Balıklar (Common)",
+    "folderPath": "common",
+    "categoryColor": "#87C16D",
+    "nameHeader": "Balık Adı",
+    "columns": [
+      { "headerText": "Balığı Tut", "headerColor": "#87C16D", "x": 245, "defaultChecked": true },
+      { "headerText": "Pişir", "headerColor": "#FFB400", "x": 350, "defaultChecked": false },
+      { "headerText": "Öldür", "headerColor": "#59BDFF", "x": 455, "defaultChecked": false },
+      { "headerText": "Yere At", "headerColor": "#FF8BA4", "x": 560, "defaultChecked": false }
+    ]
+  },
+  {
+    "id": "others",
+    "title": "Diğer Öğeler (Others)",
+    "folderPath": "others",
+    "categoryColor": "#59BDFF",
+    "nameHeader": "Öğe Adı",
+    "columns": [
+      { "headerText": "Yakala", "headerColor": "#87C16D", "x": 318, "defaultChecked": true },
+      { "headerText": "Yere At", "headerColor": "#FF8BA4", "x": 558, "defaultChecked": false }
+    ]
+  },
+  {
+    "id": "deadFishLoot",
+    "title": "Ölü Balık Ganimetleri (Dead Fish Loot)",
+    "folderPath": "others/deadFishLoot",
+    "categoryColor": "#FF8BA4",
+    "nameHeader": "Öğe Adı",
+    "columns": [
+      { "headerText": "Yere At", "headerColor": "#FF8BA4", "x": 558, "defaultChecked": false }
+    ]
+  }
+]
