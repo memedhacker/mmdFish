@@ -20,7 +20,26 @@ namespace Aether.Pages
 
             if (!DesignMode)
             {
+                // Tabloları oluştur
                 FishFilterTableBuilder.BuildTables(fishFilterPanel, channelsLine, this);
+
+                // metin2client.exe olan tüm görevleri ve HWND bilgilerini ComboBox'a yerleştir
+                ClientProcessHelper.PopulateClientComboBox(clientSelectComboBox);
+
+                // refreshClientListButton tıklanınca listeyi tekrar tara ve yenile
+                refreshClientListButton.Click += (s, ev) =>
+                {
+                    ClientProcessHelper.PopulateClientComboBox(clientSelectComboBox);
+                };
+
+                // highlightClientButton tıklanınca seçili client penceresini en öne getir
+                highlightClientButton.Click += (s, ev) =>
+                {
+                    if (clientSelectComboBox.SelectedItem is Aether.Models.ClientProcessInfo clientInfo)
+                    {
+                        ClientProcessHelper.BringWindowToFront(clientInfo.Handle);
+                    }
+                };
             }
         }
     }

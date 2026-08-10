@@ -41,6 +41,7 @@ namespace Aether.Pages
             closeGameCheckBox = new Sunny.UI.UICheckBox();
             label2 = new Label();
             uıPanel2 = new Sunny.UI.UIPanel();
+            uıLine1 = new Sunny.UI.UILine();
             changeChannelMinuteUpDown = new Sunny.UI.UIUpDownTextBox();
             ch6CheckBox = new Sunny.UI.UICheckBox();
             ch3CheckBox = new Sunny.UI.UICheckBox();
@@ -73,7 +74,6 @@ namespace Aether.Pages
             uıPanel8 = new Sunny.UI.UIPanel();
             fishBotTime = new Label();
             fishBotStatus = new Label();
-            uıLine1 = new Sunny.UI.UILine();
             fishFilterPanel = new Sunny.UI.UIPanel();
             panelHeader.SuspendLayout();
             clientPanel.SuspendLayout();
@@ -134,6 +134,7 @@ namespace Aether.Pages
             // clientSelectComboBox
             // 
             clientSelectComboBox.DataSource = null;
+            clientSelectComboBox.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
             clientSelectComboBox.FillColor = Color.White;
             clientSelectComboBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             clientSelectComboBox.ItemHoverColor = Color.FromArgb(155, 200, 255);
@@ -305,6 +306,19 @@ namespace Aether.Pages
             uıPanel2.TabIndex = 4;
             uıPanel2.Text = null;
             uıPanel2.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
+            // uıLine1
+            // 
+            uıLine1.BackColor = Color.Transparent;
+            uıLine1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            uıLine1.ForeColor = Color.FromArgb(99, 168, 71);
+            uıLine1.LineColor = Color.FromArgb(99, 168, 71);
+            uıLine1.Location = new Point(14, 89);
+            uıLine1.MinimumSize = new Size(1, 1);
+            uıLine1.Name = "uıLine1";
+            uıLine1.Size = new Size(378, 29);
+            uıLine1.TabIndex = 3;
+            uıLine1.Text = "Kanal Seç";
             // 
             // changeChannelMinuteUpDown
             // 
@@ -795,19 +809,6 @@ namespace Aether.Pages
             fishBotStatus.Size = new Size(161, 28);
             fishBotStatus.TabIndex = 1;
             fishBotStatus.Text = "Çalışıyor/Durdu";
-            // 
-            // uıLine1
-            // 
-            uıLine1.BackColor = Color.Transparent;
-            uıLine1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıLine1.ForeColor = Color.FromArgb(99, 168, 71);
-            uıLine1.LineColor = Color.FromArgb(99, 168, 71);
-            uıLine1.Location = new Point(14, 89);
-            uıLine1.MinimumSize = new Size(1, 1);
-            uıLine1.Name = "uıLine1";
-            uıLine1.Size = new Size(378, 29);
-            uıLine1.TabIndex = 3;
-            uıLine1.Text = "Kanal Seç";
             // 
             // fishFilterPanel
             // 

@@ -27,11 +27,13 @@ Aether/
 │   └── MainForm.cs      ← Uygulama ana penceresi (shell/navigator)
 │
 ├── Helpers/
+│   ├── ClientProcessHelper.cs   ← 'metin2client' süreç ve HWND tespiti yapan yardımcı sınıf (static)
 │   └── FishFilterTableBuilder.cs ← FishBot filtresi için dinamik tablo oluşturucu (static)
 │
 ├── Models/
-│   ├── ClientModel.cs   ← Client veri modeli (domain)
-│   └── ClientInfo.cs    ← State katmanı için hafif DTO
+│   ├── ClientInfo.cs        ← State katmanı için hafif DTO
+│   ├── ClientModel.cs       ← Client veri modeli (domain)
+│   └── ClientProcessInfo.cs ← Süreç PID, HWND ve başlık bilgilerini taşıyan model
 │
 ├── Native/
 │   └── Win32Native.cs   ← Win32 API P/Invoke merkezi

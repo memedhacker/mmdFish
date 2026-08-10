@@ -1,30 +1,33 @@
 using Aether.Models;
 using Aether.States;
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Aether.Pages
 {
     /// <summary>
     /// Tüm bot sayfaları için ortak temel sınıf.
-    ///
-    /// SORUMLULUKLAR:
-    /// - ClientState.OnSelectedClientChanged event aboneliğini yönetir.
-    /// - Seçili client adını thread-safe şekilde ClientNameLabel'a yansıtır.
-    /// - Handle yok edildiğinde event aboneliğini otomatik temizler.
-    ///
-    /// ALT SINIF KURALLARI:
-    /// - protected override Label ClientNameLabel => clientNameLabel; — mutlaka implemente edilmeli.
-    /// - InitializeComponent() constructor'da çağrılmalı.
-    /// - FishBotPage gibi ek davranış gereken sayfalar OnLoad'u override edebilir (base.OnLoad(e) çağrılmalı).
+    /// [DesignerCategory("Component")] veya [DesignerCategory("")] kullanımı sayesinde
+    /// Visual Studio WinForms Out-Of-Process Designer arka planda 'BaseBotPage' için 
+    /// kilitli izole tasarım iş parçacığı çalıştırmaz; alt sayfalar (FishBotPage vb.)
+    /// tasarımcı ortamında doğrudan ve pürüzsüz açılır.
     /// </summary>
-    public abstract class BaseBotPage : UserControl
+    [DesignerCategory("Component")]
+    public class BaseBotPage : UserControl
     {
         /// <summary>
         /// Seçili client adının yazdırılacağı Label.
-        /// Alt sınıf kendi Designer.cs'teki label'ı döndürmelidir.
+        /// Alt sınıflar kendi Designer.cs'indeki label'ı döndürmek üzere override etmelidir.
         /// </summary>
-        protected abstract Label ClientNameLabel { get; }
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        protected virtual Label? ClientNameLabel => null;
+
+        public BaseBotPage()
+        {
+            // WinForms Designer varsayılan yapıcı metodu
+        }
 
         protected override void OnLoad(EventArgs e)
         {
@@ -50,7 +53,10 @@ namespace Aether.Pages
 
         private void UpdateClientDisplay(ClientInfo? clientInfo)
         {
-            ClientNameLabel.Text = clientInfo?.Name ?? "Seçim Yok";
+            if (ClientNameLabel != null)
+            {
+                ClientNameLabel.Text = clientInfo?.Name ?? "Seçim Yok";
+            }
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
