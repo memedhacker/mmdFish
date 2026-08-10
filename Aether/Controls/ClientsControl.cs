@@ -1,24 +1,14 @@
-using Aether.Controls;
+using Aether.Models;
 using Aether.States;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Aether.Controls
 {
     public partial class ClientsControl : UserControl
     {
-        // Global ClientState üzerinden seçili olan kart ve işaretli kartlar listesi
-        public ClientCard? SelectedClient => ClientState.Instance.SelectedClient;
-        public List<ClientCard> CheckedClients => ClientState.Instance.CheckedClients;
-
-        // Kart ve checkbox seçim event'leri
-        public event EventHandler OnClientSelected;
-        public event EventHandler OnCheckedClientsChanged;
+        // Görsel seçim durumunu takip etmek için (UI katmanında tutulur, state'e taşınmaz)
+        private ClientCard? _currentlySelectedCard;
 
         public ClientsControl()
         {
@@ -33,13 +23,13 @@ namespace Aether.Controls
         public void LoadClients()
         {
             clientListFlowPanel.Controls.Clear();
+            _currentlySelectedCard = null;
 
-            var clientModels = Services.ClientService.Instance.GenerateDefaultClients(10);
+            var clientModels = Services.ClientService.GenerateDefaultClients(10);
 
             foreach (var clientModel in clientModels)
             {
                 ClientCard card = new ClientCard();
-
                 card.ClientName = clientModel.Name;
                 card.ClientNumber = clientModel.Id;
 
@@ -55,7 +45,7 @@ namespace Aether.Controls
                 clientListFlowPanel.Controls.Add(card);
             }
 
-            // Varsayılan olarak 1. Client kartını otomatik olarak seç ve state/border rengini ayarla
+            // Varsayılan olarak 1. Client kartını otomatik olarak seç
             if (clientListFlowPanel.Controls.Count > 0 && clientListFlowPanel.Controls[0] is ClientCard firstCard)
             {
                 SelectClient(firstCard);
@@ -65,7 +55,7 @@ namespace Aether.Controls
             customScrollBar1.SyncWithTarget();
         }
 
-        private void AttachMouseWheel(Control control)
+        private void AttachMouseWheel(System.Windows.Forms.Control control)
         {
             control.MouseWheel += (sender, e) =>
             {
@@ -73,7 +63,7 @@ namespace Aether.Controls
                 customScrollBar1.Value += delta;
             };
 
-            foreach (Control child in control.Controls)
+            foreach (System.Windows.Forms.Control child in control.Controls)
             {
                 AttachMouseWheel(child);
             }
@@ -87,10 +77,9 @@ namespace Aether.Controls
         /// <summary>
         /// Tüm client kartlarının checkbox durumunu belirler (Hepsini Seç / Kaldır).
         /// </summary>
-        /// <param name="isChecked">True ise tümünü seçer, False ise kaldırır.</param>
         public void SetAllChecked(bool isChecked)
         {
-            foreach (Control control in clientListFlowPanel.Controls)
+            foreach (System.Windows.Forms.Control control in clientListFlowPanel.Controls)
             {
                 if (control is ClientCard card)
                 {
@@ -102,28 +91,27 @@ namespace Aether.Controls
         }
 
         /// <summary>
-        /// Checkbox'ı işaretli olan kartları tarar ve ClientState üzerindeki CheckedClients listesini günceller.
+        /// Checkbox'ı işaretli olan kartları tarar ve ClientState üzerindeki checked listesini günceller.
+        /// ClientInfo (UI bağımsız) nesneleri oluşturarak state'e iletir.
         /// </summary>
         public void UpdateCheckedClients()
         {
-            var checkedList = new List<ClientCard>();
-            foreach (Control control in clientListFlowPanel.Controls)
+            var checkedList = new List<ClientInfo>();
+            foreach (System.Windows.Forms.Control control in clientListFlowPanel.Controls)
             {
                 if (control is ClientCard card && card.IsChecked)
                 {
-                    checkedList.Add(card);
+                    checkedList.Add(new ClientInfo(card.ClientNumber, card.ClientName));
                 }
             }
 
-            // State güncellemesi
             ClientState.Instance.UpdateCheckedClients(checkedList);
-            OnCheckedClientsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// Kart tıklandığında çalışan event handler.
         /// </summary>
-        private void ClientCard_OnCardSelected(object sender, EventArgs e)
+        private void ClientCard_OnCardSelected(object sender, System.EventArgs e)
         {
             if (sender is ClientCard selectedCard)
             {
@@ -132,28 +120,23 @@ namespace Aether.Controls
         }
 
         /// <summary>
-        /// Seçilen kartı günceller ve önceki kartın seçim durumunu kaldırır.
+        /// Seçilen kartı günceller, görsel seçim durumunu yönetir ve
+        /// ClientState'e UI bağımsız ClientInfo nesnesiyle seçimi bildirir.
         /// </summary>
-        /// <param name="card">Seçilen ClientCard nesnesi</param>
         public void SelectClient(ClientCard card)
         {
-            // Önceki seçili kart varsa seçim durumunu kaldır
-            if (ClientState.Instance.SelectedClient != null)
+            // Önceki seçili kartın görsel seçimini kaldır
+            if (_currentlySelectedCard != null)
             {
-                ClientState.Instance.SelectedClient.IsSelected = false;
+                _currentlySelectedCard.IsSelected = false;
             }
 
-            // ClientState üzerindeki seçili kartı güncelle
-            ClientState.Instance.SelectedClient = card;
+            // Yeni kartı seç ve görsel durumunu güncelle
+            _currentlySelectedCard = card;
+            _currentlySelectedCard.IsSelected = true;
 
-            // Seçilen kartın durumunu aktif yap
-            if (ClientState.Instance.SelectedClient != null)
-            {
-                ClientState.Instance.SelectedClient.IsSelected = true;
-            }
-
-            // Seçim olayını dışarıya bildir
-            OnClientSelected?.Invoke(this, EventArgs.Empty);
+            // State katmanına UI bağımsız ClientInfo ilet
+            ClientState.Instance.SelectedClient = new ClientInfo(card.ClientNumber, card.ClientName);
         }
     }
 }

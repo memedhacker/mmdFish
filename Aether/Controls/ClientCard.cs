@@ -82,17 +82,6 @@ namespace Aether.Controls
             set => uıCheckBox1.Checked = value;
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsFishBotRunning { get; set; } = false;
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsUpgradeBotRunning { get; set; } = false;
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsFishPuzzleRunning { get; set; } = false;
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsAlchemyRunning { get; set; } = false;
 
         private void UpdateCardAppearance()
         {

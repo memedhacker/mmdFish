@@ -4,17 +4,17 @@ using System.Collections.Generic;
 namespace Aether.Services
 {
     /// <summary>
-    /// Client verilerinin yönetimi, üretimi ve filtrelenmesinden sorumlu servis katmanı.
+    /// Client verilerinin üretimi ve oluşturulmasından sorumlu servis katmanı.
+    ///
+    /// NOT: GenerateDefaultClients stateless bir üretim metodudur; instance state gerektirmez.
+    /// Bu nedenle static olarak tasarlanmıştır.
     /// </summary>
-    public class ClientService
+    public static class ClientService
     {
-        private static readonly Lazy<ClientService> _instance = new Lazy<ClientService>(() => new ClientService());
-        public static ClientService Instance => _instance.Value;
-
         /// <summary>
-        /// Varsayılan 10 adet Client listesini oluşturur.
+        /// Varsayılan client listesini oluşturur.
         /// </summary>
-        public List<ClientModel> GenerateDefaultClients(int count = 10)
+        public static List<ClientModel> GenerateDefaultClients(int count = 10)
         {
             var list = new List<ClientModel>();
             for (int i = 1; i <= count; i++)

@@ -1,23 +1,29 @@
-using Aether.Controls;
-using Aether.States;
+using Aether.Constants;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Aether.Pages
 {
-    public partial class FishBotPage : UserControl
+    public partial class FishBotPage : BaseBotPage
     {
         public FishBotPage()
         {
             InitializeComponent();
-            UpdateSelectedClientDisplay(ClientState.Instance.SelectedClient);
+        }
 
-            // State değişimini canlı olarak dinle
-            ClientState.Instance.OnSelectedClientChanged += ClientState_OnSelectedClientChanged;
+        protected override Label ClientNameLabel => clientNameLabel;
 
-            // Balık Filtre Tablosunu Oluştur
-            BuildFishFilterTable();
+        protected override void OnLoad(EventArgs e)
+        {
+            // Base sınıf: client aboneliğini başlatır
+            base.OnLoad(e);
+
+            if (!DesignMode)
+            {
+                BuildFishFilterTable();
+            }
         }
 
         private void BuildFishFilterTable()
@@ -46,34 +52,36 @@ namespace Aether.Pages
 
         private Sunny.UI.UIPanel CreateFishCategoryTable(string categoryTitle, string folderName, ref int currentY)
         {
-            string assetPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "FishIcons", folderName);
-            if (!System.IO.Directory.Exists(assetPath))
+            string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "FishIcons", folderName);
+            if (!Directory.Exists(assetPath))
             {
-                // Fallback project path check if running under bin/Debug
-                string projectAssetPath = System.IO.Path.Combine(Application.StartupPath, "..", "..", "..", "Assets", "FishIcons", folderName);
-                if (System.IO.Directory.Exists(projectAssetPath))
-                {
+                string projectAssetPath = Path.Combine(Application.StartupPath, "..", "..", "..", "Assets", "FishIcons", folderName);
+                if (Directory.Exists(projectAssetPath))
                     assetPath = projectAssetPath;
-                }
             }
 
-            string[] fishFiles = System.IO.Directory.Exists(assetPath) 
-                ? System.IO.Directory.GetFiles(assetPath, "*.png") 
+            string[] fishFiles = Directory.Exists(assetPath)
+                ? Directory.GetFiles(assetPath, "*.png")
                 : Array.Empty<string>();
 
-            int rowHeight = 40;
-            int headerHeight = 45;
-            int titleHeight = 35;
+            // Layout sabitleri
+            const int rowHeight = 40;
+            const int headerHeight = 45;
+            const int titleHeight = 35;
             int totalHeight = titleHeight + headerHeight + (fishFiles.Length * rowHeight) + 15;
+
+            // Kategori rengi: rare → pembe, common → yeşil (Colors.cs sabitlerinden)
+            Color categoryColor = folderName == "rare" ? Colors.PembeAcik : Colors.YesilAcik;
+            Color panelBg = Color.FromArgb(30, 30, 35);
 
             Sunny.UI.UIPanel tableContainer = new Sunny.UI.UIPanel
             {
                 Location = new Point(0, currentY),
                 Size = new Size(649, totalHeight),
-                BackColor = Color.FromArgb(30, 30, 35),
-                FillColor = Color.FromArgb(30, 30, 35),
-                FillColor2 = Color.FromArgb(30, 30, 35),
-                RectColor = folderName == "rare" ? Color.FromArgb(255, 139, 164) : Color.FromArgb(135, 193, 109),
+                BackColor = panelBg,
+                FillColor = panelBg,
+                FillColor2 = panelBg,
+                RectColor = categoryColor,
                 Radius = 15,
                 Text = null
             };
@@ -83,7 +91,7 @@ namespace Aether.Pages
             {
                 Text = categoryTitle,
                 Font = new Font("Calibri", 14F, FontStyle.Bold),
-                ForeColor = folderName == "rare" ? Color.FromArgb(255, 139, 164) : Color.FromArgb(135, 193, 109),
+                ForeColor = categoryColor,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -91,7 +99,7 @@ namespace Aether.Pages
 
             int tableTop = titleHeight + 5;
 
-            // Tablo Header
+            // Tablo Header — sütun başlıkları
             Label colIconNameHeader = new Label
             {
                 Text = "Balık Adı",
@@ -107,7 +115,7 @@ namespace Aether.Pages
             {
                 Text = "Balığı Tut",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(135, 193, 109),
+                ForeColor = Colors.YesilAcik,
                 Location = new Point(275, tableTop + 8),
                 Size = new Size(110, 25),
                 TextAlign = ContentAlignment.MiddleCenter
@@ -129,7 +137,7 @@ namespace Aether.Pages
             {
                 Text = "Yere At",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(255, 139, 164),
+                ForeColor = Colors.PembeAcik,
                 Location = new Point(515, tableTop + 8),
                 Size = new Size(110, 25),
                 TextAlign = ContentAlignment.MiddleCenter
@@ -151,10 +159,10 @@ namespace Aether.Pages
             // Balık Satırları
             foreach (string filePath in fishFiles)
             {
-                string rawFileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
+                string rawFileName = Path.GetFileNameWithoutExtension(filePath);
                 string formattedName = FormatFishName(rawFileName);
 
-                // Icon
+                // İkon
                 PictureBox pbIcon = new PictureBox
                 {
                     Location = new Point(20, yOffset + 4),
@@ -164,7 +172,7 @@ namespace Aether.Pages
                 };
                 tableContainer.Controls.Add(pbIcon);
 
-                // Name
+                // Balık Adı
                 Label lblFishName = new Label
                 {
                     Text = formattedName,
@@ -183,7 +191,7 @@ namespace Aether.Pages
                     Location = new Point(318, yOffset + 6),
                     Size = new Size(25, 25),
                     CheckBoxSize = 22,
-                    CheckBoxColor = Color.FromArgb(135, 193, 109),
+                    CheckBoxColor = Colors.YesilAcik,
                     Checked = true
                 };
                 tableContainer.Controls.Add(chkCatch);
@@ -207,7 +215,7 @@ namespace Aether.Pages
                     Location = new Point(558, yOffset + 6),
                     Size = new Size(25, 25),
                     CheckBoxSize = 22,
-                    CheckBoxColor = Color.FromArgb(255, 139, 164),
+                    CheckBoxColor = Colors.PembeAcik,
                     Checked = false
                 };
                 tableContainer.Controls.Add(chkDrop);
@@ -219,54 +227,23 @@ namespace Aether.Pages
             return tableContainer;
         }
 
-        private string FormatFishName(string rawName)
+        /// <summary>
+        /// Dosya adını okunabilir balık ismine çevirir: "blue_fish" → "Blue Fish"
+        /// </summary>
+        private static string FormatFishName(string rawName)
         {
             if (string.IsNullOrWhiteSpace(rawName)) return rawName;
 
-            // Alt tireleri boşluk yap ve her kelimenin ilk harfini büyük yap
             string clean = rawName.Replace('_', ' ');
             string[] words = clean.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < words.Length; i++)
             {
                 if (words[i].Length > 0)
-                {
                     words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
-                }
             }
 
             return string.Join(" ", words);
-        }
-
-        private void ClientState_OnSelectedClientChanged(object? sender, ClientCard? selectedCard)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => UpdateSelectedClientDisplay(selectedCard)));
-            }
-            else
-            {
-                UpdateSelectedClientDisplay(selectedCard);
-            }
-        }
-
-        private void UpdateSelectedClientDisplay(ClientCard? selectedCard)
-        {
-            if (selectedCard != null && !string.IsNullOrEmpty(selectedCard.ClientName))
-            {
-                clientNameLabel.Text = selectedCard.ClientName;
-            }
-            else
-            {
-                clientNameLabel.Text = "Seçim Yok";
-            }
-        }
-
-        protected override void OnHandleDestroyed(EventArgs e)
-        {
-            // Event aboneliğini güvenle kaldır
-            ClientState.Instance.OnSelectedClientChanged -= ClientState_OnSelectedClientChanged;
-            base.OnHandleDestroyed(e);
         }
     }
 }

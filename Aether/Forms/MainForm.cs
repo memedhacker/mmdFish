@@ -1,13 +1,10 @@
 using Aether.Controls;
+using Aether.Models;
 using Aether.Pages;
 using Aether.States;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Aether.Forms
@@ -18,12 +15,6 @@ namespace Aether.Forms
 
         // Sayfa ismi ile (Buton, Sayfa Üretici) ikilisini eşleyen harita
         private readonly Dictionary<string, (UIButton Button, Func<UserControl> ControlCreator)> _pageMap = new();
-
-        // Merkezi ClientState üzerindeki seçili kart değişkeni (Tıklanan)
-        public ClientCard? SelectedClient => ClientState.Instance.SelectedClient;
-
-        // Merkezi ClientState üzerindeki işaretlenmiş kartlar değişkeni (Checkbox'lar)
-        public List<ClientCard> CheckedClients => ClientState.Instance.CheckedClients;
 
         public MainForm()
         {
@@ -46,22 +37,18 @@ namespace Aether.Forms
             _pageMap.Clear();
 
             // Buton ve sayfa eşleşmeleri
-            _pageMap["FishBot"] = (pFishBotButton, () => new FishBotPage());
-            _pageMap["Puzzle"] = (pPuzzleButton, () => new FishPuzzlePage());
-            _pageMap["Alchemy"] = (pAlchemyButton, () => new AlchemyPage());
-            _pageMap["Upgrade"] = (pUpgradeButton, () => new UpgradePage());
-            _pageMap["AntiBan"] = (pAntiBanButton, () => new AntiBanPage());
+            _pageMap["FishBot"]  = (pFishBotButton,  () => new FishBotPage());
+            _pageMap["Puzzle"]   = (pPuzzleButton,   () => new FishPuzzlePage());
+            _pageMap["Alchemy"]  = (pAlchemyButton,  () => new AlchemyPage());
+            _pageMap["Upgrade"]  = (pUpgradeButton,  () => new UpgradePage());
+            _pageMap["AntiBan"]  = (pAntiBanButton,  () => new AntiBanPage());
 
-            // İsmi 'p' ile başlayan butonlara tıklama event'i bağlama
             foreach (var kvp in _pageMap)
             {
                 string pageKey = kvp.Key;
                 UIButton btn = kvp.Value.Button;
 
-                btn.Click += (sender, e) =>
-                {
-                    NavigateToPage(pageKey);
-                };
+                btn.Click += (sender, e) => NavigateToPage(pageKey);
             }
         }
 
@@ -70,73 +57,56 @@ namespace Aether.Forms
             // Checkbox seçimleri değiştiğinde selectAllButton durumunu senkronize et
             ClientState.Instance.OnCheckedClientsChanged += ClientState_OnCheckedClientsChanged;
 
-            // PageState değişim dinleyicisi
-            PageState.Instance.OnPageChanged += PageState_OnPageChanged;
-
-            // Program açıldığında pFishBotButton otomatik olarak disabled olsun ve FishBotPage yüklensin
+            // Program açıldığında FishBotPage otomatik yüklensin
             NavigateToPage("FishBot");
         }
 
         /// <summary>
-        /// İlgili sayfayı showPagePanel içerisine yatayda sıfıra sıfır (stretch) şekilde ekler,
+        /// İlgili sayfayı showPagePanel içerisine yatayda stretch şekilde ekler,
         /// aktif p-butonunu disable eder ve kalan tüm p-butonlarını enable yapar.
         /// </summary>
-        /// <param name="pageKey">Sayfa anahtar kelimesi (Örn: "FishBot")</param>
         public void NavigateToPage(string pageKey)
         {
             if (!_pageMap.ContainsKey(pageKey)) return;
 
-            // PageState güncellemesi
+            // PageState'i senkron tut (harici okumalar için)
             if (PageState.Instance.CurrentPage != pageKey)
             {
                 PageState.Instance.CurrentPage = pageKey;
             }
 
-            // Buton durumlarını güncelle: Tıklanan buton disable, diğer tüm 'p' butonları enable
+            // Buton durumlarını güncelle
             foreach (var kvp in _pageMap)
             {
                 bool isCurrent = kvp.Key.Equals(pageKey, StringComparison.OrdinalIgnoreCase);
                 kvp.Value.Button.Enabled = !isCurrent;
             }
 
-            // showPagePanel içerisini temizle ve yeni kontrolü sıfıra sıfır stretch şekilde ekle
+            // Panel içeriğini temizle ve yeni sayfayı ekle
             showPagePanel.SuspendLayout();
             showPagePanel.Controls.Clear();
 
             UserControl pageControl = _pageMap[pageKey].ControlCreator.Invoke();
-            pageControl.Margin = new Padding(0);
-            pageControl.Padding = new Padding(0);
+            pageControl.Margin = new System.Windows.Forms.Padding(0);
+            pageControl.Padding = new System.Windows.Forms.Padding(0);
             pageControl.Width = showPagePanel.ClientSize.Width;
 
             showPagePanel.Controls.Add(pageControl);
             showPagePanel.ResumeLayout(true);
 
-            // CustomScrollBar'ı yeni sayfa içeriğiyle senkronize et
             pageScrollBar.SyncWithTarget();
         }
 
         private void ShowPagePanel_Resize(object? sender, EventArgs e)
         {
             showPagePanel.SuspendLayout();
-            foreach (Control ctrl in showPagePanel.Controls)
+            foreach (System.Windows.Forms.Control ctrl in showPagePanel.Controls)
             {
-                ctrl.Margin = new Padding(0);
+                ctrl.Margin = new System.Windows.Forms.Padding(0);
                 ctrl.Width = showPagePanel.ClientSize.Width;
             }
             showPagePanel.ResumeLayout(true);
             pageScrollBar.SyncWithTarget();
-        }
-
-        private void PageState_OnPageChanged(object? sender, string pageKey)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => NavigateToPage(pageKey)));
-            }
-            else
-            {
-                NavigateToPage(pageKey);
-            }
         }
 
         private void SelectAllButton_Click(object? sender, EventArgs e)
@@ -164,7 +134,7 @@ namespace Aether.Forms
             }
         }
 
-        private void ClientState_OnCheckedClientsChanged(object? sender, IReadOnlyList<ClientCard> checkedList)
+        private void ClientState_OnCheckedClientsChanged(object? sender, IReadOnlyList<ClientInfo> checkedList)
         {
             if (_isUpdatingSelectAll) return;
 
@@ -172,14 +142,7 @@ namespace Aether.Forms
             try
             {
                 int totalClients = clientsControl1.TotalClientsCount;
-                if (totalClients > 0 && checkedList.Count == totalClients)
-                {
-                    selectAllButton.Checked = true;
-                }
-                else
-                {
-                    selectAllButton.Checked = false;
-                }
+                selectAllButton.Checked = totalClients > 0 && checkedList.Count == totalClients;
             }
             finally
             {

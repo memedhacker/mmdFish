@@ -1,4 +1,4 @@
-using Aether.Controls;
+using Aether.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +7,9 @@ namespace Aether.States
     /// <summary>
     /// Client kartlarının seçim durumlarını ve bot çalışma modüllerini merkezi olarak yöneten modüler state sınıfı.
     /// Program başlar başlamaz (Program.cs) tetiklenir ve hazırlanır.
+    ///
+    /// ÖNEMLİ: Bu sınıf yalnızca Aether.Models katmanına bağımlıdır.
+    /// UI tipi olan ClientCard buraya girmez; bunun yerine ClientInfo kullanılır.
     /// </summary>
     public class ClientState
     {
@@ -17,8 +20,8 @@ namespace Aether.States
         /// </summary>
         public static ClientState Instance => _instance.Value;
 
-        private ClientCard? _selectedClient;
-        private List<ClientCard> _checkedClients = new List<ClientCard>();
+        private ClientInfo? _selectedClient;
+        private List<ClientInfo> _checkedClients = new List<ClientInfo>();
 
         // Bot modül durum değişkenleri (Default: false)
         private bool _isFishBotRunning = false;
@@ -26,11 +29,11 @@ namespace Aether.States
         private bool _isFishPuzzleRunning = false;
         private bool _isAlchemyRunning = false;
 
-        /// <summary> Tıklanarak seçilen kart değiştiğinde tetiklenen olay. </summary>
-        public event EventHandler<ClientCard?>? OnSelectedClientChanged;
+        /// <summary> Tıklanarak seçilen client değiştiğinde tetiklenen olay. </summary>
+        public event EventHandler<ClientInfo?>? OnSelectedClientChanged;
 
-        /// <summary> Checkbox ile işaretlenen kartların listesi değiştiğinde tetiklenen olay. </summary>
-        public event EventHandler<IReadOnlyList<ClientCard>>? OnCheckedClientsChanged;
+        /// <summary> Checkbox ile işaretlenen client'ların listesi değiştiğinde tetiklenen olay. </summary>
+        public event EventHandler<IReadOnlyList<ClientInfo>>? OnCheckedClientsChanged;
 
         /// <summary> Bot ve modül çalışma durumları değiştiğinde tetiklenen olay. </summary>
         public event EventHandler? OnBotStateChanged;
@@ -61,13 +64,13 @@ namespace Aether.States
             OnBotStateChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary> Tıklanarak seçilen aktif kart (Tekil). </summary>
-        public ClientCard? SelectedClient
+        /// <summary> Tıklanarak seçilen aktif client (Tekil). </summary>
+        public ClientInfo? SelectedClient
         {
             get => _selectedClient;
             set
             {
-                if (_selectedClient != value)
+                if (!Equals(_selectedClient, value))
                 {
                     _selectedClient = value;
                     OnSelectedClientChanged?.Invoke(this, _selectedClient);
@@ -75,13 +78,13 @@ namespace Aether.States
             }
         }
 
-        /// <summary> Checkbox ile işaretlenmiş kartların listesi (Çoklu). </summary>
-        public List<ClientCard> CheckedClients
+        /// <summary> Checkbox ile işaretlenmiş client'ların listesi (Çoklu). </summary>
+        public List<ClientInfo> CheckedClients
         {
             get => _checkedClients;
             set
             {
-                _checkedClients = value ?? new List<ClientCard>();
+                _checkedClients = value ?? new List<ClientInfo>();
                 OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly());
             }
         }
@@ -143,11 +146,11 @@ namespace Aether.States
         }
 
         /// <summary>
-        /// Checkbox ile işaretlenmiş kartlar listesini yeniler ve dinleyicileri bilgilendirir.
+        /// Checkbox ile işaretlenmiş client listesini yeniler ve dinleyicileri bilgilendirir.
         /// </summary>
-        public void UpdateCheckedClients(IEnumerable<ClientCard> clients)
+        public void UpdateCheckedClients(IEnumerable<ClientInfo> clients)
         {
-            _checkedClients = new List<ClientCard>(clients);
+            _checkedClients = new List<ClientInfo>(clients);
             OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly());
         }
     }

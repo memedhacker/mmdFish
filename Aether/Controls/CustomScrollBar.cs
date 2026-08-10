@@ -43,6 +43,7 @@ namespace Aether.Controls
         /// Kaydırılacak hedef FlowLayoutPanel veya Panel.
         /// </summary>
         [Category("Behavior")]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public ScrollableControl? TargetControl
         {
             get => _targetControl;
@@ -86,6 +87,7 @@ namespace Aether.Controls
         }
 
         [Category("Behavior")]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public int Minimum
         {
             get => _minimum;
@@ -97,6 +99,7 @@ namespace Aether.Controls
         }
 
         [Category("Behavior")]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public int Maximum
         {
             get => _maximum;
@@ -108,6 +111,7 @@ namespace Aether.Controls
         }
 
         [Category("Behavior")]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public int Value
         {
             get => _value;
@@ -125,6 +129,7 @@ namespace Aether.Controls
         }
 
         [Category("Behavior")]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public int LargeChange
         {
             get => _largeChange;
