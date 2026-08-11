@@ -30,6 +30,7 @@ namespace Aether.States
             if (!_settingsMap.TryGetValue(clientId, out var settings))
             {
                 settings = new FishBotSettings();
+                Helpers.FishFilterTableBuilder.PopulateDefaultFishFilter(settings);
                 _settingsMap[clientId] = settings;
             }
 
@@ -46,7 +47,9 @@ namespace Aether.States
         /// </summary>
         public void Reset(int clientId)
         {
-            _settingsMap[clientId] = new FishBotSettings();
+            var settings = new FishBotSettings();
+            Helpers.FishFilterTableBuilder.PopulateDefaultFishFilter(settings);
+            _settingsMap[clientId] = settings;
         }
 
         /// <summary>
@@ -56,6 +59,22 @@ namespace Aether.States
         public void Set(int clientId, FishBotSettings settings)
         {
             _settingsMap[clientId] = settings;
+        }
+
+        /// <summary>
+        /// Program başlatıldığında tüm istemciler (varsayılan 10 adet) için bağımsız varsayılan ayar state'lerini oluşturur.
+        /// </summary>
+        public void InitializeDefaults(int clientCount = 10)
+        {
+            for (int id = 1; id <= clientCount; id++)
+            {
+                if (!_settingsMap.ContainsKey(id))
+                {
+                    var settings = new FishBotSettings();
+                    Helpers.FishFilterTableBuilder.PopulateDefaultFishFilter(settings);
+                    _settingsMap[id] = settings;
+                }
+            }
         }
 
         /// <summary>

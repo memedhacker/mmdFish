@@ -42,6 +42,7 @@ namespace Aether.Forms
             pAntiBanButton = new Sunny.UI.UIButton();
             pUpgradeButton = new Sunny.UI.UIButton();
             settingsButton = new Sunny.UI.UIImageButton();
+            testButton = new Sunny.UI.UIButton();
             clientSettingsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)settingsButton).BeginInit();
@@ -77,7 +78,6 @@ namespace Aether.Forms
             showPagePanel.Location = new Point(0, 0);
             showPagePanel.Margin = new Padding(0);
             showPagePanel.Name = "showPagePanel";
-            showPagePanel.Padding = new Padding(0);
             showPagePanel.Size = new Size(689, 739);
             showPagePanel.TabIndex = 0;
             showPagePanel.WrapContents = false;
@@ -90,7 +90,6 @@ namespace Aether.Forms
             pageScrollBar.Name = "pageScrollBar";
             pageScrollBar.Size = new Size(14, 739);
             pageScrollBar.TabIndex = 1;
-            pageScrollBar.TargetControl = showPagePanel;
             // 
             // uıButton1
             // 
@@ -256,6 +255,18 @@ namespace Aether.Forms
             settingsButton.SizeMode = PictureBoxSizeMode.StretchImage;
             settingsButton.TabIndex = 6;
             settingsButton.TabStop = false;
+            settingsButton.Text = null;
+            // 
+            // testButton
+            // 
+            testButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            testButton.Location = new Point(93, 711);
+            testButton.MinimumSize = new Size(1, 1);
+            testButton.Name = "testButton";
+            testButton.Size = new Size(100, 35);
+            testButton.TabIndex = 7;
+            testButton.Text = "test et";
+            testButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
             // MainForm
             // 
@@ -263,6 +274,7 @@ namespace Aether.Forms
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(14, 14, 17);
             ClientSize = new Size(1033, 818);
+            Controls.Add(testButton);
             Controls.Add(settingsButton);
             Controls.Add(pUpgradeButton);
             Controls.Add(pAntiBanButton);
@@ -300,5 +312,6 @@ namespace Aether.Forms
         private Sunny.UI.UIButton pAntiBanButton;
         private Sunny.UI.UIButton pUpgradeButton;
         private Sunny.UI.UIImageButton settingsButton;
+        private Sunny.UI.UIButton testButton;
     }
 }

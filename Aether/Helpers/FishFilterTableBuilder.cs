@@ -1,4 +1,5 @@
 using Aether.Constants;
+using Aether.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -69,6 +70,30 @@ namespace Aether.Helpers
             }
 
             return new List<TableConfig>();
+        }
+
+        /// <summary>
+        /// Tüm istemciler başlangıçta oluşturulurken varsayılan balık filtresi state'ini doldurur.
+        /// "Balığı Tut" / "Yakala" seçeneği hariç tüm seçenekler (Pişir, Öldür, Yere At) varsayılan olarak unchecked (false) olur.
+        /// </summary>
+        public static void PopulateDefaultFishFilter(FishBotSettings settings)
+        {
+            var configs = LoadConfigs();
+            foreach (var cfg in configs)
+            {
+                string[] files = ResolveAssetFiles(cfg.FolderPath);
+                foreach (string filePath in files)
+                {
+                    string itemKey = Path.GetFileNameWithoutExtension(filePath);
+                    var filterItem = settings.GetOrCreateFilterItem(cfg.Id, itemKey);
+
+                    foreach (var col in cfg.Columns)
+                    {
+                        bool isCatchCol = col.HeaderText == "Balığı Tut" || col.HeaderText == "Yakala";
+                        filterItem.SetCheck(col.HeaderText, isCatchCol);
+                    }
+                }
+            }
         }
 
         private static Sunny.UI.UIPanel? CreateGenericTable(TableConfig cfg, ref int currentY)
@@ -168,9 +193,12 @@ namespace Aether.Helpers
                 });
 
                 // Checkboxlar
+                Sunny.UI.UICheckBox? catchCheckBox = null;
+                var otherCheckBoxes = new List<Sunny.UI.UICheckBox>();
+
                 foreach (var col in cfg.Columns)
                 {
-                    container.Controls.Add(new Sunny.UI.UICheckBox
+                    var cb = new Sunny.UI.UICheckBox
                     {
                         Text = "",
                         Location = new Point(col.X, yOffset + 6),
@@ -180,7 +208,42 @@ namespace Aether.Helpers
                         Checked = col.DefaultChecked,
                         // Binder'ın bu checkbox'ı tanımlayabilmesi için tag: "categoryId|itemKey|columnHeader"
                         Tag = $"{cfg.Id}|{Path.GetFileNameWithoutExtension(filePath)}|{col.HeaderText}"
-                    });
+                    };
+
+                    container.Controls.Add(cb);
+
+                    // İlk sütun (Balığı Tut veya Yakala) ilk kontrol olarak yakalanır
+                    if (col.HeaderText == "Balığı Tut" || col.HeaderText == "Yakala")
+                    {
+                        catchCheckBox = cb;
+                    }
+                    else
+                    {
+                        otherCheckBoxes.Add(cb);
+                    }
+                }
+
+                if (catchCheckBox != null && otherCheckBoxes.Count > 0)
+                {
+                    // Tut/Yakala durumuna göre diğerlerini enabled/disabled yapan yardımcı lambda
+                    Action updateRowControls = () =>
+                    {
+                        bool isCatchChecked = catchCheckBox.Checked;
+                        foreach (var cb in otherCheckBoxes)
+                        {
+                            if (!isCatchChecked && !FishBotPageBinder.IsBinding)
+                            {
+                                cb.Checked = false;
+                            }
+                            cb.Enabled = isCatchChecked;
+                        }
+                    };
+
+                    catchCheckBox.ValueChanged += (s, value) => updateRowControls();
+                    catchCheckBox.Click += (s, e) => updateRowControls();
+
+                    // İlk yükleme esnasında başlangıç durumunu ayarla
+                    updateRowControls();
                 }
 
                 yOffset += RowHeight;

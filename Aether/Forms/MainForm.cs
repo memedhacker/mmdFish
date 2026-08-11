@@ -13,8 +13,8 @@ namespace Aether.Forms
     {
         private bool _isUpdatingSelectAll = false;
 
-        // Sayfa ismi ile (Buton, Sayfa Üretici) ikilisini eşleyen harita
-        private readonly Dictionary<string, (UIButton Button, Func<UserControl> ControlCreator)> _pageMap = new();
+        // Sayfa ismi ile (Buton, Sayfa Örneği) ikilisini eşleyen harita
+        private readonly Dictionary<string, (UIButton Button, UserControl PageInstance)> _pageMap = new();
 
         public MainForm()
         {
@@ -27,30 +27,41 @@ namespace Aether.Forms
             selectAllButton.ValueChanged += SelectAllButton_ValueChanged;
             selectAllButton.Click += SelectAllButton_Click;
 
+            // Test / Log Çıktısı Alma Buton Bağlantısı (testButton)
+            testButton.Click += (s, e) =>
+            {
+                string path = Helpers.StateLoggerHelper.ExportAllStatesToDesktop();
+                MessageBox.Show($"Tüm state verileri başarıyla Masaüstüne kaydedildi:\n{path}", "State Log Raporu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+
             // Panel yeniden boyutlandırıldığında yüklenen sayfaları yatayda stretch yap
             showPagePanel.Resize += ShowPagePanel_Resize;
         }
 
         /// <summary>
-        /// İsmi 'p' ile başlayan tüm butonları dinamik olarak haritalandırır ve tıklama dinleyicilerini bağlar.
+        /// İsmi 'p' ile başlayan tüm butonları dinamik olarak haritalandırır ve tekil sayfa örneklerini bağlar.
         /// </summary>
         private void RegisterPageButtons()
         {
             _pageMap.Clear();
 
-            // Buton ve sayfa eşleşmeleri
-            _pageMap["FishBot"]  = (pFishBotButton,  () => new FishBotPage());
-            _pageMap["Puzzle"]   = (pPuzzleButton,   () => new FishPuzzlePage());
-            _pageMap["Alchemy"]  = (pAlchemyButton,  () => new AlchemyPage());
-            _pageMap["Upgrade"]  = (pUpgradeButton,  () => new UpgradePage());
-            _pageMap["AntiBan"]  = (pAntiBanButton,  () => new AntiBanPage());
+            // Buton ve sayfa eşleşmeleri (Tekil nesneler olarak oluşturulur)
+            _pageMap["Home"]     = (null!,           new HomePage());
+            _pageMap["FishBot"]  = (pFishBotButton,  new FishBotPage());
+            _pageMap["Puzzle"]   = (pPuzzleButton,   new FishPuzzlePage());
+            _pageMap["Alchemy"]  = (pAlchemyButton,  new AlchemyPage());
+            _pageMap["Upgrade"]  = (pUpgradeButton,  new UpgradePage());
+            _pageMap["AntiBan"]  = (pAntiBanButton,  new AntiBanPage());
 
             foreach (var kvp in _pageMap)
             {
                 string pageKey = kvp.Key;
                 UIButton btn = kvp.Value.Button;
 
-                btn.Click += (sender, e) => NavigateToPage(pageKey);
+                if (btn != null)
+                {
+                    btn.Click += (sender, e) => NavigateToPage(pageKey);
+                }
             }
         }
 
@@ -59,8 +70,8 @@ namespace Aether.Forms
             // Checkbox seçimleri değiştiğinde selectAllButton durumunu senkronize et
             ClientState.Instance.OnCheckedClientsChanged += ClientState_OnCheckedClientsChanged;
 
-            // Program açıldığında FishBotPage otomatik yüklensin
-            NavigateToPage("FishBot");
+            // Program açıldığında Ana Sayfa (Home) otomatik yüklensin
+            NavigateToPage("Home");
         }
 
         /// <summary>
@@ -80,15 +91,18 @@ namespace Aether.Forms
             // Buton durumlarını güncelle
             foreach (var kvp in _pageMap)
             {
-                bool isCurrent = kvp.Key.Equals(pageKey, StringComparison.OrdinalIgnoreCase);
-                kvp.Value.Button.Enabled = !isCurrent;
+                if (kvp.Value.Button != null)
+                {
+                    bool isCurrent = kvp.Key.Equals(pageKey, StringComparison.OrdinalIgnoreCase);
+                    kvp.Value.Button.Enabled = !isCurrent;
+                }
             }
 
             // Panel içeriğini temizle ve yeni sayfayı ekle
             showPagePanel.SuspendLayout();
             showPagePanel.Controls.Clear();
 
-            UserControl pageControl = _pageMap[pageKey].ControlCreator.Invoke();
+            UserControl pageControl = _pageMap[pageKey].PageInstance;
             pageControl.Margin = new System.Windows.Forms.Padding(0);
             pageControl.Padding = new System.Windows.Forms.Padding(0);
             pageControl.Width = showPagePanel.ClientSize.Width;

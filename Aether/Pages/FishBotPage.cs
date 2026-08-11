@@ -135,6 +135,9 @@ namespace Aether.Pages
 
                 // deleteBotSettingsButton: seçili preseti sil (onay sonrası)
                 deleteBotSettingsButton.Click += (s, ev) => DeleteSelectedPreset();
+
+                // Anlık kontrol değişikliklerini o anki aktif client state'ine bağla
+                FishBotPageBinder.AttachRealtimeStateSync(this, SaveSettingsForLastClient);
             }
         }
 
@@ -148,10 +151,10 @@ namespace Aether.Pages
         private void LoadSettingsForCurrentClient()
         {
             var client = ClientState.Instance.SelectedClient;
-            if (client == null) return;
+            int clientId = client?.Id ?? 1;
 
-            _lastLoadedClientId = client.Id;
-            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(client.Id);
+            _lastLoadedClientId = clientId;
+            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientId);
             FishBotPageBinder.LoadFromSettings(this, settings);
 
             // Kanal enable/disable durumu yükleme sonrası da senkronize edilmeli
@@ -257,15 +260,19 @@ namespace Aether.Pages
                 return;
             }
 
-            // Önce mevcut UI değerlerini aktif client state'ine yansıt
-            SaveSettingsForLastClient();
-
             var client = ClientState.Instance.SelectedClient;
-            int clientId = client?.Id ?? (_lastLoadedClientId ?? 0);
-            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientId);
-            settings.SettingsName = presetName;
+            int clientId = client?.Id ?? (_lastLoadedClientId ?? 1);
 
-            FishBotPresetManager.SavePreset(presetName, settings);
+            // Mevcut UI üzerindeki aktif değerleri seçili client'ın state'ine kaydet
+            var currentSettings = FishBotSettingsRegistry.Instance.GetOrCreate(clientId);
+            FishBotPageBinder.SaveToSettings(this, currentSettings);
+
+            // Ayarların kopyasını alıp preset adını ekleyerek JSON olarak sakla
+            string json = System.Text.Json.JsonSerializer.Serialize(currentSettings);
+            var presetSettings = System.Text.Json.JsonSerializer.Deserialize<FishBotSettings>(json) ?? new FishBotSettings();
+            presetSettings.SettingsName = presetName;
+
+            FishBotPresetManager.SavePreset(presetName, presetSettings);
             RefreshPresetList();
 
             // ComboBox'ta yeni kayıtlı preseti seç
@@ -306,14 +313,17 @@ namespace Aether.Pages
             }
 
             var client = ClientState.Instance.SelectedClient;
-            if (client == null) return;
+            int clientId = client?.Id ?? (_lastLoadedClientId ?? 1);
 
-            // Client state'ini preset değerleriyle güncelle
-            FishBotSettingsRegistry.Instance.Set(client.Id, loaded);
-            _lastLoadedClientId = client.Id;
+            // Her istemcinin tamamen bağımsız bir state nesnesi olmasını garanti etmek için deep clone ile atıyoruz
+            string json = System.Text.Json.JsonSerializer.Serialize(loaded);
+            var clonedSettings = System.Text.Json.JsonSerializer.Deserialize<FishBotSettings>(json) ?? loaded;
+
+            FishBotSettingsRegistry.Instance.Set(clientId, clonedSettings);
+            _lastLoadedClientId = clientId;
 
             // UI'ya yansıt
-            FishBotPageBinder.LoadFromSettings(this, loaded);
+            FishBotPageBinder.LoadFromSettings(this, clonedSettings);
             SetChannelControlsEnabled(changeChannelCheckBox.Checked);
         }
 

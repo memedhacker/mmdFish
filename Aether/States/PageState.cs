@@ -14,7 +14,7 @@ namespace Aether.States
         /// </summary>
         public static PageState Instance => _instance.Value;
 
-        private string _currentPage = "FishBot";
+        private string _currentPage = "Home";
 
         /// <summary>
         /// Aktif sayfa değiştiğinde tetiklenen olay.
@@ -31,11 +31,11 @@ namespace Aether.States
         }
 
         /// <summary>
-        /// Varsayılan başlangıç sayfasına ("FishBot") sıfırlar.
+        /// Varsayılan başlangıç sayfasına ("Home") sıfırlar.
         /// </summary>
         public void Reset()
         {
-            _currentPage = "FishBot";
+            _currentPage = "Home";
             OnPageChanged?.Invoke(this, _currentPage);
         }
 

@@ -18,6 +18,7 @@ namespace Aether
             // Program henüz başladığı an State sistemlerini tetikle ve hazırla
             ClientState.Initialize();
             PageState.Initialize();
+            FishBotSettingsRegistry.Instance.InitializeDefaults(10);
 
             Application.Run(new Forms.MainForm());
         }
