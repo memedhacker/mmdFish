@@ -82,7 +82,58 @@ namespace Aether.Pages
                         Aether.States.ClientState.Instance.UpdateSelectedClientHandle(IntPtr.Zero, 0);
                     }
                 };
+
+                // Kanal Değiştirme CheckBox mantıkları
+                SetupChannelCheckBoxHandlers();
             }
+        }
+
+        private void SetupChannelCheckBoxHandlers()
+        {
+            // changeChannelCheckBox değiştiğinde altındaki tüm kanal checkbox'larını ve selectAllChannelsCheckBox'ı enabled/disabled yap
+            changeChannelCheckBox.ValueChanged += (s, value) =>
+            {
+                SetChannelControlsEnabled(value);
+            };
+            changeChannelCheckBox.Click += (s, e) =>
+            {
+                SetChannelControlsEnabled(changeChannelCheckBox.Checked);
+            };
+
+            // selectAllChannelsCheckBox işaretlendiğinde/kaldırıldığında 6 kanal checkbox'ının durumunu değiştir
+            selectAllChannelsCheckBox.ValueChanged += (s, value) =>
+            {
+                SetAllChannelsChecked(value);
+            };
+            selectAllChannelsCheckBox.Click += (s, e) =>
+            {
+                SetAllChannelsChecked(selectAllChannelsCheckBox.Checked);
+            };
+
+            // Başlangıç durumunu ayarla
+            SetChannelControlsEnabled(changeChannelCheckBox.Checked);
+        }
+
+        private void SetChannelControlsEnabled(bool enabled)
+        {
+            selectAllChannelsCheckBox.Enabled = enabled;
+            ch1CheckBox.Enabled = enabled;
+            ch2CheckBox.Enabled = enabled;
+            ch3CheckBox.Enabled = enabled;
+            ch4CheckBox.Enabled = enabled;
+            ch5CheckBox.Enabled = enabled;
+            ch6CheckBox.Enabled = enabled;
+            changeChannelMinuteUpDown.Enabled = enabled;
+        }
+
+        private void SetAllChannelsChecked(bool isChecked)
+        {
+            ch1CheckBox.Checked = isChecked;
+            ch2CheckBox.Checked = isChecked;
+            ch3CheckBox.Checked = isChecked;
+            ch4CheckBox.Checked = isChecked;
+            ch5CheckBox.Checked = isChecked;
+            ch6CheckBox.Checked = isChecked;
         }
 
         private void SyncComboBoxWithSelectedClient()
@@ -91,5 +142,7 @@ namespace Aether.Pages
             IntPtr currentHandle = selectedClient?.Handle ?? IntPtr.Zero;
             GameWindowProcessHelper.SelectMatchingHandleInComboBox(gameWindowSelectComboBox, currentHandle);
         }
+
+       
     }
 }

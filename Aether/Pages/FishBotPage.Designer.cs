@@ -30,7 +30,9 @@ namespace Aether.Pages
         {
             lblTitle = new Label();
             panelHeader = new Panel();
+            fishBotTime = new Label();
             clientNameLabel = new Label();
+            fishBotStatus = new Label();
             label1 = new Label();
             gameWindowSelectComboBox = new Sunny.UI.UIComboBox();
             refresGameWindowList = new Sunny.UI.UIButton();
@@ -73,16 +75,20 @@ namespace Aether.Pages
             inventoryPageSelectUpDown = new Sunny.UI.UIUpDownTextBox();
             label8 = new Label();
             uıPanel8 = new Sunny.UI.UIPanel();
-            fishBotTime = new Label();
-            fishBotStatus = new Label();
+            maxFishSpeedTextBox = new Sunny.UI.UITextBox();
+            minFishSpeedTextBox = new Sunny.UI.UITextBox();
+            label12 = new Label();
+            label13 = new Label();
+            label11 = new Label();
+            label10 = new Label();
             fishFilterPanel = new Sunny.UI.UIPanel();
             uıPanel9 = new Sunny.UI.UIPanel();
+            botSettingsNameTextBox = new Sunny.UI.UITextBox();
+            loadBotSettingsButton = new Sunny.UI.UIButton();
             botSettingsListComboBox = new Sunny.UI.UIComboBox();
+            deleteBotSettingsButton = new Sunny.UI.UIButton();
             label9 = new Label();
             addBotSettingsButton = new Sunny.UI.UIButton();
-            deleteBotSettingsButton = new Sunny.UI.UIButton();
-            loadBotSettingsButton = new Sunny.UI.UIButton();
-            botSettingsNameTextBox = new Sunny.UI.UITextBox();
             panelHeader.SuspendLayout();
             clientPanel.SuspendLayout();
             uıPanel1.SuspendLayout();
@@ -110,13 +116,26 @@ namespace Aether.Pages
             // panelHeader
             // 
             panelHeader.BackColor = Color.FromArgb(30, 30, 35);
+            panelHeader.Controls.Add(fishBotTime);
             panelHeader.Controls.Add(clientNameLabel);
+            panelHeader.Controls.Add(fishBotStatus);
             panelHeader.Controls.Add(lblTitle);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(0, 0);
             panelHeader.Name = "panelHeader";
             panelHeader.Size = new Size(680, 55);
             panelHeader.TabIndex = 0;
+            // 
+            // fishBotTime
+            // 
+            fishBotTime.AutoSize = true;
+            fishBotTime.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            fishBotTime.ForeColor = SystemColors.ControlLightLight;
+            fishBotTime.Location = new Point(467, 15);
+            fishBotTime.Name = "fishBotTime";
+            fishBotTime.Size = new Size(94, 28);
+            fishBotTime.TabIndex = 1;
+            fishBotTime.Text = "00:00:00";
             // 
             // clientNameLabel
             // 
@@ -128,6 +147,17 @@ namespace Aether.Pages
             clientNameLabel.Size = new Size(101, 32);
             clientNameLabel.TabIndex = 1;
             clientNameLabel.Text = "Client 0";
+            // 
+            // fishBotStatus
+            // 
+            fishBotStatus.AutoSize = true;
+            fishBotStatus.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            fishBotStatus.ForeColor = SystemColors.ControlLightLight;
+            fishBotStatus.Location = new Point(312, 15);
+            fishBotStatus.Name = "fishBotStatus";
+            fishBotStatus.Size = new Size(161, 28);
+            fishBotStatus.TabIndex = 1;
+            fishBotStatus.Text = "Çalışıyor/Durdu";
             // 
             // label1
             // 
@@ -214,7 +244,7 @@ namespace Aether.Pages
             clientPanel.FillColor = Color.FromArgb(30, 30, 35);
             clientPanel.FillColor2 = Color.FromArgb(30, 30, 35);
             clientPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            clientPanel.Location = new Point(15, 77);
+            clientPanel.Location = new Point(15, 208);
             clientPanel.Margin = new Padding(4, 5, 4, 5);
             clientPanel.MinimumSize = new Size(1, 1);
             clientPanel.Name = "clientPanel";
@@ -496,7 +526,7 @@ namespace Aether.Pages
             channelsLine.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             channelsLine.ForeColor = Color.FromArgb(99, 168, 71);
             channelsLine.LineColor = Color.FromArgb(99, 168, 71);
-            channelsLine.Location = new Point(15, 696);
+            channelsLine.Location = new Point(15, 691);
             channelsLine.MinimumSize = new Size(1, 1);
             channelsLine.Name = "channelsLine";
             channelsLine.Size = new Size(649, 29);
@@ -747,13 +777,13 @@ namespace Aether.Pages
             uıPanel7.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel7.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel7.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel7.Location = new Point(391, 147);
+            uıPanel7.Location = new Point(391, 297);
             uıPanel7.Margin = new Padding(4, 5, 4, 5);
             uıPanel7.MinimumSize = new Size(1, 1);
             uıPanel7.Name = "uıPanel7";
             uıPanel7.Radius = 15;
             uıPanel7.RectColor = Color.White;
-            uıPanel7.Size = new Size(273, 63);
+            uıPanel7.Size = new Size(273, 42);
             uıPanel7.TabIndex = 4;
             uıPanel7.Text = null;
             uıPanel7.TextAlignment = ContentAlignment.MiddleCenter;
@@ -764,7 +794,7 @@ namespace Aether.Pages
             inventoryPageSelectUpDown.DoubleValue = 1D;
             inventoryPageSelectUpDown.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             inventoryPageSelectUpDown.IntValue = 1;
-            inventoryPageSelectUpDown.Location = new Point(171, 15);
+            inventoryPageSelectUpDown.Location = new Point(171, 5);
             inventoryPageSelectUpDown.Margin = new Padding(4, 5, 4, 5);
             inventoryPageSelectUpDown.MaxLength = 4;
             inventoryPageSelectUpDown.Minimum = 0D;
@@ -784,7 +814,7 @@ namespace Aether.Pages
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 12F);
             label8.ForeColor = SystemColors.ControlLightLight;
-            label8.Location = new Point(28, 19);
+            label8.Location = new Point(28, 9);
             label8.Name = "label8";
             label8.Size = new Size(127, 21);
             label8.TabIndex = 1;
@@ -793,43 +823,106 @@ namespace Aether.Pages
             // uıPanel8
             // 
             uıPanel8.BackColor = Color.FromArgb(30, 30, 35);
-            uıPanel8.Controls.Add(fishBotTime);
-            uıPanel8.Controls.Add(fishBotStatus);
+            uıPanel8.Controls.Add(maxFishSpeedTextBox);
+            uıPanel8.Controls.Add(minFishSpeedTextBox);
+            uıPanel8.Controls.Add(label12);
+            uıPanel8.Controls.Add(label13);
+            uıPanel8.Controls.Add(label11);
+            uıPanel8.Controls.Add(label10);
             uıPanel8.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel8.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel8.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel8.Location = new Point(391, 74);
+            uıPanel8.Location = new Point(391, 205);
             uıPanel8.Margin = new Padding(4, 5, 4, 5);
             uıPanel8.MinimumSize = new Size(1, 1);
             uıPanel8.Name = "uıPanel8";
             uıPanel8.Radius = 15;
             uıPanel8.RectColor = Color.White;
-            uıPanel8.Size = new Size(273, 63);
+            uıPanel8.Size = new Size(273, 82);
             uıPanel8.TabIndex = 4;
             uıPanel8.Text = null;
             uıPanel8.TextAlignment = ContentAlignment.MiddleCenter;
             // 
-            // fishBotTime
+            // maxFishSpeedTextBox
             // 
-            fishBotTime.AutoSize = true;
-            fishBotTime.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-            fishBotTime.ForeColor = SystemColors.ControlLightLight;
-            fishBotTime.Location = new Point(172, 19);
-            fishBotTime.Name = "fishBotTime";
-            fishBotTime.Size = new Size(94, 28);
-            fishBotTime.TabIndex = 1;
-            fishBotTime.Text = "00:00:00";
+            maxFishSpeedTextBox.DoubleValue = 250D;
+            maxFishSpeedTextBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            maxFishSpeedTextBox.IntValue = 250;
+            maxFishSpeedTextBox.Location = new Point(181, 34);
+            maxFishSpeedTextBox.Margin = new Padding(4, 5, 4, 5);
+            maxFishSpeedTextBox.MinimumSize = new Size(1, 16);
+            maxFishSpeedTextBox.Name = "maxFishSpeedTextBox";
+            maxFishSpeedTextBox.Padding = new Padding(5);
+            maxFishSpeedTextBox.ShowText = false;
+            maxFishSpeedTextBox.Size = new Size(70, 29);
+            maxFishSpeedTextBox.TabIndex = 5;
+            maxFishSpeedTextBox.Text = "250";
+            maxFishSpeedTextBox.TextAlignment = ContentAlignment.MiddleLeft;
+            maxFishSpeedTextBox.Type = Sunny.UI.UITextBox.UIEditType.Integer;
+            maxFishSpeedTextBox.Watermark = "Max";
             // 
-            // fishBotStatus
+            // minFishSpeedTextBox
             // 
-            fishBotStatus.AutoSize = true;
-            fishBotStatus.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-            fishBotStatus.ForeColor = SystemColors.ControlLightLight;
-            fishBotStatus.Location = new Point(17, 19);
-            fishBotStatus.Name = "fishBotStatus";
-            fishBotStatus.Size = new Size(161, 28);
-            fishBotStatus.TabIndex = 1;
-            fishBotStatus.Text = "Çalışıyor/Durdu";
+            minFishSpeedTextBox.DoubleValue = 150D;
+            minFishSpeedTextBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            minFishSpeedTextBox.IntValue = 150;
+            minFishSpeedTextBox.Location = new Point(89, 34);
+            minFishSpeedTextBox.Margin = new Padding(4, 5, 4, 5);
+            minFishSpeedTextBox.MinimumSize = new Size(1, 16);
+            minFishSpeedTextBox.Name = "minFishSpeedTextBox";
+            minFishSpeedTextBox.Padding = new Padding(5);
+            minFishSpeedTextBox.ShowText = false;
+            minFishSpeedTextBox.Size = new Size(68, 29);
+            minFishSpeedTextBox.TabIndex = 5;
+            minFishSpeedTextBox.Text = "150";
+            minFishSpeedTextBox.TextAlignment = ContentAlignment.MiddleLeft;
+            minFishSpeedTextBox.Type = Sunny.UI.UITextBox.UIEditType.Integer;
+            minFishSpeedTextBox.Watermark = "Min";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Segoe UI", 12F);
+            label12.ForeColor = SystemColors.ControlLightLight;
+            label12.Location = new Point(181, 8);
+            label12.Name = "label12";
+            label12.Size = new Size(70, 21);
+            label12.TabIndex = 1;
+            label12.Text = "Max(ms)";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 12F);
+            label13.ForeColor = SystemColors.ControlLightLight;
+            label13.Location = new Point(161, 37);
+            label13.Name = "label13";
+            label13.Size = new Size(16, 21);
+            label13.TabIndex = 1;
+            label13.Text = "-";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 12F);
+            label11.ForeColor = SystemColors.ControlLightLight;
+            label11.Location = new Point(89, 8);
+            label11.Name = "label11";
+            label11.Size = new Size(68, 21);
+            label11.TabIndex = 1;
+            label11.Text = "Min(ms)";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 12F);
+            label10.ForeColor = SystemColors.ControlLightLight;
+            label10.Location = new Point(9, 21);
+            label10.Name = "label10";
+            label10.Size = new Size(73, 42);
+            label10.TabIndex = 1;
+            label10.Text = "Oltalama\r\n Hızı:";
+            label10.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // fishFilterPanel
             // 
@@ -837,13 +930,13 @@ namespace Aether.Pages
             fishFilterPanel.FillColor = Color.FromArgb(24, 24, 27);
             fishFilterPanel.FillColor2 = Color.FromArgb(24, 24, 27);
             fishFilterPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            fishFilterPanel.Location = new Point(15, 728);
+            fishFilterPanel.Location = new Point(15, 723);
             fishFilterPanel.Margin = new Padding(0);
             fishFilterPanel.MinimumSize = new Size(1, 1);
             fishFilterPanel.Name = "fishFilterPanel";
             fishFilterPanel.Radius = 0;
             fishFilterPanel.RectColor = Color.Transparent;
-            fishFilterPanel.Size = new Size(649, 1080);
+            fishFilterPanel.Size = new Size(649, 1085);
             fishFilterPanel.TabIndex = 5;
             fishFilterPanel.Text = null;
             fishFilterPanel.TextAlignment = ContentAlignment.MiddleCenter;
@@ -860,7 +953,7 @@ namespace Aether.Pages
             uıPanel9.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel9.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel9.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel9.Location = new Point(15, 218);
+            uıPanel9.Location = new Point(15, 72);
             uıPanel9.Margin = new Padding(4, 5, 4, 5);
             uıPanel9.MinimumSize = new Size(1, 1);
             uıPanel9.Name = "uıPanel9";
@@ -870,6 +963,31 @@ namespace Aether.Pages
             uıPanel9.TabIndex = 4;
             uıPanel9.Text = null;
             uıPanel9.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
+            // botSettingsNameTextBox
+            // 
+            botSettingsNameTextBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            botSettingsNameTextBox.Location = new Point(175, 22);
+            botSettingsNameTextBox.Margin = new Padding(4, 5, 4, 5);
+            botSettingsNameTextBox.MinimumSize = new Size(1, 16);
+            botSettingsNameTextBox.Name = "botSettingsNameTextBox";
+            botSettingsNameTextBox.Padding = new Padding(5);
+            botSettingsNameTextBox.ShowText = false;
+            botSettingsNameTextBox.Size = new Size(268, 29);
+            botSettingsNameTextBox.TabIndex = 5;
+            botSettingsNameTextBox.TextAlignment = ContentAlignment.MiddleLeft;
+            botSettingsNameTextBox.Watermark = "Ayar İsmi";
+            // 
+            // loadBotSettingsButton
+            // 
+            loadBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            loadBotSettingsButton.Location = new Point(453, 61);
+            loadBotSettingsButton.MinimumSize = new Size(1, 1);
+            loadBotSettingsButton.Name = "loadBotSettingsButton";
+            loadBotSettingsButton.Size = new Size(67, 29);
+            loadBotSettingsButton.TabIndex = 4;
+            loadBotSettingsButton.Text = "Yükle";
+            loadBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
             // botSettingsListComboBox
             // 
@@ -890,6 +1008,27 @@ namespace Aether.Pages
             botSettingsListComboBox.Text = "Seç";
             botSettingsListComboBox.TextAlignment = ContentAlignment.MiddleLeft;
             botSettingsListComboBox.Watermark = "";
+            // 
+            // deleteBotSettingsButton
+            // 
+            deleteBotSettingsButton.FillColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.FillColor2 = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.FillHoverColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.FillPressColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.FillSelectedColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            deleteBotSettingsButton.ForeColor = Color.Black;
+            deleteBotSettingsButton.Location = new Point(524, 61);
+            deleteBotSettingsButton.MinimumSize = new Size(1, 1);
+            deleteBotSettingsButton.Name = "deleteBotSettingsButton";
+            deleteBotSettingsButton.RectColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.RectHoverColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.RectPressColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.RectSelectedColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.Size = new Size(71, 29);
+            deleteBotSettingsButton.TabIndex = 3;
+            deleteBotSettingsButton.Text = "Sil";
+            deleteBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
             // label9
             // 
@@ -922,52 +1061,6 @@ namespace Aether.Pages
             addBotSettingsButton.TabIndex = 3;
             addBotSettingsButton.Text = "Ekle";
             addBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            // 
-            // deleteBotSettingsButton
-            // 
-            deleteBotSettingsButton.FillColor = Color.FromArgb(255, 139, 164);
-            deleteBotSettingsButton.FillColor2 = Color.FromArgb(255, 139, 164);
-            deleteBotSettingsButton.FillHoverColor = Color.FromArgb(255, 139, 164);
-            deleteBotSettingsButton.FillPressColor = Color.FromArgb(244, 103, 136);
-            deleteBotSettingsButton.FillSelectedColor = Color.FromArgb(244, 103, 136);
-            deleteBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            deleteBotSettingsButton.ForeColor = Color.Black;
-            deleteBotSettingsButton.Location = new Point(524, 61);
-            deleteBotSettingsButton.MinimumSize = new Size(1, 1);
-            deleteBotSettingsButton.Name = "deleteBotSettingsButton";
-            deleteBotSettingsButton.RectColor = Color.FromArgb(255, 139, 164);
-            deleteBotSettingsButton.RectHoverColor = Color.FromArgb(255, 139, 164);
-            deleteBotSettingsButton.RectPressColor = Color.FromArgb(244, 103, 136);
-            deleteBotSettingsButton.RectSelectedColor = Color.FromArgb(244, 103, 136);
-            deleteBotSettingsButton.Size = new Size(71, 29);
-            deleteBotSettingsButton.TabIndex = 3;
-            deleteBotSettingsButton.Text = "Sil";
-            deleteBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            // 
-            // loadBotSettingsButton
-            // 
-            loadBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            loadBotSettingsButton.Location = new Point(453, 61);
-            loadBotSettingsButton.MinimumSize = new Size(1, 1);
-            loadBotSettingsButton.Name = "loadBotSettingsButton";
-            loadBotSettingsButton.Size = new Size(67, 29);
-            loadBotSettingsButton.TabIndex = 4;
-            loadBotSettingsButton.Text = "Yükle";
-            loadBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            // 
-            // botSettingsNameTextBox
-            // 
-            botSettingsNameTextBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            botSettingsNameTextBox.Location = new Point(175, 22);
-            botSettingsNameTextBox.Margin = new Padding(4, 5, 4, 5);
-            botSettingsNameTextBox.MinimumSize = new Size(1, 16);
-            botSettingsNameTextBox.Name = "botSettingsNameTextBox";
-            botSettingsNameTextBox.Padding = new Padding(5);
-            botSettingsNameTextBox.ShowText = false;
-            botSettingsNameTextBox.Size = new Size(268, 29);
-            botSettingsNameTextBox.TabIndex = 5;
-            botSettingsNameTextBox.TextAlignment = ContentAlignment.MiddleLeft;
-            botSettingsNameTextBox.Watermark = "Ayar İsmi";
             // 
             // FishBotPage
             // 
@@ -1071,5 +1164,11 @@ namespace Aether.Pages
         private Sunny.UI.UIButton deleteBotSettingsButton;
         private Label label9;
         private Sunny.UI.UIButton addBotSettingsButton;
+        private Sunny.UI.UITextBox maxFishSpeedTextBox;
+        private Sunny.UI.UITextBox minFishSpeedTextBox;
+        private Label label12;
+        private Label label11;
+        private Label label10;
+        private Label label13;
     }
 }

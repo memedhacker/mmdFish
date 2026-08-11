@@ -20,7 +20,9 @@ namespace Aether.Forms
         {
             InitializeComponent();
             RegisterPageButtons();
-
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = true;
             // selectAllButton tıklama ve değer değişimi event abonelikleri
             selectAllButton.ValueChanged += SelectAllButton_ValueChanged;
             selectAllButton.Click += SelectAllButton_Click;
