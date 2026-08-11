@@ -1,0 +1,1157 @@
+﻿| Program.cs | 1 | using Aether.States; |
+| Program.cs | 2 | using System; |
+| Program.cs | 3 | using System.Windows.Forms; |
+| Program.cs | 7 | internal static class Program |
+| Program.cs | 13 | static void Main() |
+| Program.cs | 16 | ApplicationConfiguration.Initialize(); |
+| Program.cs | 19 | ClientState.Initialize(); |
+| Program.cs | 20 | PageState.Initialize(); |
+| Program.cs | 22 | Application.Run(new Forms.MainForm()); |
+| Constants\Colors.cs | 1 | using System.Drawing; |
+| Constants\Colors.cs | 8 | public static class Colors |
+| Constants\Colors.cs | 12 | public static readonly Color MaviKoyu = Color.FromArgb(0, 177, 255); |
+| Constants\Colors.cs | 15 | public static readonly Color MaviAcik = Color.FromArgb(89, 189, 255); |
+| Constants\Colors.cs | 19 | public static readonly Color PembeKoyu = Color.FromArgb(244, 103, 136); |
+| Constants\Colors.cs | 22 | public static readonly Color PembeAcik = Color.FromArgb(255, 139, 164); |
+| Constants\Colors.cs | 26 | public static readonly Color YesilKoyu = Color.FromArgb(99, 168, 71); |
+| Constants\Colors.cs | 29 | public static readonly Color YesilAcik = Color.FromArgb(135, 193, 109); |
+| Constants\Colors.cs | 33 | public static readonly Color Turuncu = Color.FromArgb(255, 180, 0); |
+| Constants\Colors.cs | 37 | public static readonly Color ArkaPlanKoyu = Color.FromArgb(24, 24, 27); |
+| Constants\Colors.cs | 40 | public static readonly Color ArkaPlanAcik = Color.FromArgb(30, 30, 35); |
+| Constants\Colors.cs | 43 | public static readonly Color CizgiRengi = Color.FromArgb(60, 60, 65); |
+| Controls\ClientCard.cs | 1 | using Aether.Constants; |
+| Controls\ClientCard.cs | 2 | using Sunny.UI; |
+| Controls\ClientCard.cs | 3 | using System; |
+| Controls\ClientCard.cs | 4 | using System.Collections.Generic; |
+| Controls\ClientCard.cs | 5 | using System.ComponentModel; |
+| Controls\ClientCard.cs | 6 | using System.Data; |
+| Controls\ClientCard.cs | 7 | using System.Drawing; |
+| Controls\ClientCard.cs | 8 | using System.Text; |
+| Controls\ClientCard.cs | 9 | using System.Windows.Forms; |
+| Controls\ClientCard.cs | 13 | public partial class ClientCard : UserControl |
+| Controls\ClientCard.cs | 15 | private int clientNumber = 0; |
+| Controls\ClientCard.cs | 16 | private bool isSelected = false; |
+| Controls\ClientCard.cs | 18 | public event EventHandler OnCardSelected; |
+| Controls\ClientCard.cs | 19 | public event EventHandler OnCheckedChanged; |
+| Controls\ClientCard.cs | 21 | public ClientCard() |
+| Controls\ClientCard.cs | 24 | SetStyle(ControlStyles.AllPaintingInWmPaint | |
+| Controls\ClientCard.cs | 25 | ControlStyles.OptimizedDoubleBuffer | |
+| Controls\ClientCard.cs | 26 | ControlStyles.UserPaint | |
+| Controls\ClientCard.cs | 27 | ControlStyles.ResizeRedraw, true); |
+| Controls\ClientCard.cs | 29 | InitializeComponent(); |
+| Controls\ClientCard.cs | 30 | RegisterClickEvents(this); |
+| Controls\ClientCard.cs | 32 | uıCheckBox1.Click += (s, e) => OnCheckedChanged?.Invoke(this, EventArgs.Empty); |
+| Controls\ClientCard.cs | 33 | uıCheckBox1.ValueChanged += (s, value) => OnCheckedChanged?.Invoke(this, EventArgs.Empty); |
+| Controls\ClientCard.cs | 36 | private void RegisterClickEvents(Control control) |
+| Controls\ClientCard.cs | 38 | control.Click += Card_Click; |
+| Controls\ClientCard.cs | 39 | foreach (Control child in control.Controls) |
+| Controls\ClientCard.cs | 41 | if (child != pictureBox1 && child != uıCheckBox1) |
+| Controls\ClientCard.cs | 43 | RegisterClickEvents(child); |
+| Controls\ClientCard.cs | 48 | private void Card_Click(object sender, EventArgs e) |
+| Controls\ClientCard.cs | 50 | OnCardSelected?.Invoke(this, EventArgs.Empty); |
+| Controls\ClientCard.cs | 53 | [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] |
+| Controls\ClientCard.cs | 54 | public string ClientName |
+| Controls\ClientCard.cs | 56 | get => lblClientName.Text; |
+| Controls\ClientCard.cs | 57 | set => lblClientName.Text = value; |
+| Controls\ClientCard.cs | 60 | [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] |
+| Controls\ClientCard.cs | 61 | public int ClientNumber |
+| Controls\ClientCard.cs | 63 | get => clientNumber; |
+| Controls\ClientCard.cs | 64 | set => clientNumber = value; |
+| Controls\ClientCard.cs | 67 | [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] |
+| Controls\ClientCard.cs | 68 | public bool IsSelected |
+| Controls\ClientCard.cs | 70 | get => isSelected; |
+| Controls\ClientCard.cs | 73 | isSelected = value; |
+| Controls\ClientCard.cs | 78 | [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] |
+| Controls\ClientCard.cs | 79 | public bool IsChecked |
+| Controls\ClientCard.cs | 81 | get => uıCheckBox1.Checked; |
+| Controls\ClientCard.cs | 82 | set => uıCheckBox1.Checked = value; |
+| Controls\ClientCard.cs | 85 | [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] |
+| Controls\ClientCard.cs | 86 | public string GameWindowText |
+| Controls\ClientCard.cs | 88 | get => selectedGameWindow.Text; |
+| Controls\ClientCard.cs | 91 | selectedGameWindow.Text = value; |
+| Controls\ClientCard.cs | 92 | if (!string.IsNullOrWhiteSpace(value) && value != "Client Seçilmedi") |
+| Controls\ClientCard.cs | 94 | selectedGameWindow.ForeColor = Colors.YesilAcik; |
+| Controls\ClientCard.cs | 98 | selectedGameWindow.ForeColor = Color.Red; |
+| Controls\ClientCard.cs | 104 | private void UpdateCardAppearance() |
+| Controls\ClientCard.cs | 106 | if (isSelected) |
+| Controls\ClientCard.cs | 108 | cardPanel.RectColor = Colors.YesilKoyu; |
+| Controls\ClientCard.cs | 112 | cardPanel.RectColor = Colors.MaviAcik; |
+| Controls\ClientCard.cs | 116 | private void cardPanel_MouseLeave(object sender, EventArgs e) |
+| Controls\ClientCard.cs | 118 | if (!isSelected) |
+| Controls\ClientCard.cs | 120 | cardPanel.RectColor = Colors.MaviAcik; |
+| Controls\ClientCard.cs | 124 | cardPanel.RectColor = Colors.YesilKoyu; |
+| Controls\ClientCard.cs | 128 | private void cardPanel_MouseHover(object sender, EventArgs e) |
+| Controls\ClientCard.cs | 130 | cardPanel.RectColor = Colors.YesilKoyu; |
+| Controls\ClientsControl.cs | 1 | using Aether.Models; |
+| Controls\ClientsControl.cs | 2 | using Aether.States; |
+| Controls\ClientsControl.cs | 3 | using System.Collections.Generic; |
+| Controls\ClientsControl.cs | 4 | using System.Windows.Forms; |
+| Controls\ClientsControl.cs | 8 | public partial class ClientsControl : UserControl |
+| Controls\ClientsControl.cs | 11 | private ClientCard? _currentlySelectedCard; |
+| Controls\ClientsControl.cs | 13 | public ClientsControl() |
+| Controls\ClientsControl.cs | 15 | InitializeComponent(); |
+| Controls\ClientsControl.cs | 16 | LoadClients(); |
+| Controls\ClientsControl.cs | 19 | ClientState.Instance.OnSelectedClientChanged += ClientState_OnSelectedClientChanged; |
+| Controls\ClientsControl.cs | 22 | private void ClientState_OnSelectedClientChanged(object? sender, ClientInfo? clientInfo) |
+| Controls\ClientsControl.cs | 24 | UpdateSelectedCardGameWindowText(clientInfo); |
+| Controls\ClientsControl.cs | 27 | public void UpdateSelectedCardGameWindowText(ClientInfo? clientInfo) |
+| Controls\ClientsControl.cs | 29 | if (_currentlySelectedCard == null) return; |
+| Controls\ClientsControl.cs | 31 | if (clientInfo != null && clientInfo.Handle != System.IntPtr.Zero && clientInfo.ProcessId != 0) |
+| Controls\ClientsControl.cs | 33 | _currentlySelectedCard.GameWindowText = $"PID: {clientInfo.ProcessId}"; |
+| Controls\ClientsControl.cs | 35 | else if (clientInfo != null && clientInfo.Handle != System.IntPtr.Zero) |
+| Controls\ClientsControl.cs | 37 | _currentlySelectedCard.GameWindowText = $"HWND: 0x{clientInfo.Handle.ToInt64():X}"; |
+| Controls\ClientsControl.cs | 41 | _currentlySelectedCard.GameWindowText = "Client Seçilmedi"; |
+| Controls\ClientsControl.cs | 49 | public void LoadClients() |
+| Controls\ClientsControl.cs | 51 | clientListFlowPanel.Controls.Clear(); |
+| Controls\ClientsControl.cs | 54 | var clientModels = Services.ClientService.GenerateDefaultClients(10); |
+| Controls\ClientsControl.cs | 56 | foreach (var clientModel in clientModels) |
+| Controls\ClientsControl.cs | 58 | ClientCard card = new ClientCard(); |
+| Controls\ClientsControl.cs | 59 | card.ClientName = clientModel.Name; |
+| Controls\ClientsControl.cs | 60 | card.ClientNumber = clientModel.Id; |
+| Controls\ClientsControl.cs | 63 | card.OnCardSelected += ClientCard_OnCardSelected; |
+| Controls\ClientsControl.cs | 66 | card.OnCheckedChanged += (sender, e) => UpdateCheckedClients(); |
+| Controls\ClientsControl.cs | 71 | clientListFlowPanel.Controls.Add(card); |
+| Controls\ClientsControl.cs | 75 | if (clientListFlowPanel.Controls.Count > 0 && clientListFlowPanel.Controls[0] is ClientCard firstCard) |
+| Controls\ClientsControl.cs | 77 | SelectClient(firstCard); |
+| Controls\ClientsControl.cs | 80 | UpdateCheckedClients(); |
+| Controls\ClientsControl.cs | 81 | customScrollBar1.SyncWithTarget(); |
+| Controls\ClientsControl.cs | 84 | private void AttachMouseWheel(System.Windows.Forms.Control control) |
+| Controls\ClientsControl.cs | 88 | int delta = e.Delta > 0 ? -60 : 60; |
+| Controls\ClientsControl.cs | 92 | foreach (System.Windows.Forms.Control child in control.Controls) |
+| Controls\ClientsControl.cs | 94 | AttachMouseWheel(child); |
+| Controls\ClientsControl.cs | 101 | public int TotalClientsCount => clientListFlowPanel.Controls.Count; |
+| Controls\ClientsControl.cs | 106 | public void SetAllChecked(bool isChecked) |
+| Controls\ClientsControl.cs | 108 | foreach (System.Windows.Forms.Control control in clientListFlowPanel.Controls) |
+| Controls\ClientsControl.cs | 110 | if (control is ClientCard card) |
+| Controls\ClientsControl.cs | 112 | card.IsChecked = isChecked; |
+| Controls\ClientsControl.cs | 116 | UpdateCheckedClients(); |
+| Controls\ClientsControl.cs | 123 | public void UpdateCheckedClients() |
+| Controls\ClientsControl.cs | 125 | var checkedList = new List<ClientInfo>(); |
+| Controls\ClientsControl.cs | 126 | foreach (System.Windows.Forms.Control control in clientListFlowPanel.Controls) |
+| Controls\ClientsControl.cs | 128 | if (control is ClientCard card && card.IsChecked) |
+| Controls\ClientsControl.cs | 130 | var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName); |
+| Controls\ClientsControl.cs | 131 | checkedList.Add(clientInfo); |
+| Controls\ClientsControl.cs | 135 | ClientState.Instance.UpdateCheckedClients(checkedList); |
+| Controls\ClientsControl.cs | 141 | private void ClientCard_OnCardSelected(object sender, System.EventArgs e) |
+| Controls\ClientsControl.cs | 143 | if (sender is ClientCard selectedCard) |
+| Controls\ClientsControl.cs | 145 | SelectClient(selectedCard); |
+| Controls\ClientsControl.cs | 153 | public void SelectClient(ClientCard card) |
+| Controls\ClientsControl.cs | 156 | if (_currentlySelectedCard != null) |
+| Controls\ClientsControl.cs | 158 | _currentlySelectedCard.IsSelected = false; |
+| Controls\ClientsControl.cs | 163 | _currentlySelectedCard.IsSelected = true; |
+| Controls\ClientsControl.cs | 166 | var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName); |
+| Controls\ClientsControl.cs | 169 | UpdateSelectedCardGameWindowText(clientInfo); |
+| Controls\ClientsControl.cs | 172 | ClientState.Instance.SelectedClient = clientInfo; |
+| Controls\CustomScrollBar.cs | 1 | using Aether.Constants; |
+| Controls\CustomScrollBar.cs | 2 | using Aether.Native; |
+| Controls\CustomScrollBar.cs | 3 | using System; |
+| Controls\CustomScrollBar.cs | 4 | using System.ComponentModel; |
+| Controls\CustomScrollBar.cs | 5 | using System.Drawing; |
+| Controls\CustomScrollBar.cs | 6 | using System.Drawing.Drawing2D; |
+| Controls\CustomScrollBar.cs | 7 | using System.Windows.Forms; |
+| Controls\CustomScrollBar.cs | 14 | public class CustomScrollBar : UserControl |
+| Controls\CustomScrollBar.cs | 16 | private ScrollableControl? _targetControl; |
+| Controls\CustomScrollBar.cs | 17 | private int _minimum = 0; |
+| Controls\CustomScrollBar.cs | 18 | private int _maximum = 100; |
+| Controls\CustomScrollBar.cs | 19 | private int _value = 0; |
+| Controls\CustomScrollBar.cs | 20 | private int _largeChange = 10; |
+| Controls\CustomScrollBar.cs | 22 | private bool _isHovered = false; |
+| Controls\CustomScrollBar.cs | 23 | private bool _isMouseDown = false; |
+| Controls\CustomScrollBar.cs | 24 | private Point _dragStartPoint; |
+| Controls\CustomScrollBar.cs | 25 | private int _dragStartValue; |
+| Controls\CustomScrollBar.cs | 27 | public event EventHandler? Scroll; |
+| Controls\CustomScrollBar.cs | 28 | public event EventHandler? ValueChanged; |
+| Controls\CustomScrollBar.cs | 30 | public CustomScrollBar() |
+| Controls\CustomScrollBar.cs | 32 | SetStyle(ControlStyles.AllPaintingInWmPaint | |
+| Controls\CustomScrollBar.cs | 33 | ControlStyles.OptimizedDoubleBuffer | |
+| Controls\CustomScrollBar.cs | 34 | ControlStyles.ResizeRedraw | |
+| Controls\CustomScrollBar.cs | 35 | ControlStyles.UserPaint | |
+| Controls\CustomScrollBar.cs | 39 | Width = 12; |
+| Controls\CustomScrollBar.cs | 45 | [Category("Behavior")] |
+| Controls\CustomScrollBar.cs | 46 | [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)] |
+| Controls\CustomScrollBar.cs | 47 | public ScrollableControl? TargetControl |
+| Controls\CustomScrollBar.cs | 52 | if (_targetControl != value) |
+| Controls\CustomScrollBar.cs | 54 | if (_targetControl != null) |
+| Controls\CustomScrollBar.cs | 57 | _targetControl.Resize -= TargetControl_LayoutChanged; |
+| Controls\CustomScrollBar.cs | 64 | if (_targetControl != null) |
+| Controls\CustomScrollBar.cs | 67 | _targetControl.Resize += TargetControl_LayoutChanged; |
+| Controls\CustomScrollBar.cs | 72 | HideNativeScrollBar(); |
+| Controls\CustomScrollBar.cs | 75 | SyncWithTarget(); |
+| Controls\CustomScrollBar.cs | 80 | public void HideNativeScrollBar() |
+| Controls\CustomScrollBar.cs | 82 | if (_targetControl != null && _targetControl.IsHandleCreated) |
+| Controls\CustomScrollBar.cs | 84 | Win32Native.ShowScrollBar(_targetControl.Handle, Win32Native.SB_VERT, false); |
+| Controls\CustomScrollBar.cs | 85 | Win32Native.ShowScrollBar(_targetControl.Handle, Win32Native.SB_HORZ, false); |
+| Controls\CustomScrollBar.cs | 89 | [Category("Behavior")] |
+| Controls\CustomScrollBar.cs | 90 | [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)] |
+| Controls\CustomScrollBar.cs | 91 | public int Minimum |
+| Controls\CustomScrollBar.cs | 93 | get => _minimum; |
+| Controls\CustomScrollBar.cs | 96 | _minimum = value; |
+| Controls\CustomScrollBar.cs | 97 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 101 | [Category("Behavior")] |
+| Controls\CustomScrollBar.cs | 102 | [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)] |
+| Controls\CustomScrollBar.cs | 103 | public int Maximum |
+| Controls\CustomScrollBar.cs | 105 | get => _maximum; |
+| Controls\CustomScrollBar.cs | 108 | _maximum = Math.Max(_minimum, value); |
+| Controls\CustomScrollBar.cs | 109 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 113 | [Category("Behavior")] |
+| Controls\CustomScrollBar.cs | 114 | [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)] |
+| Controls\CustomScrollBar.cs | 115 | public int Value |
+| Controls\CustomScrollBar.cs | 120 | int val = Math.Clamp(value, _minimum, _maximum); |
+| Controls\CustomScrollBar.cs | 121 | if (_value != val) |
+| Controls\CustomScrollBar.cs | 124 | ValueChanged?.Invoke(this, EventArgs.Empty); |
+| Controls\CustomScrollBar.cs | 126 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 131 | [Category("Behavior")] |
+| Controls\CustomScrollBar.cs | 132 | [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)] |
+| Controls\CustomScrollBar.cs | 133 | public int LargeChange |
+| Controls\CustomScrollBar.cs | 139 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 146 | public void SyncWithTarget() |
+| Controls\CustomScrollBar.cs | 148 | if (_targetControl == null) return; |
+| Controls\CustomScrollBar.cs | 150 | HideNativeScrollBar(); |
+| Controls\CustomScrollBar.cs | 152 | int contentHeight = 0; |
+| Controls\CustomScrollBar.cs | 153 | int currentScrollY = -_targetControl.AutoScrollPosition.Y; |
+| Controls\CustomScrollBar.cs | 155 | foreach (Control ctrl in _targetControl.Controls) |
+| Controls\CustomScrollBar.cs | 157 | if (ctrl.Visible) |
+| Controls\CustomScrollBar.cs | 159 | int absoluteBottom = ctrl.Bottom + currentScrollY + ctrl.Margin.Bottom; |
+| Controls\CustomScrollBar.cs | 160 | contentHeight = Math.Max(contentHeight, absoluteBottom); |
+| Controls\CustomScrollBar.cs | 164 | int visibleHeight = _targetControl.ClientSize.Height; |
+| Controls\CustomScrollBar.cs | 165 | int maxScroll = Math.Max(0, contentHeight - visibleHeight); |
+| Controls\CustomScrollBar.cs | 167 | _maximum = maxScroll; |
+| Controls\CustomScrollBar.cs | 168 | _largeChange = Math.Max(1, visibleHeight); |
+| Controls\CustomScrollBar.cs | 169 | _value = Math.Clamp(currentScrollY, 0, _maximum); |
+| Controls\CustomScrollBar.cs | 171 | Visible = maxScroll > 0; |
+| Controls\CustomScrollBar.cs | 172 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 175 | private void TargetControl_MouseWheel(object? sender, MouseEventArgs e) |
+| Controls\CustomScrollBar.cs | 177 | int delta = e.Delta > 0 ? -60 : 60; |
+| Controls\CustomScrollBar.cs | 181 | private void TargetControl_LayoutChanged(object? sender, EventArgs e) |
+| Controls\CustomScrollBar.cs | 183 | SyncWithTarget(); |
+| Controls\CustomScrollBar.cs | 186 | private void TargetControl_ControlAddedRemoved(object? sender, ControlEventArgs e) |
+| Controls\CustomScrollBar.cs | 188 | SyncWithTarget(); |
+| Controls\CustomScrollBar.cs | 191 | private void ApplyScrollToTarget() |
+| Controls\CustomScrollBar.cs | 193 | if (_targetControl == null) return; |
+| Controls\CustomScrollBar.cs | 195 | _targetControl.AutoScrollPosition = new Point(0, _value); |
+| Controls\CustomScrollBar.cs | 196 | HideNativeScrollBar(); |
+| Controls\CustomScrollBar.cs | 199 | protected override void OnMouseEnter(EventArgs e) |
+| Controls\CustomScrollBar.cs | 202 | _isHovered = true; |
+| Controls\CustomScrollBar.cs | 203 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 206 | protected override void OnMouseLeave(EventArgs e) |
+| Controls\CustomScrollBar.cs | 209 | _isHovered = false; |
+| Controls\CustomScrollBar.cs | 210 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 213 | protected override void OnMouseDown(MouseEventArgs e) |
+| Controls\CustomScrollBar.cs | 216 | if (e.Button == MouseButtons.Left) |
+| Controls\CustomScrollBar.cs | 219 | if (thumbRect.Contains(e.Location)) |
+| Controls\CustomScrollBar.cs | 221 | _isMouseDown = true; |
+| Controls\CustomScrollBar.cs | 222 | _dragStartPoint = e.Location; |
+| Controls\CustomScrollBar.cs | 227 | if (e.Y < thumbRect.Top) |
+| Controls\CustomScrollBar.cs | 231 | else if (e.Y > thumbRect.Bottom) |
+| Controls\CustomScrollBar.cs | 236 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 240 | protected override void OnMouseUp(MouseEventArgs e) |
+| Controls\CustomScrollBar.cs | 243 | _isMouseDown = false; |
+| Controls\CustomScrollBar.cs | 244 | Invalidate(); |
+| Controls\CustomScrollBar.cs | 247 | protected override void OnMouseMove(MouseEventArgs e) |
+| Controls\CustomScrollBar.cs | 250 | if (_isMouseDown) |
+| Controls\CustomScrollBar.cs | 252 | int trackHeight = Height - GetThumbHeight(); |
+| Controls\CustomScrollBar.cs | 253 | if (trackHeight > 0) |
+| Controls\CustomScrollBar.cs | 255 | int deltaY = e.Y - _dragStartPoint.Y; |
+| Controls\CustomScrollBar.cs | 256 | float percentDelta = (float)deltaY / trackHeight; |
+| Controls\CustomScrollBar.cs | 257 | int valueDelta = (int)(percentDelta * (_maximum - _minimum)); |
+| Controls\CustomScrollBar.cs | 259 | Scroll?.Invoke(this, EventArgs.Empty); |
+| Controls\CustomScrollBar.cs | 264 | private int GetThumbHeight() |
+| Controls\CustomScrollBar.cs | 266 | if (_maximum <= _minimum) return Height; |
+| Controls\CustomScrollBar.cs | 267 | float ratio = (float)_largeChange / (_maximum - _minimum + _largeChange); |
+| Controls\CustomScrollBar.cs | 268 | int thumbHeight = (int)(Height * ratio); |
+| Controls\CustomScrollBar.cs | 269 | return Math.Max(25, thumbHeight); |
+| Controls\CustomScrollBar.cs | 272 | private Rectangle GetThumbRectangle() |
+| Controls\CustomScrollBar.cs | 274 | int thumbHeight = GetThumbHeight(); |
+| Controls\CustomScrollBar.cs | 275 | int trackHeight = Height - thumbHeight; |
+| Controls\CustomScrollBar.cs | 277 | int thumbY = 0; |
+| Controls\CustomScrollBar.cs | 278 | if (_maximum > _minimum && trackHeight > 0) |
+| Controls\CustomScrollBar.cs | 280 | float percent = (float)(_value - _minimum) / (_maximum - _minimum); |
+| Controls\CustomScrollBar.cs | 281 | thumbY = (int)(percent * trackHeight); |
+| Controls\CustomScrollBar.cs | 284 | return new Rectangle(2, thumbY + 2, Width - 4, thumbHeight - 4); |
+| Controls\CustomScrollBar.cs | 287 | protected override void OnPaint(PaintEventArgs e) |
+| Controls\CustomScrollBar.cs | 289 | base.OnPaint(e); |
+| Controls\CustomScrollBar.cs | 291 | Graphics g = e.Graphics; |
+| Controls\CustomScrollBar.cs | 292 | g.SmoothingMode = SmoothingMode.AntiAlias; |
+| Controls\CustomScrollBar.cs | 295 | using (SolidBrush trackBrush = new SolidBrush(Color.FromArgb(30, 30, 35))) |
+| Controls\CustomScrollBar.cs | 297 | using (GraphicsPath trackPath = GetRoundedPath(new Rectangle(1, 0, Width - 2, Height), 4)) |
+| Controls\CustomScrollBar.cs | 299 | g.FillPath(trackBrush, trackPath); |
+| Controls\CustomScrollBar.cs | 303 | if (_maximum <= _minimum) return; |
+| Controls\CustomScrollBar.cs | 307 | if (_isMouseDown) |
+| Controls\CustomScrollBar.cs | 309 | thumbColor = Colors.YesilKoyu; // Sürükleme esnasında |
+| Controls\CustomScrollBar.cs | 311 | else if (_isHovered) |
+| Controls\CustomScrollBar.cs | 313 | thumbColor = Colors.MaviAcik;  // Mouse üzerindeyken |
+| Controls\CustomScrollBar.cs | 317 | thumbColor = Colors.MaviKoyu;  // Normal durum |
+| Controls\CustomScrollBar.cs | 321 | if (thumbRect.Width > 0 && thumbRect.Height > 0) |
+| Controls\CustomScrollBar.cs | 323 | using (SolidBrush thumbBrush = new SolidBrush(thumbColor)) |
+| Controls\CustomScrollBar.cs | 325 | using (GraphicsPath thumbPath = GetRoundedPath(thumbRect, Math.Min(thumbRect.Width, thumbRect.Height) / 2)) |
+| Controls\CustomScrollBar.cs | 327 | g.FillPath(thumbBrush, thumbPath); |
+| Controls\CustomScrollBar.cs | 333 | private GraphicsPath GetRoundedPath(Rectangle rect, int cornerRadius) |
+| Controls\CustomScrollBar.cs | 335 | GraphicsPath path = new GraphicsPath(); |
+| Controls\CustomScrollBar.cs | 336 | if (rect.Width <= 0 || rect.Height <= 0) return path; |
+| Controls\CustomScrollBar.cs | 338 | int diameter = Math.Max(1, cornerRadius * 2); |
+| Controls\CustomScrollBar.cs | 339 | Rectangle arc = new Rectangle(rect.X, rect.Y, diameter, diameter); |
+| Controls\CustomScrollBar.cs | 344 | arc.X = rect.Right - diameter; |
+| Controls\CustomScrollBar.cs | 347 | arc.Y = rect.Bottom - diameter; |
+| Controls\CustomScrollBar.cs | 353 | path.CloseFigure(); |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 1 | using Aether.Native; |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 2 | using System; |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 3 | using System.ComponentModel; |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 4 | using System.Drawing; |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 5 | using System.Windows.Forms; |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 13 | public class DoubleBufferedFlowLayoutPanel : FlowLayoutPanel |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 15 | public DoubleBufferedFlowLayoutPanel() |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 18 | SetStyle(ControlStyles.AllPaintingInWmPaint | |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 19 | ControlStyles.OptimizedDoubleBuffer | |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 20 | ControlStyles.UserPaint | |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 21 | ControlStyles.ResizeRedraw, true); |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 25 | protected override void OnHandleCreated(EventArgs e) |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 28 | HideNativeScrollBars(); |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 31 | public void HideNativeScrollBars() |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 33 | if (IsHandleCreated) |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 35 | Win32Native.ShowScrollBar(Handle, Win32Native.SB_VERT, false); |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 36 | Win32Native.ShowScrollBar(Handle, Win32Native.SB_HORZ, false); |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 40 | protected override void WndProc(ref Message m) |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 42 | if (m.Msg == Win32Native.WM_NCCALCSIZE || m.Msg == Win32Native.WM_NCPAINT) |
+| Controls\DoubleBufferedFlowLayoutPanel.cs | 44 | HideNativeScrollBars(); |
+| Forms\MainForm.cs | 1 | using Aether.Controls; |
+| Forms\MainForm.cs | 2 | using Aether.Models; |
+| Forms\MainForm.cs | 3 | using Aether.Pages; |
+| Forms\MainForm.cs | 4 | using Aether.States; |
+| Forms\MainForm.cs | 5 | using Sunny.UI; |
+| Forms\MainForm.cs | 6 | using System; |
+| Forms\MainForm.cs | 7 | using System.Collections.Generic; |
+| Forms\MainForm.cs | 8 | using System.Windows.Forms; |
+| Forms\MainForm.cs | 12 | public partial class MainForm : Form |
+| Forms\MainForm.cs | 14 | private bool _isUpdatingSelectAll = false; |
+| Forms\MainForm.cs | 17 | private readonly Dictionary<string, (UIButton Button, Func<UserControl> ControlCreator)> _pageMap = new(); |
+| Forms\MainForm.cs | 19 | public MainForm() |
+| Forms\MainForm.cs | 21 | InitializeComponent(); |
+| Forms\MainForm.cs | 22 | RegisterPageButtons(); |
+| Forms\MainForm.cs | 23 | FormBorderStyle = FormBorderStyle.FixedSingle; |
+| Forms\MainForm.cs | 24 | MaximizeBox = false; |
+| Forms\MainForm.cs | 25 | MinimizeBox = true; |
+| Forms\MainForm.cs | 28 | selectAllButton.Click += SelectAllButton_Click; |
+| Forms\MainForm.cs | 31 | showPagePanel.Resize += ShowPagePanel_Resize; |
+| Forms\MainForm.cs | 37 | private void RegisterPageButtons() |
+| Forms\MainForm.cs | 42 | _pageMap["FishBot"]  = (pFishBotButton,  () => new FishBotPage()); |
+| Forms\MainForm.cs | 43 | _pageMap["Puzzle"]   = (pPuzzleButton,   () => new FishPuzzlePage()); |
+| Forms\MainForm.cs | 46 | _pageMap["AntiBan"]  = (pAntiBanButton,  () => new AntiBanPage()); |
+| Forms\MainForm.cs | 48 | foreach (var kvp in _pageMap) |
+| Forms\MainForm.cs | 50 | string pageKey = kvp.Key; |
+| Forms\MainForm.cs | 51 | UIButton btn = kvp.Value.Button; |
+| Forms\MainForm.cs | 53 | btn.Click += (sender, e) => NavigateToPage(pageKey); |
+| Forms\MainForm.cs | 57 | private void MainForm_Load(object sender, EventArgs e) |
+| Forms\MainForm.cs | 60 | ClientState.Instance.OnCheckedClientsChanged += ClientState_OnCheckedClientsChanged; |
+| Forms\MainForm.cs | 63 | NavigateToPage("FishBot"); |
+| Forms\MainForm.cs | 70 | public void NavigateToPage(string pageKey) |
+| Forms\MainForm.cs | 72 | if (!_pageMap.ContainsKey(pageKey)) return; |
+| Forms\MainForm.cs | 75 | if (PageState.Instance.CurrentPage != pageKey) |
+| Forms\MainForm.cs | 77 | PageState.Instance.CurrentPage = pageKey; |
+| Forms\MainForm.cs | 81 | foreach (var kvp in _pageMap) |
+| Forms\MainForm.cs | 83 | bool isCurrent = kvp.Key.Equals(pageKey, StringComparison.OrdinalIgnoreCase); |
+| Forms\MainForm.cs | 84 | kvp.Value.Button.Enabled = !isCurrent; |
+| Forms\MainForm.cs | 91 | UserControl pageControl = _pageMap[pageKey].ControlCreator.Invoke(); |
+| Forms\MainForm.cs | 92 | pageControl.Margin = new System.Windows.Forms.Padding(0); |
+| Forms\MainForm.cs | 93 | pageControl.Padding = new System.Windows.Forms.Padding(0); |
+| Forms\MainForm.cs | 94 | pageControl.Width = showPagePanel.ClientSize.Width; |
+| Forms\MainForm.cs | 99 | pageScrollBar.SyncWithTarget(); |
+| Forms\MainForm.cs | 102 | private void ShowPagePanel_Resize(object? sender, EventArgs e) |
+| Forms\MainForm.cs | 105 | foreach (System.Windows.Forms.Control ctrl in showPagePanel.Controls) |
+| Forms\MainForm.cs | 107 | ctrl.Margin = new System.Windows.Forms.Padding(0); |
+| Forms\MainForm.cs | 108 | ctrl.Width = showPagePanel.ClientSize.Width; |
+| Forms\MainForm.cs | 111 | pageScrollBar.SyncWithTarget(); |
+| Forms\MainForm.cs | 114 | private void SelectAllButton_Click(object? sender, EventArgs e) |
+| Forms\MainForm.cs | 119 | private void SelectAllButton_ValueChanged(object sender, bool value) |
+| Forms\MainForm.cs | 124 | private void ToggleSelectAll(bool isChecked) |
+| Forms\MainForm.cs | 126 | if (_isUpdatingSelectAll) return; |
+| Forms\MainForm.cs | 130 | _isUpdatingSelectAll = true; |
+| Forms\MainForm.cs | 131 | clientsControl1.SetAllChecked(isChecked); |
+| Forms\MainForm.cs | 133 | finally |
+| Forms\MainForm.cs | 135 | _isUpdatingSelectAll = false; |
+| Forms\MainForm.cs | 139 | private void ClientState_OnCheckedClientsChanged(object? sender, IReadOnlyList<ClientInfo> checkedList) |
+| Forms\MainForm.cs | 141 | if (_isUpdatingSelectAll) return; |
+| Forms\MainForm.cs | 143 | _isUpdatingSelectAll = true; |
+| Forms\MainForm.cs | 146 | int totalClients = clientsControl1.TotalClientsCount; |
+| Forms\MainForm.cs | 147 | selectAllButton.Checked = totalClients > 0 && checkedList.Count == totalClients; |
+| Forms\MainForm.cs | 149 | finally |
+| Forms\MainForm.cs | 151 | _isUpdatingSelectAll = false; |
+| Helpers\FishBotPageBinder.cs | 1 | using Aether.Models; |
+| Helpers\FishBotPageBinder.cs | 2 | using Aether.Pages; |
+| Helpers\FishBotPageBinder.cs | 3 | using Sunny.UI; |
+| Helpers\FishBotPageBinder.cs | 4 | using System; |
+| Helpers\FishBotPageBinder.cs | 5 | using System.Windows.Forms; |
+| Helpers\FishBotPageBinder.cs | 13 | /// Checkbox'lar Tag tabanlı "categoryId|itemKey|columnHeader" sistemiyle okunur/yazılır. |
+| Helpers\FishBotPageBinder.cs | 15 | public static class FishBotPageBinder |
+| Helpers\FishBotPageBinder.cs | 24 | public static void SaveToSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 26 | SaveGeneralSettings(page, settings); |
+| Helpers\FishBotPageBinder.cs | 27 | SaveChannelSettings(page, settings); |
+| Helpers\FishBotPageBinder.cs | 28 | SaveFishFilterSettings(page, settings); |
+| Helpers\FishBotPageBinder.cs | 31 | private static void SaveGeneralSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 33 | settings.CloseGameEnabled = page.CloseGameCheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 34 | settings.CloseGameAfterMinutes = page.CloseGameMinuteSelectUpDown.IntValue; |
+| Helpers\FishBotPageBinder.cs | 36 | settings.CharacterScreenEnabled = page.CharacterScreenCheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 37 | settings.CharacterScreenAfterMinutes = page.CharacterScreenUpDown.IntValue; |
+| Helpers\FishBotPageBinder.cs | 39 | settings.BuyCampfireEnabled = page.BuyCampfireCheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 40 | settings.CampfireCount = page.CampFireCountUpDown.IntValue; |
+| Helpers\FishBotPageBinder.cs | 42 | settings.BuyWormEnabled = page.BuyWormCheckbox.Checked; |
+| Helpers\FishBotPageBinder.cs | 43 | settings.WormCount = page.WormCountUpDown.IntValue; |
+| Helpers\FishBotPageBinder.cs | 45 | settings.AnimationMode = page.AnimationModeSwitch.Active ? "armor" : "mount"; |
+| Helpers\FishBotPageBinder.cs | 47 | settings.InventoryPage = page.InventoryPageSelectUpDown.IntValue; |
+| Helpers\FishBotPageBinder.cs | 49 | if (int.TryParse(page.MinFishSpeedTextBox.Text, out int minMs)) |
+| Helpers\FishBotPageBinder.cs | 50 | settings.FishingSpeedMinMs = minMs; |
+| Helpers\FishBotPageBinder.cs | 51 | if (int.TryParse(page.MaxFishSpeedTextBox.Text, out int maxMs)) |
+| Helpers\FishBotPageBinder.cs | 52 | settings.FishingSpeedMaxMs = maxMs; |
+| Helpers\FishBotPageBinder.cs | 55 | private static void SaveChannelSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 57 | settings.ChangeChannelEnabled = page.ChangeChannelCheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 58 | settings.ChangeChannelAfterMinutes = page.ChangeChannelMinuteUpDown.IntValue; |
+| Helpers\FishBotPageBinder.cs | 59 | settings.SelectAllChannels = page.SelectAllChannelsCheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 60 | settings.Ch1 = page.Ch1CheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 61 | settings.Ch2 = page.Ch2CheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 62 | settings.Ch3 = page.Ch3CheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 63 | settings.Ch4 = page.Ch4CheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 64 | settings.Ch5 = page.Ch5CheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 65 | settings.Ch6 = page.Ch6CheckBox.Checked; |
+| Helpers\FishBotPageBinder.cs | 70 | /// Checkbox Tag formatı: "categoryId|itemKey|columnHeader" |
+| Helpers\FishBotPageBinder.cs | 72 | private static void SaveFishFilterSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 74 | foreach (Control tablePanel in page.FishFilterPanel.Controls) |
+| Helpers\FishBotPageBinder.cs | 76 | foreach (Control ctrl in tablePanel.Controls) |
+| Helpers\FishBotPageBinder.cs | 78 | if (ctrl is UICheckBox cb && cb.Tag is string tag) |
+| Helpers\FishBotPageBinder.cs | 80 | var parts = tag.Split('|'); |
+| Helpers\FishBotPageBinder.cs | 81 | if (parts.Length == 3) |
+| Helpers\FishBotPageBinder.cs | 83 | var item = settings.GetOrCreateFilterItem(parts[0], parts[1]); |
+| Helpers\FishBotPageBinder.cs | 84 | item.SetCheck(parts[2], cb.Checked); |
+| Helpers\FishBotPageBinder.cs | 98 | public static void LoadFromSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 100 | LoadGeneralSettings(page, settings); |
+| Helpers\FishBotPageBinder.cs | 101 | LoadChannelSettings(page, settings); |
+| Helpers\FishBotPageBinder.cs | 102 | LoadFishFilterSettings(page, settings); |
+| Helpers\FishBotPageBinder.cs | 105 | private static void LoadGeneralSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 107 | page.CloseGameCheckBox.Checked = settings.CloseGameEnabled; |
+| Helpers\FishBotPageBinder.cs | 108 | page.CloseGameMinuteSelectUpDown.IntValue = settings.CloseGameAfterMinutes; |
+| Helpers\FishBotPageBinder.cs | 110 | page.CharacterScreenCheckBox.Checked = settings.CharacterScreenEnabled; |
+| Helpers\FishBotPageBinder.cs | 111 | page.CharacterScreenUpDown.IntValue = settings.CharacterScreenAfterMinutes; |
+| Helpers\FishBotPageBinder.cs | 113 | page.BuyCampfireCheckBox.Checked = settings.BuyCampfireEnabled; |
+| Helpers\FishBotPageBinder.cs | 114 | page.CampFireCountUpDown.IntValue = settings.CampfireCount; |
+| Helpers\FishBotPageBinder.cs | 116 | page.BuyWormCheckbox.Checked = settings.BuyWormEnabled; |
+| Helpers\FishBotPageBinder.cs | 117 | page.WormCountUpDown.IntValue = settings.WormCount; |
+| Helpers\FishBotPageBinder.cs | 119 | page.AnimationModeSwitch.Active = settings.AnimationMode == "armor"; |
+| Helpers\FishBotPageBinder.cs | 121 | page.InventoryPageSelectUpDown.IntValue = settings.InventoryPage; |
+| Helpers\FishBotPageBinder.cs | 123 | page.MinFishSpeedTextBox.Text = settings.FishingSpeedMinMs.ToString(); |
+| Helpers\FishBotPageBinder.cs | 124 | page.MaxFishSpeedTextBox.Text = settings.FishingSpeedMaxMs.ToString(); |
+| Helpers\FishBotPageBinder.cs | 127 | private static void LoadChannelSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 129 | page.ChangeChannelCheckBox.Checked = settings.ChangeChannelEnabled; |
+| Helpers\FishBotPageBinder.cs | 130 | page.ChangeChannelMinuteUpDown.IntValue = settings.ChangeChannelAfterMinutes; |
+| Helpers\FishBotPageBinder.cs | 131 | page.SelectAllChannelsCheckBox.Checked = settings.SelectAllChannels; |
+| Helpers\FishBotPageBinder.cs | 132 | page.Ch1CheckBox.Checked = settings.Ch1; |
+| Helpers\FishBotPageBinder.cs | 133 | page.Ch2CheckBox.Checked = settings.Ch2; |
+| Helpers\FishBotPageBinder.cs | 134 | page.Ch3CheckBox.Checked = settings.Ch3; |
+| Helpers\FishBotPageBinder.cs | 135 | page.Ch4CheckBox.Checked = settings.Ch4; |
+| Helpers\FishBotPageBinder.cs | 136 | page.Ch5CheckBox.Checked = settings.Ch5; |
+| Helpers\FishBotPageBinder.cs | 137 | page.Ch6CheckBox.Checked = settings.Ch6; |
+| Helpers\FishBotPageBinder.cs | 142 | /// Tag formatı: "categoryId|itemKey|columnHeader" |
+| Helpers\FishBotPageBinder.cs | 144 | private static void LoadFishFilterSettings(FishBotPage page, FishBotSettings settings) |
+| Helpers\FishBotPageBinder.cs | 146 | foreach (Control tablePanel in page.FishFilterPanel.Controls) |
+| Helpers\FishBotPageBinder.cs | 148 | foreach (Control ctrl in tablePanel.Controls) |
+| Helpers\FishBotPageBinder.cs | 150 | if (ctrl is UICheckBox cb && cb.Tag is string tag) |
+| Helpers\FishBotPageBinder.cs | 152 | var parts = tag.Split('|'); |
+| Helpers\FishBotPageBinder.cs | 153 | if (parts.Length == 3) |
+| Helpers\FishBotPageBinder.cs | 155 | if (settings.FishFilter.TryGetValue(parts[0], out var category) && |
+| Helpers\FishBotPageBinder.cs | 156 | category.TryGetValue(parts[1], out var item)) |
+| Helpers\FishBotPageBinder.cs | 158 | cb.Checked = item.GetCheck(parts[2], cb.Checked); |
+| Helpers\FishBotPresetManager.cs | 1 | using Aether.Models; |
+| Helpers\FishBotPresetManager.cs | 2 | using System; |
+| Helpers\FishBotPresetManager.cs | 3 | using System.IO; |
+| Helpers\FishBotPresetManager.cs | 4 | using System.Text.Json; |
+| Helpers\FishBotPresetManager.cs | 5 | using System.Text.Json.Serialization; |
+| Helpers\FishBotPresetManager.cs | 13 | public static class FishBotPresetManager |
+| Helpers\FishBotPresetManager.cs | 16 | private static readonly string FolderPath = Path.Combine( |
+| Helpers\FishBotPresetManager.cs | 17 | Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), |
+| Helpers\FishBotPresetManager.cs | 18 | ".mmdfishbot"); |
+| Helpers\FishBotPresetManager.cs | 20 | private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions |
+| Helpers\FishBotPresetManager.cs | 22 | WriteIndented = true, |
+| Helpers\FishBotPresetManager.cs | 23 | PropertyNamingPolicy = JsonNamingPolicy.CamelCase, |
+| Helpers\FishBotPresetManager.cs | 24 | DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull |
+| Helpers\FishBotPresetManager.cs | 34 | public static void EnsureFolder() |
+| Helpers\FishBotPresetManager.cs | 36 | if (!Directory.Exists(FolderPath)) |
+| Helpers\FishBotPresetManager.cs | 37 | Directory.CreateDirectory(FolderPath); |
+| Helpers\FishBotPresetManager.cs | 49 | public static string SavePreset(string presetName, FishBotSettings settings) |
+| Helpers\FishBotPresetManager.cs | 52 | string filePath = GetFilePath(presetName); |
+| Helpers\FishBotPresetManager.cs | 53 | string json = JsonSerializer.Serialize(settings, SerializerOptions); |
+| Helpers\FishBotPresetManager.cs | 54 | File.WriteAllText(filePath, json); |
+| Helpers\FishBotPresetManager.cs | 55 | return filePath; |
+| Helpers\FishBotPresetManager.cs | 66 | public static FishBotSettings? LoadPreset(string presetName) |
+| Helpers\FishBotPresetManager.cs | 68 | string filePath = GetFilePath(presetName); |
+| Helpers\FishBotPresetManager.cs | 69 | if (!File.Exists(filePath)) return null; |
+| Helpers\FishBotPresetManager.cs | 73 | string json = File.ReadAllText(filePath); |
+| Helpers\FishBotPresetManager.cs | 74 | return JsonSerializer.Deserialize<FishBotSettings>(json, SerializerOptions); |
+| Helpers\FishBotPresetManager.cs | 90 | public static string[] GetPresetNames() |
+| Helpers\FishBotPresetManager.cs | 92 | if (!Directory.Exists(FolderPath)) |
+| Helpers\FishBotPresetManager.cs | 93 | return Array.Empty<string>(); |
+| Helpers\FishBotPresetManager.cs | 95 | var files = Directory.GetFiles(FolderPath, "*.json"); |
+| Helpers\FishBotPresetManager.cs | 96 | var names = new string[files.Length]; |
+| Helpers\FishBotPresetManager.cs | 97 | for (int i = 0; i < files.Length; i++) |
+| Helpers\FishBotPresetManager.cs | 98 | names[i] = Path.GetFileNameWithoutExtension(files[i]); |
+| Helpers\FishBotPresetManager.cs | 111 | public static void DeletePreset(string presetName) |
+| Helpers\FishBotPresetManager.cs | 113 | string filePath = GetFilePath(presetName); |
+| Helpers\FishBotPresetManager.cs | 114 | if (File.Exists(filePath)) |
+| Helpers\FishBotPresetManager.cs | 115 | File.Delete(filePath); |
+| Helpers\FishBotPresetManager.cs | 121 | public static bool PresetExists(string presetName) |
+| Helpers\FishBotPresetManager.cs | 122 | => File.Exists(GetFilePath(presetName)); |
+| Helpers\FishBotPresetManager.cs | 128 | private static string GetFilePath(string presetName) |
+| Helpers\FishBotPresetManager.cs | 129 | => Path.Combine(FolderPath, $"{presetName}.json"); |
+| Helpers\FishFilterTableBuilder.cs | 1 | using Aether.Constants; |
+| Helpers\FishFilterTableBuilder.cs | 2 | using System; |
+| Helpers\FishFilterTableBuilder.cs | 3 | using System.Collections.Generic; |
+| Helpers\FishFilterTableBuilder.cs | 4 | using System.Drawing; |
+| Helpers\FishFilterTableBuilder.cs | 5 | using System.IO; |
+| Helpers\FishFilterTableBuilder.cs | 6 | using System.Text.Json; |
+| Helpers\FishFilterTableBuilder.cs | 7 | using System.Windows.Forms; |
+| Helpers\FishFilterTableBuilder.cs | 11 | public record ColumnConfig(string HeaderText, string HeaderColor, int X, bool DefaultChecked); |
+| Helpers\FishFilterTableBuilder.cs | 13 | public record TableConfig( |
+| Helpers\FishFilterTableBuilder.cs | 14 | string Id, |
+| Helpers\FishFilterTableBuilder.cs | 15 | string Title, |
+| Helpers\FishFilterTableBuilder.cs | 16 | string FolderPath, |
+| Helpers\FishFilterTableBuilder.cs | 17 | string CategoryColor, |
+| Helpers\FishFilterTableBuilder.cs | 18 | string NameHeader, |
+| Helpers\FishFilterTableBuilder.cs | 19 | List<ColumnConfig> Columns |
+| Helpers\FishFilterTableBuilder.cs | 25 | public static class FishFilterTableBuilder |
+| Helpers\FishFilterTableBuilder.cs | 27 | private const int RowHeight = 40; |
+| Helpers\FishFilterTableBuilder.cs | 28 | private const int HeaderHeight = 45; |
+| Helpers\FishFilterTableBuilder.cs | 29 | private const int TitleHeight = 35; |
+| Helpers\FishFilterTableBuilder.cs | 30 | private const int PanelWidth = 649; |
+| Helpers\FishFilterTableBuilder.cs | 32 | public static void BuildTables(Sunny.UI.UIPanel fishFilterPanel, Sunny.UI.UILine channelsLine, UserControl pageControl) |
+| Helpers\FishFilterTableBuilder.cs | 34 | fishFilterPanel.Controls.Clear(); |
+| Helpers\FishFilterTableBuilder.cs | 35 | fishFilterPanel.BackColor = Colors.ArkaPlanKoyu; |
+| Helpers\FishFilterTableBuilder.cs | 36 | fishFilterPanel.FillColor = Colors.ArkaPlanKoyu; |
+| Helpers\FishFilterTableBuilder.cs | 37 | fishFilterPanel.FillColor2 = Colors.ArkaPlanKoyu; |
+| Helpers\FishFilterTableBuilder.cs | 39 | int currentY = 0; |
+| Helpers\FishFilterTableBuilder.cs | 40 | var configs = LoadConfigs(); |
+| Helpers\FishFilterTableBuilder.cs | 42 | foreach (var cfg in configs) |
+| Helpers\FishFilterTableBuilder.cs | 44 | var panel = CreateGenericTable(cfg, ref currentY); |
+| Helpers\FishFilterTableBuilder.cs | 45 | if (panel != null) |
+| Helpers\FishFilterTableBuilder.cs | 47 | fishFilterPanel.Controls.Add(panel); |
+| Helpers\FishFilterTableBuilder.cs | 52 | fishFilterPanel.Height = currentY + 10; |
+| Helpers\FishFilterTableBuilder.cs | 53 | pageControl.Size = new Size(pageControl.Width, channelsLine.Bottom + fishFilterPanel.Height + 50); |
+| Helpers\FishFilterTableBuilder.cs | 56 | private static List<TableConfig> LoadConfigs() |
+| Helpers\FishFilterTableBuilder.cs | 58 | string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "fish_filter_config.json"); |
+| Helpers\FishFilterTableBuilder.cs | 59 | if (!File.Exists(jsonPath)) |
+| Helpers\FishFilterTableBuilder.cs | 61 | jsonPath = Path.Combine(Application.StartupPath, "..", "..", "..", "Assets", "fish_filter_config.json"); |
+| Helpers\FishFilterTableBuilder.cs | 64 | if (File.Exists(jsonPath)) |
+| Helpers\FishFilterTableBuilder.cs | 66 | string json = File.ReadAllText(jsonPath); |
+| Helpers\FishFilterTableBuilder.cs | 67 | var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; |
+| Helpers\FishFilterTableBuilder.cs | 68 | return JsonSerializer.Deserialize<List<TableConfig>>(json, options) ?? new List<TableConfig>(); |
+| Helpers\FishFilterTableBuilder.cs | 71 | return new List<TableConfig>(); |
+| Helpers\FishFilterTableBuilder.cs | 74 | private static Sunny.UI.UIPanel? CreateGenericTable(TableConfig cfg, ref int currentY) |
+| Helpers\FishFilterTableBuilder.cs | 76 | string[] files = ResolveAssetFiles(cfg.FolderPath); |
+| Helpers\FishFilterTableBuilder.cs | 77 | if (files.Length == 0) return null; |
+| Helpers\FishFilterTableBuilder.cs | 79 | int totalHeight = TitleHeight + HeaderHeight + (files.Length * RowHeight) + 15; |
+| Helpers\FishFilterTableBuilder.cs | 82 | Sunny.UI.UIPanel container = new Sunny.UI.UIPanel |
+| Helpers\FishFilterTableBuilder.cs | 84 | Location = new Point(0, currentY), |
+| Helpers\FishFilterTableBuilder.cs | 85 | Size = new Size(PanelWidth, totalHeight), |
+| Helpers\FishFilterTableBuilder.cs | 86 | BackColor = Colors.ArkaPlanAcik, |
+| Helpers\FishFilterTableBuilder.cs | 87 | FillColor = Colors.ArkaPlanAcik, |
+| Helpers\FishFilterTableBuilder.cs | 88 | FillColor2 = Colors.ArkaPlanAcik, |
+| Helpers\FishFilterTableBuilder.cs | 90 | Radius = 15, |
+| Helpers\FishFilterTableBuilder.cs | 95 | container.Controls.Add(new Label |
+| Helpers\FishFilterTableBuilder.cs | 97 | Text = cfg.Title, |
+| Helpers\FishFilterTableBuilder.cs | 98 | Font = new Font("Calibri", 14F, FontStyle.Bold), |
+| Helpers\FishFilterTableBuilder.cs | 100 | Location = new Point(15, 10), |
+| Helpers\FishFilterTableBuilder.cs | 101 | AutoSize = true |
+| Helpers\FishFilterTableBuilder.cs | 104 | int tableTop = TitleHeight + 5; |
+| Helpers\FishFilterTableBuilder.cs | 107 | container.Controls.Add(new Label |
+| Helpers\FishFilterTableBuilder.cs | 110 | Font = new Font("Segoe UI", 11F, FontStyle.Bold), |
+| Helpers\FishFilterTableBuilder.cs | 111 | ForeColor = Color.White, |
+| Helpers\FishFilterTableBuilder.cs | 112 | Location = new Point(20, tableTop + 8), |
+| Helpers\FishFilterTableBuilder.cs | 113 | Size = new Size(cfg.Columns.Count > 2 ? 180 : (cfg.Columns.Count > 1 ? 220 : 300), 25), |
+| Helpers\FishFilterTableBuilder.cs | 114 | TextAlign = ContentAlignment.MiddleLeft |
+| Helpers\FishFilterTableBuilder.cs | 118 | int headerSpacing = cfg.Columns.Count switch { 1 => 0, 2 => 240, _ => 105 }; |
+| Helpers\FishFilterTableBuilder.cs | 119 | int headerStartX = cfg.Columns.Count switch { 1 => 515, 2 => 275, _ => 210 }; |
+| Helpers\FishFilterTableBuilder.cs | 121 | for (int i = 0; i < cfg.Columns.Count; i++) |
+| Helpers\FishFilterTableBuilder.cs | 123 | var col = cfg.Columns[i]; |
+| Helpers\FishFilterTableBuilder.cs | 124 | container.Controls.Add(new Label |
+| Helpers\FishFilterTableBuilder.cs | 127 | Font = new Font("Segoe UI", 10F, FontStyle.Bold), |
+| Helpers\FishFilterTableBuilder.cs | 129 | Location = new Point(headerStartX + (i * headerSpacing), tableTop + 8), |
+| Helpers\FishFilterTableBuilder.cs | 130 | Size = new Size(cfg.Columns.Count > 2 ? 95 : 110, 25), |
+| Helpers\FishFilterTableBuilder.cs | 131 | TextAlign = ContentAlignment.MiddleCenter |
+| Helpers\FishFilterTableBuilder.cs | 136 | container.Controls.Add(new Sunny.UI.UILine |
+| Helpers\FishFilterTableBuilder.cs | 138 | Location = new Point(15, tableTop + RowHeight - 2), |
+| Helpers\FishFilterTableBuilder.cs | 139 | Size = new Size(PanelWidth - 30, 2), |
+| Helpers\FishFilterTableBuilder.cs | 140 | LineColor = Colors.CizgiRengi, |
+| Helpers\FishFilterTableBuilder.cs | 141 | FillColor = Color.Transparent |
+| Helpers\FishFilterTableBuilder.cs | 145 | int yOffset = tableTop + RowHeight + 5; |
+| Helpers\FishFilterTableBuilder.cs | 146 | foreach (string filePath in files) |
+| Helpers\FishFilterTableBuilder.cs | 148 | string formattedName = FormatName(Path.GetFileNameWithoutExtension(filePath)); |
+| Helpers\FishFilterTableBuilder.cs | 151 | container.Controls.Add(new PictureBox |
+| Helpers\FishFilterTableBuilder.cs | 153 | Location = new Point(20, yOffset + 4), |
+| Helpers\FishFilterTableBuilder.cs | 154 | Size = new Size(30, 30), |
+| Helpers\FishFilterTableBuilder.cs | 155 | SizeMode = PictureBoxSizeMode.Zoom, |
+| Helpers\FishFilterTableBuilder.cs | 156 | Image = Image.FromFile(filePath) |
+| Helpers\FishFilterTableBuilder.cs | 160 | container.Controls.Add(new Label |
+| Helpers\FishFilterTableBuilder.cs | 163 | Font = new Font("Segoe UI", 10F, FontStyle.Regular), |
+| Helpers\FishFilterTableBuilder.cs | 164 | ForeColor = Color.White, |
+| Helpers\FishFilterTableBuilder.cs | 165 | Location = new Point(55, yOffset + 7), |
+| Helpers\FishFilterTableBuilder.cs | 166 | Size = new Size(cfg.Columns.Count > 2 ? 150 : (cfg.Columns.Count > 1 ? 200 : 250), 25), |
+| Helpers\FishFilterTableBuilder.cs | 167 | TextAlign = ContentAlignment.MiddleLeft |
+| Helpers\FishFilterTableBuilder.cs | 171 | foreach (var col in cfg.Columns) |
+| Helpers\FishFilterTableBuilder.cs | 173 | container.Controls.Add(new Sunny.UI.UICheckBox |
+| Helpers\FishFilterTableBuilder.cs | 176 | Location = new Point(col.X, yOffset + 6), |
+| Helpers\FishFilterTableBuilder.cs | 177 | Size = new Size(25, 25), |
+| Helpers\FishFilterTableBuilder.cs | 178 | CheckBoxSize = 22, |
+| Helpers\FishFilterTableBuilder.cs | 181 | // Binder'ın bu checkbox'ı tanımlayabilmesi için tag: "categoryId|itemKey|columnHeader" |
+| Helpers\FishFilterTableBuilder.cs | 182 | Tag = $"{cfg.Id}|{Path.GetFileNameWithoutExtension(filePath)}|{col.HeaderText}" |
+| Helpers\FishFilterTableBuilder.cs | 186 | yOffset += RowHeight; |
+| Helpers\FishFilterTableBuilder.cs | 189 | currentY += totalHeight; |
+| Helpers\FishFilterTableBuilder.cs | 190 | return container; |
+| Helpers\FishFilterTableBuilder.cs | 193 | private static string[] ResolveAssetFiles(string relativeFolderPath) |
+| Helpers\FishFilterTableBuilder.cs | 195 | string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "FishIcons", relativeFolderPath); |
+| Helpers\FishFilterTableBuilder.cs | 196 | if (!Directory.Exists(assetPath)) |
+| Helpers\FishFilterTableBuilder.cs | 198 | string projectAssetPath = Path.Combine(Application.StartupPath, "..", "..", "..", "Assets", "FishIcons", relativeFolderPath); |
+| Helpers\FishFilterTableBuilder.cs | 199 | if (Directory.Exists(projectAssetPath)) |
+| Helpers\FishFilterTableBuilder.cs | 202 | return Directory.Exists(assetPath) ? Directory.GetFiles(assetPath, "*.png") : Array.Empty<string>(); |
+| Helpers\FishFilterTableBuilder.cs | 205 | private static string FormatName(string rawName) |
+| Helpers\FishFilterTableBuilder.cs | 207 | if (string.IsNullOrWhiteSpace(rawName)) return rawName; |
+| Helpers\FishFilterTableBuilder.cs | 208 | string clean = rawName.Replace('_', ' '); |
+| Helpers\FishFilterTableBuilder.cs | 209 | string[] words = clean.Split(' ', StringSplitOptions.RemoveEmptyEntries); |
+| Helpers\FishFilterTableBuilder.cs | 210 | for (int i = 0; i < words.Length; i++) |
+| Helpers\FishFilterTableBuilder.cs | 212 | if (words[i].Length > 0) |
+| Helpers\FishFilterTableBuilder.cs | 213 | words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower(); |
+| Helpers\FishFilterTableBuilder.cs | 215 | return string.Join(" ", words); |
+| Helpers\GameWindowProcessHelper.cs | 1 | using Aether.Models; |
+| Helpers\GameWindowProcessHelper.cs | 2 | using Sunny.UI; |
+| Helpers\GameWindowProcessHelper.cs | 3 | using System; |
+| Helpers\GameWindowProcessHelper.cs | 4 | using System.Collections.Generic; |
+| Helpers\GameWindowProcessHelper.cs | 5 | using System.Diagnostics; |
+| Helpers\GameWindowProcessHelper.cs | 13 | public static class GameWindowProcessHelper |
+| Helpers\GameWindowProcessHelper.cs | 15 | private const string TargetProcessName = "metin2client"; |
+| Helpers\GameWindowProcessHelper.cs | 20 | public static List<GameWindowProcessInfo> GetActiveGameWindowProcesses() |
+| Helpers\GameWindowProcessHelper.cs | 22 | var result = new List<GameWindowProcessInfo>(); |
+| Helpers\GameWindowProcessHelper.cs | 30 | if (processes.Length == 0) |
+| Helpers\GameWindowProcessHelper.cs | 32 | processes = Process.GetProcessesByName("metin2"); |
+| Helpers\GameWindowProcessHelper.cs | 35 | foreach (var proc in processes) |
+| Helpers\GameWindowProcessHelper.cs | 39 | if (!proc.HasExited && proc.MainWindowHandle != IntPtr.Zero) |
+| Helpers\GameWindowProcessHelper.cs | 41 | result.Add(new GameWindowProcessInfo |
+| Helpers\GameWindowProcessHelper.cs | 43 | ProcessId = proc.Id, |
+| Helpers\GameWindowProcessHelper.cs | 44 | Handle = proc.MainWindowHandle, |
+| Helpers\GameWindowProcessHelper.cs | 45 | Title = proc.MainWindowTitle, |
+| Helpers\GameWindowProcessHelper.cs | 69 | public static void PopulateGameWindowComboBox(UIComboBox comboBox) |
+| Helpers\GameWindowProcessHelper.cs | 71 | if (comboBox == null) return; |
+| Helpers\GameWindowProcessHelper.cs | 73 | comboBox.Items.Clear(); |
+| Helpers\GameWindowProcessHelper.cs | 74 | comboBox.Items.Add("-- Seç --"); |
+| Helpers\GameWindowProcessHelper.cs | 76 | var activeWindows = GetActiveGameWindowProcesses(); |
+| Helpers\GameWindowProcessHelper.cs | 77 | var activeHandles = new HashSet<IntPtr>(); |
+| Helpers\GameWindowProcessHelper.cs | 79 | foreach (var windowInfo in activeWindows) |
+| Helpers\GameWindowProcessHelper.cs | 81 | comboBox.Items.Add(windowInfo); |
+| Helpers\GameWindowProcessHelper.cs | 82 | activeHandles.Add(windowInfo.Handle); |
+| Helpers\GameWindowProcessHelper.cs | 86 | Aether.States.ClientState.Instance.ValidateAndCleanInvalidHandles(activeHandles); |
+| Helpers\GameWindowProcessHelper.cs | 88 | comboBox.SelectedIndex = 0; |
+| Helpers\GameWindowProcessHelper.cs | 95 | public static void SelectMatchingHandleInComboBox(UIComboBox comboBox, IntPtr targetHandle) |
+| Helpers\GameWindowProcessHelper.cs | 97 | if (comboBox == null || comboBox.Items.Count == 0) return; |
+| Helpers\GameWindowProcessHelper.cs | 99 | if (targetHandle != IntPtr.Zero) |
+| Helpers\GameWindowProcessHelper.cs | 101 | for (int i = 0; i < comboBox.Items.Count; i++) |
+| Helpers\GameWindowProcessHelper.cs | 103 | if (comboBox.Items[i] is GameWindowProcessInfo procInfo && procInfo.Handle == targetHandle) |
+| Helpers\GameWindowProcessHelper.cs | 105 | comboBox.SelectedIndex = i; |
+| Helpers\GameWindowProcessHelper.cs | 112 | comboBox.SelectedIndex = 0; |
+| Helpers\GameWindowProcessHelper.cs | 118 | public static void BringWindowToFront(IntPtr hWnd) |
+| Helpers\GameWindowProcessHelper.cs | 120 | if (hWnd != IntPtr.Zero) |
+| Helpers\GameWindowProcessHelper.cs | 122 | Aether.Native.Win32Native.ShowWindow(hWnd, Aether.Native.Win32Native.SW_RESTORE); |
+| Helpers\GameWindowProcessHelper.cs | 123 | Aether.Native.Win32Native.SetForegroundWindow(hWnd); |
+| Models\ClientInfo.cs | 7 | public sealed class ClientInfo |
+| Models\ClientInfo.cs | 10 | public int Id { get; } |
+| Models\ClientInfo.cs | 13 | public string Name { get; } |
+| Models\ClientInfo.cs | 16 | public System.IntPtr Handle { get; set; } |
+| Models\ClientInfo.cs | 19 | public int ProcessId { get; set; } |
+| Models\ClientInfo.cs | 21 | public ClientInfo(int id, string name) |
+| Models\ClientInfo.cs | 23 | Id = id; |
+| Models\ClientInfo.cs | 25 | Handle = System.IntPtr.Zero; |
+| Models\ClientInfo.cs | 26 | ProcessId = 0; |
+| Models\ClientInfo.cs | 29 | public ClientInfo(int id, string name, System.IntPtr handle, int processId = 0) |
+| Models\ClientInfo.cs | 31 | Id = id; |
+| Models\ClientInfo.cs | 34 | ProcessId = processId; |
+| Models\ClientInfo.cs | 37 | public override string ToString() => $"Client #{Id}: {Name}"; |
+| Models\ClientInfo.cs | 39 | public override bool Equals(object? obj) => obj is ClientInfo other && Id == other.Id; |
+| Models\ClientInfo.cs | 40 | public override int GetHashCode() => Id.GetHashCode(); |
+| Models\ClientModel.cs | 1 | using System; |
+| Models\ClientModel.cs | 8 | public class ClientModel |
+| Models\ClientModel.cs | 10 | public int Id { get; set; } |
+| Models\ClientModel.cs | 11 | public string Name { get; set; } = string.Empty; |
+| Models\ClientModel.cs | 12 | public bool IsSelected { get; set; } |
+| Models\ClientModel.cs | 13 | public bool IsChecked { get; set; } |
+| Models\ClientModel.cs | 16 | public bool IsFishBotRunning { get; set; } = false; |
+| Models\ClientModel.cs | 17 | public bool IsUpgradeBotRunning { get; set; } = false; |
+| Models\ClientModel.cs | 18 | public bool IsFishPuzzleRunning { get; set; } = false; |
+| Models\ClientModel.cs | 19 | public bool IsAlchemyRunning { get; set; } = false; |
+| Models\ClientModel.cs | 21 | public ClientModel() { } |
+| Models\ClientModel.cs | 23 | public ClientModel(int id, string name) |
+| Models\ClientModel.cs | 25 | Id = id; |
+| Models\FishBotSettings.cs | 1 | using System.Collections.Generic; |
+| Models\FishBotSettings.cs | 9 | public class FishBotSettings |
+| Models\FishBotSettings.cs | 12 | public string SettingsName { get; set; } = string.Empty; |
+| Models\FishBotSettings.cs | 15 | public bool CloseGameEnabled { get; set; } = false; |
+| Models\FishBotSettings.cs | 16 | public int CloseGameAfterMinutes { get; set; } = 25; |
+| Models\FishBotSettings.cs | 19 | public bool ChangeChannelEnabled { get; set; } = false; |
+| Models\FishBotSettings.cs | 20 | public int ChangeChannelAfterMinutes { get; set; } = 25; |
+| Models\FishBotSettings.cs | 21 | public bool SelectAllChannels { get; set; } = true; |
+| Models\FishBotSettings.cs | 22 | public bool Ch1 { get; set; } = true; |
+| Models\FishBotSettings.cs | 23 | public bool Ch2 { get; set; } = true; |
+| Models\FishBotSettings.cs | 24 | public bool Ch3 { get; set; } = true; |
+| Models\FishBotSettings.cs | 25 | public bool Ch4 { get; set; } = true; |
+| Models\FishBotSettings.cs | 26 | public bool Ch5 { get; set; } = true; |
+| Models\FishBotSettings.cs | 27 | public bool Ch6 { get; set; } = true; |
+| Models\FishBotSettings.cs | 30 | public bool CharacterScreenEnabled { get; set; } = false; |
+| Models\FishBotSettings.cs | 31 | public int CharacterScreenAfterMinutes { get; set; } = 25; |
+| Models\FishBotSettings.cs | 34 | public bool BuyCampfireEnabled { get; set; } = false; |
+| Models\FishBotSettings.cs | 35 | public int CampfireCount { get; set; } = 5; |
+| Models\FishBotSettings.cs | 38 | public bool BuyWormEnabled { get; set; } = false; |
+| Models\FishBotSettings.cs | 39 | public int WormCount { get; set; } = 5; |
+| Models\FishBotSettings.cs | 42 | /// <summary> "mount" = Binek Kullan | "armor" = Zırh Değiştir </summary> |
+| Models\FishBotSettings.cs | 43 | public string AnimationMode { get; set; } = "mount"; |
+| Models\FishBotSettings.cs | 46 | public int InventoryPage { get; set; } = 1; |
+| Models\FishBotSettings.cs | 49 | public int FishingSpeedMinMs { get; set; } = 150; |
+| Models\FishBotSettings.cs | 50 | public int FishingSpeedMaxMs { get; set; } = 250; |
+| Models\FishBotSettings.cs | 53 | // Anahtar: kategori ID'si (fish_filter_config.json'daki "id" alanı, örn: "rare", "common", "others", "deadFishLoot") |
+| Models\FishBotSettings.cs | 55 | public Dictionary<string, Dictionary<string, FishFilterItemState>> FishFilter { get; set; } |
+| Models\FishBotSettings.cs | 56 | = new Dictionary<string, Dictionary<string, FishFilterItemState>>(); |
+| Models\FishBotSettings.cs | 61 | public FishFilterItemState GetOrCreateFilterItem(string categoryId, string itemKey) |
+| Models\FishBotSettings.cs | 63 | if (!FishFilter.TryGetValue(categoryId, out var category)) |
+| Models\FishBotSettings.cs | 65 | category = new Dictionary<string, FishFilterItemState>(); |
+| Models\FishBotSettings.cs | 66 | FishFilter[categoryId] = category; |
+| Models\FishBotSettings.cs | 69 | if (!category.TryGetValue(itemKey, out var item)) |
+| Models\FishBotSettings.cs | 71 | item = new FishFilterItemState(itemKey); |
+| Models\FishBotSettings.cs | 72 | category[itemKey] = item; |
+| Models\FishBotSettings.cs | 75 | return item; |
+| Models\FishFilterItemState.cs | 1 | using System.Collections.Generic; |
+| Models\FishFilterItemState.cs | 9 | public class FishFilterItemState |
+| Models\FishFilterItemState.cs | 11 | /// <summary> Öğenin dosya adından türetilen benzersiz kimliği (örn: "Altın_Sudak_Balığı"). </summary> |
+| Models\FishFilterItemState.cs | 12 | public string ItemKey { get; set; } |
+| Models\FishFilterItemState.cs | 14 | /// <summary> Sütun başlığı → checkbox durumu eşlemesi. Örn: {"Balığı Tut": true, "Pişir": false} </summary> |
+| Models\FishFilterItemState.cs | 15 | public Dictionary<string, bool> ColumnChecks { get; set; } |
+| Models\FishFilterItemState.cs | 17 | public FishFilterItemState(string itemKey) |
+| Models\FishFilterItemState.cs | 19 | ItemKey = itemKey; |
+| Models\FishFilterItemState.cs | 20 | ColumnChecks = new Dictionary<string, bool>(); |
+| Models\FishFilterItemState.cs | 24 | public bool GetCheck(string columnKey, bool defaultValue = false) |
+| Models\FishFilterItemState.cs | 30 | public void SetCheck(string columnKey, bool value) |
+| Models\GameWindowProcessInfo.cs | 1 | using System; |
+| Models\GameWindowProcessInfo.cs | 8 | public class GameWindowProcessInfo |
+| Models\GameWindowProcessInfo.cs | 10 | public int ProcessId { get; set; } |
+| Models\GameWindowProcessInfo.cs | 11 | public IntPtr Handle { get; set; } |
+| Models\GameWindowProcessInfo.cs | 12 | public string Title { get; set; } = string.Empty; |
+| Models\GameWindowProcessInfo.cs | 13 | public string ProcessName { get; set; } = string.Empty; |
+| Models\GameWindowProcessInfo.cs | 15 | public override string ToString() |
+| Models\GameWindowProcessInfo.cs | 17 | return string.IsNullOrWhiteSpace(Title) |
+| Models\GameWindowProcessInfo.cs | 18 | ? $"{ProcessName} (PID: {ProcessId} | HWND: 0x{Handle.ToInt64():X})" |
+| Models\GameWindowProcessInfo.cs | 19 | : $"{Title} (PID: {ProcessId} | HWND: 0x{Handle.ToInt64():X})"; |
+| Native\Win32Native.cs | 1 | using System; |
+| Native\Win32Native.cs | 2 | using System.Runtime.InteropServices; |
+| Native\Win32Native.cs | 4 | namespace Aether.Native |
+| Native\Win32Native.cs | 9 | public static class Win32Native |
+| Native\Win32Native.cs | 11 | #region Win32 Constants |
+| Native\Win32Native.cs | 14 | public const int WM_HOTKEY = 0x0312; |
+| Native\Win32Native.cs | 15 | public const int WM_NCCALCSIZE = 0x0083; |
+| Native\Win32Native.cs | 16 | public const int WM_NCPAINT = 0x0085; |
+| Native\Win32Native.cs | 19 | public const int GWL_EXSTYLE = -20; |
+| Native\Win32Native.cs | 20 | public const int WS_EX_TRANSPARENT = 0x20; |
+| Native\Win32Native.cs | 21 | public const int WS_EX_LAYERED = 0x80000; |
+| Native\Win32Native.cs | 22 | public const uint WDA_EXCLUDE = 0x00000003; |
+| Native\Win32Native.cs | 25 | public const int SB_HORZ = 0; |
+| Native\Win32Native.cs | 26 | public const int SB_VERT = 1; |
+| Native\Win32Native.cs | 27 | public const int SB_BOTH = 3; |
+| Native\Win32Native.cs | 30 | public const uint MOUSEEVENTF_LEFTDOWN = 0x02; |
+| Native\Win32Native.cs | 31 | public const uint MOUSEEVENTF_LEFTUP = 0x04; |
+| Native\Win32Native.cs | 34 | public const uint KEYEVENTF_KEYUP = 0x0002; |
+| Native\Win32Native.cs | 37 | public const uint VK_SPACE = 0x20; |
+| Native\Win32Native.cs | 38 | public const uint VK_ESCAPE = 0x1B; |
+| Native\Win32Native.cs | 39 | public const uint VK_1 = 0x31; |
+| Native\Win32Native.cs | 40 | public const uint VK_2 = 0x32; |
+| Native\Win32Native.cs | 41 | public const uint VK_3 = 0x33; |
+| Native\Win32Native.cs | 42 | public const uint VK_4 = 0x34; |
+| Native\Win32Native.cs | 43 | public const uint VK_5 = 0x35; |
+| Native\Win32Native.cs | 44 | public const uint VK_CONTROL = 0x11; |
+| Native\Win32Native.cs | 45 | public const uint VK_G = 0x47; |
+| Native\Win32Native.cs | 47 | #endregion |
+| Native\Win32Native.cs | 49 | #region User32.dll Functions |
+| Native\Win32Native.cs | 51 | [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)] |
+| Native\Win32Native.cs | 52 | public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo); |
+| Native\Win32Native.cs | 54 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 55 | public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk); |
+| Native\Win32Native.cs | 57 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 58 | public static extern bool UnregisterHotKey(IntPtr hWnd, int id); |
+| Native\Win32Native.cs | 60 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 61 | public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo); |
+| Native\Win32Native.cs | 63 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 64 | public static extern uint MapVirtualKey(uint uCode, uint uMapType); |
+| Native\Win32Native.cs | 66 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 67 | public static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow); |
+| Native\Win32Native.cs | 69 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 70 | public static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity); |
+| Native\Win32Native.cs | 72 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 73 | public static extern int GetWindowLong(IntPtr hWnd, int nIndex); |
+| Native\Win32Native.cs | 75 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 76 | public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); |
+| Native\Win32Native.cs | 78 | public const int SW_RESTORE = 9; |
+| Native\Win32Native.cs | 80 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 81 | public static extern bool SetForegroundWindow(IntPtr hWnd); |
+| Native\Win32Native.cs | 83 | [DllImport("user32.dll")] |
+| Native\Win32Native.cs | 84 | public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow); |
+| Native\Win32Native.cs | 86 | #endregion |
+| Pages\AlchemyPage.cs | 1 | using System.Windows.Forms; |
+| Pages\AlchemyPage.cs | 5 | public partial class AlchemyPage : BaseBotPage |
+| Pages\AlchemyPage.cs | 7 | public AlchemyPage() |
+| Pages\AlchemyPage.cs | 9 | InitializeComponent(); |
+| Pages\AlchemyPage.cs | 12 | protected override Label ClientNameLabel => clientNameLabel; |
+| Pages\AntiBanPage.cs | 1 | using System.Windows.Forms; |
+| Pages\AntiBanPage.cs | 5 | public partial class AntiBanPage : BaseBotPage |
+| Pages\AntiBanPage.cs | 7 | public AntiBanPage() |
+| Pages\AntiBanPage.cs | 9 | InitializeComponent(); |
+| Pages\AntiBanPage.cs | 12 | protected override Label ClientNameLabel => clientNameLabel; |
+| Pages\BaseBotPage.cs | 1 | using Aether.Models; |
+| Pages\BaseBotPage.cs | 2 | using Aether.States; |
+| Pages\BaseBotPage.cs | 3 | using System; |
+| Pages\BaseBotPage.cs | 4 | using System.ComponentModel; |
+| Pages\BaseBotPage.cs | 5 | using System.Windows.Forms; |
+| Pages\BaseBotPage.cs | 11 | /// [DesignerCategory("Component")] veya [DesignerCategory("")] kullanımı sayesinde |
+| Pages\BaseBotPage.cs | 16 | [DesignerCategory("Component")] |
+| Pages\BaseBotPage.cs | 17 | public class BaseBotPage : UserControl |
+| Pages\BaseBotPage.cs | 24 | [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] |
+| Pages\BaseBotPage.cs | 25 | protected virtual Label? ClientNameLabel => null; |
+| Pages\BaseBotPage.cs | 27 | public BaseBotPage() |
+| Pages\BaseBotPage.cs | 32 | protected override void OnLoad(EventArgs e) |
+| Pages\BaseBotPage.cs | 36 | if (!DesignMode) |
+| Pages\BaseBotPage.cs | 39 | UpdateClientDisplay(ClientState.Instance.SelectedClient); |
+| Pages\BaseBotPage.cs | 42 | ClientState.Instance.OnSelectedClientChanged += OnSelectedClientChanged; |
+| Pages\BaseBotPage.cs | 46 | private void OnSelectedClientChanged(object? sender, ClientInfo? clientInfo) |
+| Pages\BaseBotPage.cs | 48 | if (InvokeRequired) |
+| Pages\BaseBotPage.cs | 49 | Invoke(new Action(() => UpdateClientDisplay(clientInfo))); |
+| Pages\BaseBotPage.cs | 51 | UpdateClientDisplay(clientInfo); |
+| Pages\BaseBotPage.cs | 54 | private void UpdateClientDisplay(ClientInfo? clientInfo) |
+| Pages\BaseBotPage.cs | 56 | if (ClientNameLabel != null) |
+| Pages\BaseBotPage.cs | 58 | ClientNameLabel.Text = clientInfo?.Name ?? "Seçim Yok"; |
+| Pages\BaseBotPage.cs | 62 | protected override void OnHandleDestroyed(EventArgs e) |
+| Pages\BaseBotPage.cs | 65 | ClientState.Instance.OnSelectedClientChanged -= OnSelectedClientChanged; |
+| Pages\FishBotPage.cs | 1 | using Aether.Helpers; |
+| Pages\FishBotPage.cs | 2 | using Aether.Models; |
+| Pages\FishBotPage.cs | 3 | using Aether.States; |
+| Pages\FishBotPage.cs | 4 | using System; |
+| Pages\FishBotPage.cs | 5 | using System.Windows.Forms; |
+| Pages\FishBotPage.cs | 9 | public partial class FishBotPage : BaseBotPage |
+| Pages\FishBotPage.cs | 12 | private int? _lastLoadedClientId = null; |
+| Pages\FishBotPage.cs | 14 | public FishBotPage() |
+| Pages\FishBotPage.cs | 16 | InitializeComponent(); |
+| Pages\FishBotPage.cs | 19 | protected override Label ClientNameLabel => clientNameLabel; |
+| Pages\FishBotPage.cs | 22 | internal Sunny.UI.UICheckBox CloseGameCheckBox => closeGameCheckBox; |
+| Pages\FishBotPage.cs | 23 | internal Sunny.UI.UIUpDownTextBox CloseGameMinuteSelectUpDown => closeGameMinuteSelectUpDown; |
+| Pages\FishBotPage.cs | 24 | internal Sunny.UI.UICheckBox CharacterScreenCheckBox => characterScreenCheckBox; |
+| Pages\FishBotPage.cs | 25 | internal Sunny.UI.UIUpDownTextBox CharacterScreenUpDown => characterScreenUpDown; |
+| Pages\FishBotPage.cs | 26 | internal Sunny.UI.UICheckBox BuyCampfireCheckBox => buyCampfireCheckBox; |
+| Pages\FishBotPage.cs | 27 | internal Sunny.UI.UIUpDownTextBox CampFireCountUpDown => campFireCountUpDown; |
+| Pages\FishBotPage.cs | 28 | internal Sunny.UI.UICheckBox BuyWormCheckbox => buyWormCheckbox; |
+| Pages\FishBotPage.cs | 29 | internal Sunny.UI.UIUpDownTextBox WormCountUpDown => wormCountUpDown; |
+| Pages\FishBotPage.cs | 30 | internal Sunny.UI.UISwitch AnimationModeSwitch => animationModeSwitch; |
+| Pages\FishBotPage.cs | 31 | internal Sunny.UI.UIUpDownTextBox InventoryPageSelectUpDown => inventoryPageSelectUpDown; |
+| Pages\FishBotPage.cs | 32 | internal Sunny.UI.UITextBox MinFishSpeedTextBox => minFishSpeedTextBox; |
+| Pages\FishBotPage.cs | 33 | internal Sunny.UI.UITextBox MaxFishSpeedTextBox => maxFishSpeedTextBox; |
+| Pages\FishBotPage.cs | 34 | internal Sunny.UI.UICheckBox ChangeChannelCheckBox => changeChannelCheckBox; |
+| Pages\FishBotPage.cs | 35 | internal Sunny.UI.UIUpDownTextBox ChangeChannelMinuteUpDown => changeChannelMinuteUpDown; |
+| Pages\FishBotPage.cs | 36 | internal Sunny.UI.UICheckBox SelectAllChannelsCheckBox => selectAllChannelsCheckBox; |
+| Pages\FishBotPage.cs | 37 | internal Sunny.UI.UICheckBox Ch1CheckBox => ch1CheckBox; |
+| Pages\FishBotPage.cs | 38 | internal Sunny.UI.UICheckBox Ch2CheckBox => ch2CheckBox; |
+| Pages\FishBotPage.cs | 39 | internal Sunny.UI.UICheckBox Ch3CheckBox => ch3CheckBox; |
+| Pages\FishBotPage.cs | 40 | internal Sunny.UI.UICheckBox Ch4CheckBox => ch4CheckBox; |
+| Pages\FishBotPage.cs | 41 | internal Sunny.UI.UICheckBox Ch5CheckBox => ch5CheckBox; |
+| Pages\FishBotPage.cs | 42 | internal Sunny.UI.UICheckBox Ch6CheckBox => ch6CheckBox; |
+| Pages\FishBotPage.cs | 43 | internal Sunny.UI.UIPanel FishFilterPanel => fishFilterPanel; |
+| Pages\FishBotPage.cs | 46 | internal Sunny.UI.UITextBox BotSettingsNameTextBox => botSettingsNameTextBox; |
+| Pages\FishBotPage.cs | 47 | internal Sunny.UI.UIComboBox BotSettingsListComboBox => botSettingsListComboBox; |
+| Pages\FishBotPage.cs | 49 | protected override void OnLoad(EventArgs e) |
+| Pages\FishBotPage.cs | 54 | if (!DesignMode) |
+| Pages\FishBotPage.cs | 57 | FishFilterTableBuilder.BuildTables(fishFilterPanel, channelsLine, this); |
+| Pages\FishBotPage.cs | 60 | GameWindowProcessHelper.PopulateGameWindowComboBox(gameWindowSelectComboBox); |
+| Pages\FishBotPage.cs | 63 | LoadSettingsForCurrentClient(); |
+| Pages\FishBotPage.cs | 66 | SyncComboBoxWithSelectedClient(); |
+| Pages\FishBotPage.cs | 69 | ClientState.Instance.OnSelectedClientChanged += (s, clientInfo) => |
+| Pages\FishBotPage.cs | 71 | SaveSettingsForLastClient(); |
+| Pages\FishBotPage.cs | 72 | LoadSettingsForCurrentClient(); |
+| Pages\FishBotPage.cs | 73 | SyncComboBoxWithSelectedClient(); |
+| Pages\FishBotPage.cs | 77 | refresGameWindowList.Click += (s, ev) => |
+| Pages\FishBotPage.cs | 79 | GameWindowProcessHelper.PopulateGameWindowComboBox(gameWindowSelectComboBox); |
+| Pages\FishBotPage.cs | 80 | SyncComboBoxWithSelectedClient(); |
+| Pages\FishBotPage.cs | 84 | highlightGameWindowButton.Click += (s, ev) => |
+| Pages\FishBotPage.cs | 86 | if (gameWindowSelectComboBox.SelectedItem is Aether.Models.GameWindowProcessInfo windowInfo) |
+| Pages\FishBotPage.cs | 88 | GameWindowProcessHelper.BringWindowToFront(windowInfo.Handle); |
+| Pages\FishBotPage.cs | 93 | selectGameWindow.Click += (s, ev) => |
+| Pages\FishBotPage.cs | 95 | if (gameWindowSelectComboBox.SelectedItem is Aether.Models.GameWindowProcessInfo windowInfo) |
+| Pages\FishBotPage.cs | 97 | var currentSelected = ClientState.Instance.SelectedClient; |
+| Pages\FishBotPage.cs | 98 | int? currentId = currentSelected?.Id; |
+| Pages\FishBotPage.cs | 101 | var existingOwner = ClientState.Instance.FindClientByHandle(windowInfo.Handle, currentId); |
+| Pages\FishBotPage.cs | 103 | if (existingOwner != null) |
+| Pages\FishBotPage.cs | 107 | $"Bu pencere zaten '{existingOwner.Name}' (Client #{existingOwner.Id})'ye tanımlanmış durumda.", |
+| Pages\FishBotPage.cs | 108 | "Pencere Seçim Hatası", |
+| Pages\FishBotPage.cs | 110 | MessageBoxIcon.Warning |
+| Pages\FishBotPage.cs | 115 | ClientState.Instance.UpdateSelectedClientHandle(windowInfo.Handle, windowInfo.ProcessId); |
+| Pages\FishBotPage.cs | 120 | ClientState.Instance.UpdateSelectedClientHandle(IntPtr.Zero, 0); |
+| Pages\FishBotPage.cs | 128 | RefreshPresetList(); |
+| Pages\FishBotPage.cs | 131 | addBotSettingsButton.Click += (s, ev) => SavePreset(); |
+| Pages\FishBotPage.cs | 134 | loadBotSettingsButton.Click += (s, ev) => LoadSelectedPreset(); |
+| Pages\FishBotPage.cs | 137 | deleteBotSettingsButton.Click += (s, ev) => DeleteSelectedPreset(); |
+| Pages\FishBotPage.cs | 148 | private void LoadSettingsForCurrentClient() |
+| Pages\FishBotPage.cs | 150 | var client = ClientState.Instance.SelectedClient; |
+| Pages\FishBotPage.cs | 151 | if (client == null) return; |
+| Pages\FishBotPage.cs | 153 | _lastLoadedClientId = client.Id; |
+| Pages\FishBotPage.cs | 154 | var settings = FishBotSettingsRegistry.Instance.GetOrCreate(client.Id); |
+| Pages\FishBotPage.cs | 155 | FishBotPageBinder.LoadFromSettings(this, settings); |
+| Pages\FishBotPage.cs | 164 | private void SaveSettingsForLastClient() |
+| Pages\FishBotPage.cs | 166 | if (_lastLoadedClientId == null) return; |
+| Pages\FishBotPage.cs | 168 | var settings = FishBotSettingsRegistry.Instance.GetOrCreate(_lastLoadedClientId.Value); |
+| Pages\FishBotPage.cs | 169 | FishBotPageBinder.SaveToSettings(this, settings); |
+| Pages\FishBotPage.cs | 176 | private void SetupChannelCheckBoxHandlers() |
+| Pages\FishBotPage.cs | 183 | changeChannelCheckBox.Click += (s, e) => |
+| Pages\FishBotPage.cs | 193 | selectAllChannelsCheckBox.Click += (s, e) => |
+| Pages\FishBotPage.cs | 202 | internal void SetChannelControlsEnabled(bool enabled) |
+| Pages\FishBotPage.cs | 211 | changeChannelMinuteUpDown.Enabled = enabled; |
+| Pages\FishBotPage.cs | 214 | private void SetAllChannelsChecked(bool isChecked) |
+| Pages\FishBotPage.cs | 216 | ch1CheckBox.Checked = isChecked; |
+| Pages\FishBotPage.cs | 217 | ch2CheckBox.Checked = isChecked; |
+| Pages\FishBotPage.cs | 218 | ch3CheckBox.Checked = isChecked; |
+| Pages\FishBotPage.cs | 219 | ch4CheckBox.Checked = isChecked; |
+| Pages\FishBotPage.cs | 220 | ch5CheckBox.Checked = isChecked; |
+| Pages\FishBotPage.cs | 221 | ch6CheckBox.Checked = isChecked; |
+| Pages\FishBotPage.cs | 231 | private void RefreshPresetList() |
+| Pages\FishBotPage.cs | 233 | FishBotPresetManager.EnsureFolder(); |
+| Pages\FishBotPage.cs | 234 | var names = FishBotPresetManager.GetPresetNames(); |
+| Pages\FishBotPage.cs | 236 | botSettingsListComboBox.Items.Clear(); |
+| Pages\FishBotPage.cs | 237 | foreach (var name in names) |
+| Pages\FishBotPage.cs | 238 | botSettingsListComboBox.Items.Add(name); |
+| Pages\FishBotPage.cs | 240 | if (botSettingsListComboBox.Items.Count > 0) |
+| Pages\FishBotPage.cs | 241 | botSettingsListComboBox.SelectedIndex = 0; |
+| Pages\FishBotPage.cs | 247 | private void SavePreset() |
+| Pages\FishBotPage.cs | 249 | string presetName = botSettingsNameTextBox.Text?.Trim() ?? string.Empty; |
+| Pages\FishBotPage.cs | 250 | if (string.IsNullOrEmpty(presetName)) |
+| Pages\FishBotPage.cs | 253 | "Lütfen bir preset ismi girin.", |
+| Pages\FishBotPage.cs | 254 | "Kayıt Hatası", |
+| Pages\FishBotPage.cs | 256 | MessageBoxIcon.Warning); |
+| Pages\FishBotPage.cs | 261 | SaveSettingsForLastClient(); |
+| Pages\FishBotPage.cs | 263 | var client = ClientState.Instance.SelectedClient; |
+| Pages\FishBotPage.cs | 264 | int clientId = client?.Id ?? (_lastLoadedClientId ?? 0); |
+| Pages\FishBotPage.cs | 265 | var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientId); |
+| Pages\FishBotPage.cs | 266 | settings.SettingsName = presetName; |
+| Pages\FishBotPage.cs | 268 | FishBotPresetManager.SavePreset(presetName, settings); |
+| Pages\FishBotPage.cs | 269 | RefreshPresetList(); |
+| Pages\FishBotPage.cs | 272 | int idx = botSettingsListComboBox.Items.IndexOf(presetName); |
+| Pages\FishBotPage.cs | 273 | if (idx >= 0) botSettingsListComboBox.SelectedIndex = idx; |
+| Pages\FishBotPage.cs | 276 | $"'{presetName}' başarıyla kaydedildi.", |
+| Pages\FishBotPage.cs | 277 | "Preset Kaydedildi", |
+| Pages\FishBotPage.cs | 279 | MessageBoxIcon.Information); |
+| Pages\FishBotPage.cs | 285 | private void LoadSelectedPreset() |
+| Pages\FishBotPage.cs | 287 | if (botSettingsListComboBox.SelectedItem is not string presetName) |
+| Pages\FishBotPage.cs | 290 | "Lütfen yüklenecek bir preset seçin.", |
+| Pages\FishBotPage.cs | 291 | "Yükleme Hatası", |
+| Pages\FishBotPage.cs | 293 | MessageBoxIcon.Warning); |
+| Pages\FishBotPage.cs | 297 | var loaded = FishBotPresetManager.LoadPreset(presetName); |
+| Pages\FishBotPage.cs | 298 | if (loaded == null) |
+| Pages\FishBotPage.cs | 301 | $"'{presetName}' preset dosyası okunamadı.", |
+| Pages\FishBotPage.cs | 302 | "Yükleme Hatası", |
+| Pages\FishBotPage.cs | 304 | MessageBoxIcon.Error); |
+| Pages\FishBotPage.cs | 308 | var client = ClientState.Instance.SelectedClient; |
+| Pages\FishBotPage.cs | 309 | if (client == null) return; |
+| Pages\FishBotPage.cs | 312 | FishBotSettingsRegistry.Instance.Set(client.Id, loaded); |
+| Pages\FishBotPage.cs | 313 | _lastLoadedClientId = client.Id; |
+| Pages\FishBotPage.cs | 316 | FishBotPageBinder.LoadFromSettings(this, loaded); |
+| Pages\FishBotPage.cs | 323 | private void DeleteSelectedPreset() |
+| Pages\FishBotPage.cs | 325 | if (botSettingsListComboBox.SelectedItem is not string presetName) |
+| Pages\FishBotPage.cs | 328 | "Lütfen silinecek bir preset seçin.", |
+| Pages\FishBotPage.cs | 329 | "Silme Hatası", |
+| Pages\FishBotPage.cs | 331 | MessageBoxIcon.Warning); |
+| Pages\FishBotPage.cs | 336 | $"'{presetName}' presetini kalıcı olarak silmek istediğinize emin misiniz?", |
+| Pages\FishBotPage.cs | 337 | "Preset Sil", |
+| Pages\FishBotPage.cs | 339 | MessageBoxIcon.Question, |
+| Pages\FishBotPage.cs | 342 | if (result == DialogResult.Yes) |
+| Pages\FishBotPage.cs | 344 | FishBotPresetManager.DeletePreset(presetName); |
+| Pages\FishBotPage.cs | 345 | RefreshPresetList(); |
+| Pages\FishBotPage.cs | 353 | private void SyncComboBoxWithSelectedClient() |
+| Pages\FishBotPage.cs | 355 | var selectedClient = ClientState.Instance.SelectedClient; |
+| Pages\FishBotPage.cs | 356 | IntPtr currentHandle = selectedClient?.Handle ?? IntPtr.Zero; |
+| Pages\FishBotPage.cs | 357 | GameWindowProcessHelper.SelectMatchingHandleInComboBox(gameWindowSelectComboBox, currentHandle); |
+| Pages\FishPuzzlePage.cs | 1 | using System.Windows.Forms; |
+| Pages\FishPuzzlePage.cs | 5 | public partial class FishPuzzlePage : BaseBotPage |
+| Pages\FishPuzzlePage.cs | 7 | public FishPuzzlePage() |
+| Pages\FishPuzzlePage.cs | 9 | InitializeComponent(); |
+| Pages\FishPuzzlePage.cs | 12 | protected override Label ClientNameLabel => clientNameLabel; |
+| Pages\UpgradePage.cs | 1 | using System.Windows.Forms; |
+| Pages\UpgradePage.cs | 5 | public partial class UpgradePage : BaseBotPage |
+| Pages\UpgradePage.cs | 7 | public UpgradePage() |
+| Pages\UpgradePage.cs | 9 | InitializeComponent(); |
+| Pages\UpgradePage.cs | 12 | protected override Label ClientNameLabel => clientNameLabel; |
+| Services\ClientService.cs | 1 | using Aether.Models; |
+| Services\ClientService.cs | 2 | using System.Collections.Generic; |
+| Services\ClientService.cs | 4 | namespace Aether.Services |
+| Services\ClientService.cs | 12 | public static class ClientService |
+| Services\ClientService.cs | 17 | public static List<ClientModel> GenerateDefaultClients(int count = 10) |
+| Services\ClientService.cs | 19 | var list = new List<ClientModel>(); |
+| Services\ClientService.cs | 20 | for (int i = 1; i <= count; i++) |
+| Services\ClientService.cs | 22 | list.Add(new ClientModel(i, $"Client {i}")); |
+| Services\ClientService.cs | 24 | return list; |
+| Services\InputAutomationService.cs | 1 | using Aether.Native; |
+| Services\InputAutomationService.cs | 2 | using System; |
+| Services\InputAutomationService.cs | 3 | using System.Threading.Tasks; |
+| Services\InputAutomationService.cs | 5 | namespace Aether.Services |
+| Services\InputAutomationService.cs | 10 | public class InputAutomationService |
+| Services\InputAutomationService.cs | 12 | private static readonly Lazy<InputAutomationService> _instance = new Lazy<InputAutomationService>(() => new InputAutomationService()); |
+| Services\InputAutomationService.cs | 13 | public static InputAutomationService Instance => _instance.Value; |
+| Services\InputAutomationService.cs | 15 | private readonly Random _random = new Random(); |
+| Services\InputAutomationService.cs | 20 | public async Task TriggerMacroSequenceAsync(Action<string>? logger = null) |
+| Services\InputAutomationService.cs | 24 | byte ctrlScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_CONTROL, 0); |
+| Services\InputAutomationService.cs | 25 | byte gScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_G, 0); |
+| Services\InputAutomationService.cs | 26 | byte oneScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_1, 0); |
+| Services\InputAutomationService.cs | 27 | byte twoScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_2, 0); |
+| Services\InputAutomationService.cs | 30 | Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0); |
+| Services\InputAutomationService.cs | 31 | Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0); |
+| Services\InputAutomationService.cs | 32 | await Task.Delay(35); |
+| Services\InputAutomationService.cs | 33 | Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, Win32Native.KEYEVENTF_KEYUP, 0); |
+| Services\InputAutomationService.cs | 34 | Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, Win32Native.KEYEVENTF_KEYUP, 0); |
+| Services\InputAutomationService.cs | 36 | await Task.Delay(_random.Next(300, 350)); |
+| Services\InputAutomationService.cs | 39 | Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0); |
+| Services\InputAutomationService.cs | 40 | Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0); |
+| Services\InputAutomationService.cs | 41 | await Task.Delay(35); |
+| Services\InputAutomationService.cs | 42 | Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, Win32Native.KEYEVENTF_KEYUP, 0); |
+| Services\InputAutomationService.cs | 43 | Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, Win32Native.KEYEVENTF_KEYUP, 0); |
+| Services\InputAutomationService.cs | 45 | await Task.Delay(_random.Next(150, 200)); |
+| Services\InputAutomationService.cs | 48 | Win32Native.keybd_event((byte)Win32Native.VK_1, oneScan, 0, 0); |
+| Services\InputAutomationService.cs | 49 | await Task.Delay(35); |
+| Services\InputAutomationService.cs | 50 | Win32Native.keybd_event((byte)Win32Native.VK_1, oneScan, Win32Native.KEYEVENTF_KEYUP, 0); |
+| Services\InputAutomationService.cs | 52 | await Task.Delay(_random.Next(150, 200)); |
+| Services\InputAutomationService.cs | 55 | Win32Native.keybd_event((byte)Win32Native.VK_2, twoScan, 0, 0); |
+| Services\InputAutomationService.cs | 56 | await Task.Delay(35); |
+| Services\InputAutomationService.cs | 57 | Win32Native.keybd_event((byte)Win32Native.VK_2, twoScan, Win32Native.KEYEVENTF_KEYUP, 0); |
+| Services\InputAutomationService.cs | 59 | logger?.Invoke("Makro dizisi başarıyla tamamlandı."); |
+| Services\InputAutomationService.cs | 61 | catch (Exception ex) |
+| Services\InputAutomationService.cs | 63 | logger?.Invoke($"Makro Hatası: {ex.Message}"); |
+| Services\InputAutomationService.cs | 70 | public void SendLeftClick() |
+| Services\InputAutomationService.cs | 72 | Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); |
+| Services\InputAutomationService.cs | 73 | Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); |
+| States\ClientState.cs | 1 | using Aether.Models; |
+| States\ClientState.cs | 2 | using System; |
+| States\ClientState.cs | 3 | using System.Collections.Generic; |
+| States\ClientState.cs | 14 | public class ClientState |
+| States\ClientState.cs | 16 | private static readonly Lazy<ClientState> _instance = new Lazy<ClientState>(() => new ClientState()); |
+| States\ClientState.cs | 21 | public static ClientState Instance => _instance.Value; |
+| States\ClientState.cs | 23 | private ClientInfo? _selectedClient; |
+| States\ClientState.cs | 24 | private List<ClientInfo> _checkedClients = new List<ClientInfo>(); |
+| States\ClientState.cs | 27 | private readonly Dictionary<int, ClientInfo> _clientRegistry = new Dictionary<int, ClientInfo>(); |
+| States\ClientState.cs | 32 | public ClientInfo GetOrCreateClientInfo(int id, string name) |
+| States\ClientState.cs | 34 | if (!_clientRegistry.TryGetValue(id, out var clientInfo)) |
+| States\ClientState.cs | 36 | clientInfo = new ClientInfo(id, name); |
+| States\ClientState.cs | 37 | _clientRegistry[id] = clientInfo; |
+| States\ClientState.cs | 39 | return clientInfo; |
+| States\ClientState.cs | 46 | public ClientInfo? FindClientByHandle(IntPtr handle, int? excludeClientId = null) |
+| States\ClientState.cs | 48 | if (handle == IntPtr.Zero) return null; |
+| States\ClientState.cs | 50 | foreach (var kvp in _clientRegistry) |
+| States\ClientState.cs | 52 | if (excludeClientId.HasValue && kvp.Key == excludeClientId.Value) |
+| States\ClientState.cs | 53 | continue; |
+| States\ClientState.cs | 55 | if (kvp.Value.Handle == handle) |
+| States\ClientState.cs | 68 | public void ValidateAndCleanInvalidHandles(ISet<IntPtr> activeHandles) |
+| States\ClientState.cs | 72 | foreach (var client in _clientRegistry.Values) |
+| States\ClientState.cs | 74 | if (client.Handle != IntPtr.Zero && !activeHandles.Contains(client.Handle)) |
+| States\ClientState.cs | 76 | client.Handle = IntPtr.Zero; |
+| States\ClientState.cs | 79 | if (_selectedClient != null && _selectedClient.Id == client.Id) |
+| States\ClientState.cs | 81 | OnSelectedClientChanged?.Invoke(this, _selectedClient); |
+| States\ClientState.cs | 86 | if (hasChanged) |
+| States\ClientState.cs | 88 | OnSelectedClientChanged?.Invoke(this, _selectedClient); |
+| States\ClientState.cs | 93 | private bool _isFishBotRunning = false; |
+| States\ClientState.cs | 94 | private bool _isUpgradeBotRunning = false; |
+| States\ClientState.cs | 95 | private bool _isFishPuzzleRunning = false; |
+| States\ClientState.cs | 96 | private bool _isAlchemyRunning = false; |
+| States\ClientState.cs | 99 | public event EventHandler<ClientInfo?>? OnSelectedClientChanged; |
+| States\ClientState.cs | 102 | public event EventHandler<IReadOnlyList<ClientInfo>>? OnCheckedClientsChanged; |
+| States\ClientState.cs | 105 | public event EventHandler? OnBotStateChanged; |
+| States\ClientState.cs | 110 | public static void Initialize() |
+| States\ClientState.cs | 112 | var _ = Instance; |
+| States\ClientState.cs | 113 | Instance.Reset(); |
+| States\ClientState.cs | 119 | public void Reset() |
+| States\ClientState.cs | 121 | _selectedClient = null; |
+| States\ClientState.cs | 122 | _checkedClients.Clear(); |
+| States\ClientState.cs | 123 | _clientRegistry.Clear(); |
+| States\ClientState.cs | 124 | _isFishBotRunning = false; |
+| States\ClientState.cs | 125 | _isUpgradeBotRunning = false; |
+| States\ClientState.cs | 126 | _isFishPuzzleRunning = false; |
+| States\ClientState.cs | 127 | _isAlchemyRunning = false; |
+| States\ClientState.cs | 129 | OnSelectedClientChanged?.Invoke(this, null); |
+| States\ClientState.cs | 130 | OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly()); |
+| States\ClientState.cs | 131 | OnBotStateChanged?.Invoke(this, EventArgs.Empty); |
+| States\ClientState.cs | 135 | public ClientInfo? SelectedClient |
+| States\ClientState.cs | 137 | get => _selectedClient; |
+| States\ClientState.cs | 140 | if (value != null) |
+| States\ClientState.cs | 143 | var registered = GetOrCreateClientInfo(value.Id, value.Name); |
+| States\ClientState.cs | 144 | if (_selectedClient != registered) |
+| States\ClientState.cs | 146 | _selectedClient = registered; |
+| States\ClientState.cs | 147 | OnSelectedClientChanged?.Invoke(this, _selectedClient); |
+| States\ClientState.cs | 152 | if (_selectedClient != null) |
+| States\ClientState.cs | 154 | _selectedClient = null; |
+| States\ClientState.cs | 155 | OnSelectedClientChanged?.Invoke(this, null); |
+| States\ClientState.cs | 164 | public void UpdateSelectedClientHandle(IntPtr handle, int processId = 0) |
+| States\ClientState.cs | 166 | if (_selectedClient != null) |
+| States\ClientState.cs | 168 | _selectedClient.Handle = handle; |
+| States\ClientState.cs | 169 | _selectedClient.ProcessId = processId; |
+| States\ClientState.cs | 170 | OnSelectedClientChanged?.Invoke(this, _selectedClient); |
+| States\ClientState.cs | 175 | public List<ClientInfo> CheckedClients |
+| States\ClientState.cs | 177 | get => _checkedClients; |
+| States\ClientState.cs | 180 | _checkedClients = value ?? new List<ClientInfo>(); |
+| States\ClientState.cs | 181 | OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly()); |
+| States\ClientState.cs | 186 | public bool IsFishBotRunning |
+| States\ClientState.cs | 188 | get => _isFishBotRunning; |
+| States\ClientState.cs | 191 | if (_isFishBotRunning != value) |
+| States\ClientState.cs | 193 | _isFishBotRunning = value; |
+| States\ClientState.cs | 194 | OnBotStateChanged?.Invoke(this, EventArgs.Empty); |
+| States\ClientState.cs | 200 | public bool IsUpgradeBotRunning |
+| States\ClientState.cs | 202 | get => _isUpgradeBotRunning; |
+| States\ClientState.cs | 205 | if (_isUpgradeBotRunning != value) |
+| States\ClientState.cs | 207 | _isUpgradeBotRunning = value; |
+| States\ClientState.cs | 208 | OnBotStateChanged?.Invoke(this, EventArgs.Empty); |
+| States\ClientState.cs | 214 | public bool IsFishPuzzleRunning |
+| States\ClientState.cs | 216 | get => _isFishPuzzleRunning; |
+| States\ClientState.cs | 219 | if (_isFishPuzzleRunning != value) |
+| States\ClientState.cs | 221 | _isFishPuzzleRunning = value; |
+| States\ClientState.cs | 222 | OnBotStateChanged?.Invoke(this, EventArgs.Empty); |
+| States\ClientState.cs | 228 | public bool IsAlchemyRunning |
+| States\ClientState.cs | 230 | get => _isAlchemyRunning; |
+| States\ClientState.cs | 233 | if (_isAlchemyRunning != value) |
+| States\ClientState.cs | 235 | _isAlchemyRunning = value; |
+| States\ClientState.cs | 236 | OnBotStateChanged?.Invoke(this, EventArgs.Empty); |
+| States\ClientState.cs | 244 | public void UpdateCheckedClients(IEnumerable<ClientInfo> clients) |
+| States\ClientState.cs | 246 | _checkedClients = new List<ClientInfo>(clients); |
+| States\ClientState.cs | 247 | OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly()); |
+| States\FishBotSettingsRegistry.cs | 1 | using Aether.Models; |
+| States\FishBotSettingsRegistry.cs | 2 | using System.Collections.Generic; |
+| States\FishBotSettingsRegistry.cs | 10 | public class FishBotSettingsRegistry |
+| States\FishBotSettingsRegistry.cs | 12 | private static readonly System.Lazy<FishBotSettingsRegistry> _instance |
+| States\FishBotSettingsRegistry.cs | 13 | = new System.Lazy<FishBotSettingsRegistry>(() => new FishBotSettingsRegistry()); |
+| States\FishBotSettingsRegistry.cs | 16 | public static FishBotSettingsRegistry Instance => _instance.Value; |
+| States\FishBotSettingsRegistry.cs | 19 | private readonly Dictionary<int, FishBotSettings> _settingsMap |
+| States\FishBotSettingsRegistry.cs | 20 | = new Dictionary<int, FishBotSettings>(); |
+| States\FishBotSettingsRegistry.cs | 22 | private FishBotSettingsRegistry() { } |
+| States\FishBotSettingsRegistry.cs | 28 | public FishBotSettings GetOrCreate(int clientId) |
+| States\FishBotSettingsRegistry.cs | 30 | if (!_settingsMap.TryGetValue(clientId, out var settings)) |
+| States\FishBotSettingsRegistry.cs | 32 | settings = new FishBotSettings(); |
+| States\FishBotSettingsRegistry.cs | 33 | _settingsMap[clientId] = settings; |
+| States\FishBotSettingsRegistry.cs | 36 | return settings; |
+| States\FishBotSettingsRegistry.cs | 42 | public bool HasSettings(int clientId) => _settingsMap.ContainsKey(clientId); |
+| States\FishBotSettingsRegistry.cs | 47 | public void Reset(int clientId) |
+| States\FishBotSettingsRegistry.cs | 49 | _settingsMap[clientId] = new FishBotSettings(); |
+| States\FishBotSettingsRegistry.cs | 56 | public void Set(int clientId, FishBotSettings settings) |
+| States\FishBotSettingsRegistry.cs | 58 | _settingsMap[clientId] = settings; |
+| States\FishBotSettingsRegistry.cs | 64 | public void ResetAll() |
+| States\FishBotSettingsRegistry.cs | 66 | _settingsMap.Clear(); |
+| States\PageState.cs | 1 | using System; |
+| States\PageState.cs | 8 | public class PageState |
+| States\PageState.cs | 10 | private static readonly Lazy<PageState> _instance = new Lazy<PageState>(() => new PageState()); |
+| States\PageState.cs | 15 | public static PageState Instance => _instance.Value; |
+| States\PageState.cs | 17 | private string _currentPage = "FishBot"; |
+| States\PageState.cs | 22 | public event EventHandler<string>? OnPageChanged; |
+| States\PageState.cs | 27 | public static void Initialize() |
+| States\PageState.cs | 29 | var _ = Instance; |
+| States\PageState.cs | 30 | Instance.Reset(); |
+| States\PageState.cs | 34 | /// Varsayılan başlangıç sayfasına ("FishBot") sıfırlar. |
+| States\PageState.cs | 36 | public void Reset() |
+| States\PageState.cs | 38 | _currentPage = "FishBot"; |
+| States\PageState.cs | 39 | OnPageChanged?.Invoke(this, _currentPage); |
+| States\PageState.cs | 43 | /// Aktif olarak görüntülenen sayfa ismi (Örn: "FishBot", "Puzzle", "Alchemy", "Upgrade", "AntiBan"). |
+| States\PageState.cs | 45 | public string CurrentPage |
+| States\PageState.cs | 50 | if (_currentPage != value && !string.IsNullOrEmpty(value)) |
+| States\PageState.cs | 53 | OnPageChanged?.Invoke(this, _currentPage); |

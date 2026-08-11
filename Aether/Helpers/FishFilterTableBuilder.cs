@@ -177,7 +177,9 @@ namespace Aether.Helpers
                         Size = new Size(25, 25),
                         CheckBoxSize = 22,
                         CheckBoxColor = ColorTranslator.FromHtml(col.HeaderColor),
-                        Checked = col.DefaultChecked
+                        Checked = col.DefaultChecked,
+                        // Binder'ın bu checkbox'ı tanımlayabilmesi için tag: "categoryId|itemKey|columnHeader"
+                        Tag = $"{cfg.Id}|{Path.GetFileNameWithoutExtension(filePath)}|{col.HeaderText}"
                     });
                 }
 

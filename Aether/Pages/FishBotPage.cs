@@ -1,4 +1,6 @@
 using Aether.Helpers;
+using Aether.Models;
+using Aether.States;
 using System;
 using System.Windows.Forms;
 
@@ -6,12 +8,43 @@ namespace Aether.Pages
 {
     public partial class FishBotPage : BaseBotPage
     {
+        // Sayfa açıkken hangi client'ın ayarlarını gösterdiğimizi takip eder
+        private int? _lastLoadedClientId = null;
+
         public FishBotPage()
         {
             InitializeComponent();
         }
 
         protected override Label ClientNameLabel => clientNameLabel;
+
+        // ------ Binder'ın erişmesi için internal property'ler ------
+        internal Sunny.UI.UICheckBox CloseGameCheckBox => closeGameCheckBox;
+        internal Sunny.UI.UIUpDownTextBox CloseGameMinuteSelectUpDown => closeGameMinuteSelectUpDown;
+        internal Sunny.UI.UICheckBox CharacterScreenCheckBox => characterScreenCheckBox;
+        internal Sunny.UI.UIUpDownTextBox CharacterScreenUpDown => characterScreenUpDown;
+        internal Sunny.UI.UICheckBox BuyCampfireCheckBox => buyCampfireCheckBox;
+        internal Sunny.UI.UIUpDownTextBox CampFireCountUpDown => campFireCountUpDown;
+        internal Sunny.UI.UICheckBox BuyWormCheckbox => buyWormCheckbox;
+        internal Sunny.UI.UIUpDownTextBox WormCountUpDown => wormCountUpDown;
+        internal Sunny.UI.UISwitch AnimationModeSwitch => animationModeSwitch;
+        internal Sunny.UI.UIUpDownTextBox InventoryPageSelectUpDown => inventoryPageSelectUpDown;
+        internal Sunny.UI.UITextBox MinFishSpeedTextBox => minFishSpeedTextBox;
+        internal Sunny.UI.UITextBox MaxFishSpeedTextBox => maxFishSpeedTextBox;
+        internal Sunny.UI.UICheckBox ChangeChannelCheckBox => changeChannelCheckBox;
+        internal Sunny.UI.UIUpDownTextBox ChangeChannelMinuteUpDown => changeChannelMinuteUpDown;
+        internal Sunny.UI.UICheckBox SelectAllChannelsCheckBox => selectAllChannelsCheckBox;
+        internal Sunny.UI.UICheckBox Ch1CheckBox => ch1CheckBox;
+        internal Sunny.UI.UICheckBox Ch2CheckBox => ch2CheckBox;
+        internal Sunny.UI.UICheckBox Ch3CheckBox => ch3CheckBox;
+        internal Sunny.UI.UICheckBox Ch4CheckBox => ch4CheckBox;
+        internal Sunny.UI.UICheckBox Ch5CheckBox => ch5CheckBox;
+        internal Sunny.UI.UICheckBox Ch6CheckBox => ch6CheckBox;
+        internal Sunny.UI.UIPanel FishFilterPanel => fishFilterPanel;
+
+        // ------ Preset UI kontrolleri için internal property'ler ------
+        internal Sunny.UI.UITextBox BotSettingsNameTextBox => botSettingsNameTextBox;
+        internal Sunny.UI.UIComboBox BotSettingsListComboBox => botSettingsListComboBox;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -20,18 +53,23 @@ namespace Aether.Pages
 
             if (!DesignMode)
             {
-                // Tabloları oluştur
+                // Tabloları oluştur (Tag'ler burada atanır - Binder için zorunlu)
                 FishFilterTableBuilder.BuildTables(fishFilterPanel, channelsLine, this);
 
                 // metin2client.exe olan tüm görevleri ve HWND bilgilerini ComboBox'a yerleştir
                 GameWindowProcessHelper.PopulateGameWindowComboBox(gameWindowSelectComboBox);
 
+                // Sayfa açıldığında aktif client'ın ayarlarını yükle
+                LoadSettingsForCurrentClient();
+
                 // Sayfa açıldığında aktif seçili client'ın HWND bilgisini ComboBox ile senkronize et
                 SyncComboBoxWithSelectedClient();
 
-                // Sol taraftaki kartlardan herhangi biri tıklandığında/seçildiğinde ComboBox seçimini güncelle
-                Aether.States.ClientState.Instance.OnSelectedClientChanged += (s, clientInfo) =>
+                // Client değiştiğinde: önce mevcut ayarları kaydet, sonra yeni client'ın ayarlarını yükle
+                ClientState.Instance.OnSelectedClientChanged += (s, clientInfo) =>
                 {
+                    SaveSettingsForLastClient();
+                    LoadSettingsForCurrentClient();
                     SyncComboBoxWithSelectedClient();
                 };
 
@@ -56,11 +94,11 @@ namespace Aether.Pages
                 {
                     if (gameWindowSelectComboBox.SelectedItem is Aether.Models.GameWindowProcessInfo windowInfo)
                     {
-                        var currentSelected = Aether.States.ClientState.Instance.SelectedClient;
+                        var currentSelected = ClientState.Instance.SelectedClient;
                         int? currentId = currentSelected?.Id;
 
                         // Bu pencerenin (HWND) başka bir istemciye tanımlı olup olmadığını denetle
-                        var existingOwner = Aether.States.ClientState.Instance.FindClientByHandle(windowInfo.Handle, currentId);
+                        var existingOwner = ClientState.Instance.FindClientByHandle(windowInfo.Handle, currentId);
 
                         if (existingOwner != null)
                         {
@@ -74,19 +112,66 @@ namespace Aether.Pages
                             return;
                         }
 
-                        Aether.States.ClientState.Instance.UpdateSelectedClientHandle(windowInfo.Handle, windowInfo.ProcessId);
+                        ClientState.Instance.UpdateSelectedClientHandle(windowInfo.Handle, windowInfo.ProcessId);
                     }
                     else
                     {
                         // '-- Seç --' varsayılan elemanı seçildiyse HWND ve PID'yi sıfırla
-                        Aether.States.ClientState.Instance.UpdateSelectedClientHandle(IntPtr.Zero, 0);
+                        ClientState.Instance.UpdateSelectedClientHandle(IntPtr.Zero, 0);
                     }
                 };
 
                 // Kanal Değiştirme CheckBox mantıkları
                 SetupChannelCheckBoxHandlers();
+
+                // Sayfa açıldığında mevcut preset listesini ComboBox'a yükle
+                RefreshPresetList();
+
+                // addBotSettingsButton: mevcut ayarları preset olarak kaydet
+                addBotSettingsButton.Click += (s, ev) => SavePreset();
+
+                // loadBotSettingsButton: seçili preseti aktif client'a uygula
+                loadBotSettingsButton.Click += (s, ev) => LoadSelectedPreset();
+
+                // deleteBotSettingsButton: seçili preseti sil (onay sonrası)
+                deleteBotSettingsButton.Click += (s, ev) => DeleteSelectedPreset();
             }
         }
+
+        // -----------------------------------------------------------------
+        // Per-Client Ayar Yükleme / Kaydetme
+        // -----------------------------------------------------------------
+
+        /// <summary>
+        /// Seçili client için kayıtlı ayarları UI kontrollerine yükler.
+        /// </summary>
+        private void LoadSettingsForCurrentClient()
+        {
+            var client = ClientState.Instance.SelectedClient;
+            if (client == null) return;
+
+            _lastLoadedClientId = client.Id;
+            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(client.Id);
+            FishBotPageBinder.LoadFromSettings(this, settings);
+
+            // Kanal enable/disable durumu yükleme sonrası da senkronize edilmeli
+            SetChannelControlsEnabled(changeChannelCheckBox.Checked);
+        }
+
+        /// <summary>
+        /// UI'daki mevcut değerleri, son yüklenen client'ın ayar kaydına yazar.
+        /// </summary>
+        private void SaveSettingsForLastClient()
+        {
+            if (_lastLoadedClientId == null) return;
+
+            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(_lastLoadedClientId.Value);
+            FishBotPageBinder.SaveToSettings(this, settings);
+        }
+
+        // -----------------------------------------------------------------
+        // Kanal Checkbox Yardımcıları
+        // -----------------------------------------------------------------
 
         private void SetupChannelCheckBoxHandlers()
         {
@@ -114,7 +199,7 @@ namespace Aether.Pages
             SetChannelControlsEnabled(changeChannelCheckBox.Checked);
         }
 
-        private void SetChannelControlsEnabled(bool enabled)
+        internal void SetChannelControlsEnabled(bool enabled)
         {
             selectAllChannelsCheckBox.Enabled = enabled;
             ch1CheckBox.Enabled = enabled;
@@ -136,13 +221,140 @@ namespace Aether.Pages
             ch6CheckBox.Checked = isChecked;
         }
 
+        // -----------------------------------------------------------------
+        // Preset Yönetimi (Kaydet / Yükle / Sil)
+        // -----------------------------------------------------------------
+
+        /// <summary>
+        /// .mmdfishbot klasöründeki mevcut preset dosyalarını botSettingsListComboBox'a yükler.
+        /// </summary>
+        private void RefreshPresetList()
+        {
+            FishBotPresetManager.EnsureFolder();
+            var names = FishBotPresetManager.GetPresetNames();
+
+            botSettingsListComboBox.Items.Clear();
+            foreach (var name in names)
+                botSettingsListComboBox.Items.Add(name);
+
+            if (botSettingsListComboBox.Items.Count > 0)
+                botSettingsListComboBox.SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// botSettingsNameTextBox'taki isimle sayfanın mevcut ayarlarını JSON olarak kaydeder.
+        /// </summary>
+        private void SavePreset()
+        {
+            string presetName = botSettingsNameTextBox.Text?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(presetName))
+            {
+                MessageBox.Show(
+                    "Lütfen bir preset ismi girin.",
+                    "Kayıt Hatası",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Önce mevcut UI değerlerini aktif client state'ine yansıt
+            SaveSettingsForLastClient();
+
+            var client = ClientState.Instance.SelectedClient;
+            int clientId = client?.Id ?? (_lastLoadedClientId ?? 0);
+            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientId);
+            settings.SettingsName = presetName;
+
+            FishBotPresetManager.SavePreset(presetName, settings);
+            RefreshPresetList();
+
+            // ComboBox'ta yeni kayıtlı preseti seç
+            int idx = botSettingsListComboBox.Items.IndexOf(presetName);
+            if (idx >= 0) botSettingsListComboBox.SelectedIndex = idx;
+
+            MessageBox.Show(
+                $"'{presetName}' başarıyla kaydedildi.",
+                "Preset Kaydedildi",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// botSettingsListComboBox'ta seçili preseti okur, aktif client state'ini günceller ve UI'ya yansıtır.
+        /// </summary>
+        private void LoadSelectedPreset()
+        {
+            if (botSettingsListComboBox.SelectedItem is not string presetName)
+            {
+                MessageBox.Show(
+                    "Lütfen yüklenecek bir preset seçin.",
+                    "Yükleme Hatası",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            var loaded = FishBotPresetManager.LoadPreset(presetName);
+            if (loaded == null)
+            {
+                MessageBox.Show(
+                    $"'{presetName}' preset dosyası okunamadı.",
+                    "Yükleme Hatası",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            var client = ClientState.Instance.SelectedClient;
+            if (client == null) return;
+
+            // Client state'ini preset değerleriyle güncelle
+            FishBotSettingsRegistry.Instance.Set(client.Id, loaded);
+            _lastLoadedClientId = client.Id;
+
+            // UI'ya yansıt
+            FishBotPageBinder.LoadFromSettings(this, loaded);
+            SetChannelControlsEnabled(changeChannelCheckBox.Checked);
+        }
+
+        /// <summary>
+        /// Kullanıcıya onay penceresi göstererek seçili preseti siler ve listeyi yeniler.
+        /// </summary>
+        private void DeleteSelectedPreset()
+        {
+            if (botSettingsListComboBox.SelectedItem is not string presetName)
+            {
+                MessageBox.Show(
+                    "Lütfen silinecek bir preset seçin.",
+                    "Silme Hatası",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"'{presetName}' presetini kalıcı olarak silmek istediğinize emin misiniz?",
+                "Preset Sil",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.Yes)
+            {
+                FishBotPresetManager.DeletePreset(presetName);
+                RefreshPresetList();
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // GameWindow ComboBox Senkronizasyonu
+        // -----------------------------------------------------------------
+
         private void SyncComboBoxWithSelectedClient()
         {
-            var selectedClient = Aether.States.ClientState.Instance.SelectedClient;
+            var selectedClient = ClientState.Instance.SelectedClient;
             IntPtr currentHandle = selectedClient?.Handle ?? IntPtr.Zero;
             GameWindowProcessHelper.SelectMatchingHandleInComboBox(gameWindowSelectComboBox, currentHandle);
         }
-
-       
     }
 }

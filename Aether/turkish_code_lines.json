@@ -1,0 +1,5732 @@
+﻿[
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.States;"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  2,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  3,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  7,
+        "Icerik":  "internal static class Program"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  13,
+        "Icerik":  "static void Main()"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  16,
+        "Icerik":  "ApplicationConfiguration.Initialize();"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  19,
+        "Icerik":  "ClientState.Initialize();"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  20,
+        "Icerik":  "PageState.Initialize();"
+    },
+    {
+        "Dosya":  "Program.cs",
+        "Satir":  22,
+        "Icerik":  "Application.Run(new Forms.MainForm());"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Drawing;"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  8,
+        "Icerik":  "public static class Colors"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  12,
+        "Icerik":  "public static readonly Color MaviKoyu = Color.FromArgb(0, 177, 255);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  15,
+        "Icerik":  "public static readonly Color MaviAcik = Color.FromArgb(89, 189, 255);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  19,
+        "Icerik":  "public static readonly Color PembeKoyu = Color.FromArgb(244, 103, 136);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  22,
+        "Icerik":  "public static readonly Color PembeAcik = Color.FromArgb(255, 139, 164);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  26,
+        "Icerik":  "public static readonly Color YesilKoyu = Color.FromArgb(99, 168, 71);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  29,
+        "Icerik":  "public static readonly Color YesilAcik = Color.FromArgb(135, 193, 109);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  33,
+        "Icerik":  "public static readonly Color Turuncu = Color.FromArgb(255, 180, 0);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  37,
+        "Icerik":  "public static readonly Color ArkaPlanKoyu = Color.FromArgb(24, 24, 27);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  40,
+        "Icerik":  "public static readonly Color ArkaPlanAcik = Color.FromArgb(30, 30, 35);"
+    },
+    {
+        "Dosya":  "Constants\\Colors.cs",
+        "Satir":  43,
+        "Icerik":  "public static readonly Color CizgiRengi = Color.FromArgb(60, 60, 65);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Constants;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  2,
+        "Icerik":  "using Sunny.UI;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  3,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  4,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  5,
+        "Icerik":  "using System.ComponentModel;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  6,
+        "Icerik":  "using System.Data;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  7,
+        "Icerik":  "using System.Drawing;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  8,
+        "Icerik":  "using System.Text;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  9,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  13,
+        "Icerik":  "public partial class ClientCard : UserControl"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  15,
+        "Icerik":  "private int clientNumber = 0;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  16,
+        "Icerik":  "private bool isSelected = false;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  18,
+        "Icerik":  "public event EventHandler OnCardSelected;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  19,
+        "Icerik":  "public event EventHandler OnCheckedChanged;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  21,
+        "Icerik":  "public ClientCard()"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  24,
+        "Icerik":  "SetStyle(ControlStyles.AllPaintingInWmPaint |"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  25,
+        "Icerik":  "ControlStyles.OptimizedDoubleBuffer |"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  26,
+        "Icerik":  "ControlStyles.UserPaint |"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  27,
+        "Icerik":  "ControlStyles.ResizeRedraw, true);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  29,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  30,
+        "Icerik":  "RegisterClickEvents(this);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  32,
+        "Icerik":  "uıCheckBox1.Click += (s, e) =\u003e OnCheckedChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  33,
+        "Icerik":  "uıCheckBox1.ValueChanged += (s, value) =\u003e OnCheckedChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  36,
+        "Icerik":  "private void RegisterClickEvents(Control control)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  38,
+        "Icerik":  "control.Click += Card_Click;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  39,
+        "Icerik":  "foreach (Control child in control.Controls)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  41,
+        "Icerik":  "if (child != pictureBox1 \u0026\u0026 child != uıCheckBox1)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  43,
+        "Icerik":  "RegisterClickEvents(child);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  48,
+        "Icerik":  "private void Card_Click(object sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  50,
+        "Icerik":  "OnCardSelected?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  53,
+        "Icerik":  "[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  54,
+        "Icerik":  "public string ClientName"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  56,
+        "Icerik":  "get =\u003e lblClientName.Text;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  57,
+        "Icerik":  "set =\u003e lblClientName.Text = value;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  60,
+        "Icerik":  "[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  61,
+        "Icerik":  "public int ClientNumber"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  63,
+        "Icerik":  "get =\u003e clientNumber;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  64,
+        "Icerik":  "set =\u003e clientNumber = value;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  67,
+        "Icerik":  "[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  68,
+        "Icerik":  "public bool IsSelected"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  70,
+        "Icerik":  "get =\u003e isSelected;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  73,
+        "Icerik":  "isSelected = value;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  78,
+        "Icerik":  "[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  79,
+        "Icerik":  "public bool IsChecked"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  81,
+        "Icerik":  "get =\u003e uıCheckBox1.Checked;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  82,
+        "Icerik":  "set =\u003e uıCheckBox1.Checked = value;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  85,
+        "Icerik":  "[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  86,
+        "Icerik":  "public string GameWindowText"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  88,
+        "Icerik":  "get =\u003e selectedGameWindow.Text;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  91,
+        "Icerik":  "selectedGameWindow.Text = value;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  92,
+        "Icerik":  "if (!string.IsNullOrWhiteSpace(value) \u0026\u0026 value != \"Client Seçilmedi\")"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  94,
+        "Icerik":  "selectedGameWindow.ForeColor = Colors.YesilAcik;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  98,
+        "Icerik":  "selectedGameWindow.ForeColor = Color.Red;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  104,
+        "Icerik":  "private void UpdateCardAppearance()"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  106,
+        "Icerik":  "if (isSelected)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  108,
+        "Icerik":  "cardPanel.RectColor = Colors.YesilKoyu;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  112,
+        "Icerik":  "cardPanel.RectColor = Colors.MaviAcik;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  116,
+        "Icerik":  "private void cardPanel_MouseLeave(object sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  118,
+        "Icerik":  "if (!isSelected)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  120,
+        "Icerik":  "cardPanel.RectColor = Colors.MaviAcik;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  124,
+        "Icerik":  "cardPanel.RectColor = Colors.YesilKoyu;"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  128,
+        "Icerik":  "private void cardPanel_MouseHover(object sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\ClientCard.cs",
+        "Satir":  130,
+        "Icerik":  "cardPanel.RectColor = Colors.YesilKoyu;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  2,
+        "Icerik":  "using Aether.States;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  3,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  4,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  8,
+        "Icerik":  "public partial class ClientsControl : UserControl"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  11,
+        "Icerik":  "private ClientCard? _currentlySelectedCard;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  13,
+        "Icerik":  "public ClientsControl()"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  15,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  16,
+        "Icerik":  "LoadClients();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  19,
+        "Icerik":  "ClientState.Instance.OnSelectedClientChanged += ClientState_OnSelectedClientChanged;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  22,
+        "Icerik":  "private void ClientState_OnSelectedClientChanged(object? sender, ClientInfo? clientInfo)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  24,
+        "Icerik":  "UpdateSelectedCardGameWindowText(clientInfo);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  27,
+        "Icerik":  "public void UpdateSelectedCardGameWindowText(ClientInfo? clientInfo)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  29,
+        "Icerik":  "if (_currentlySelectedCard == null) return;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  31,
+        "Icerik":  "if (clientInfo != null \u0026\u0026 clientInfo.Handle != System.IntPtr.Zero \u0026\u0026 clientInfo.ProcessId != 0)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  33,
+        "Icerik":  "_currentlySelectedCard.GameWindowText = $\"PID: {clientInfo.ProcessId}\";"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  35,
+        "Icerik":  "else if (clientInfo != null \u0026\u0026 clientInfo.Handle != System.IntPtr.Zero)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  37,
+        "Icerik":  "_currentlySelectedCard.GameWindowText = $\"HWND: 0x{clientInfo.Handle.ToInt64():X}\";"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  41,
+        "Icerik":  "_currentlySelectedCard.GameWindowText = \"Client Seçilmedi\";"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  49,
+        "Icerik":  "public void LoadClients()"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  51,
+        "Icerik":  "clientListFlowPanel.Controls.Clear();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  54,
+        "Icerik":  "var clientModels = Services.ClientService.GenerateDefaultClients(10);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  56,
+        "Icerik":  "foreach (var clientModel in clientModels)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  58,
+        "Icerik":  "ClientCard card = new ClientCard();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  59,
+        "Icerik":  "card.ClientName = clientModel.Name;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  60,
+        "Icerik":  "card.ClientNumber = clientModel.Id;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  63,
+        "Icerik":  "card.OnCardSelected += ClientCard_OnCardSelected;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  66,
+        "Icerik":  "card.OnCheckedChanged += (sender, e) =\u003e UpdateCheckedClients();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  71,
+        "Icerik":  "clientListFlowPanel.Controls.Add(card);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  75,
+        "Icerik":  "if (clientListFlowPanel.Controls.Count \u003e 0 \u0026\u0026 clientListFlowPanel.Controls[0] is ClientCard firstCard)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  77,
+        "Icerik":  "SelectClient(firstCard);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  80,
+        "Icerik":  "UpdateCheckedClients();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  81,
+        "Icerik":  "customScrollBar1.SyncWithTarget();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  84,
+        "Icerik":  "private void AttachMouseWheel(System.Windows.Forms.Control control)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  88,
+        "Icerik":  "int delta = e.Delta \u003e 0 ? -60 : 60;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  92,
+        "Icerik":  "foreach (System.Windows.Forms.Control child in control.Controls)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  94,
+        "Icerik":  "AttachMouseWheel(child);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  101,
+        "Icerik":  "public int TotalClientsCount =\u003e clientListFlowPanel.Controls.Count;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  106,
+        "Icerik":  "public void SetAllChecked(bool isChecked)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  108,
+        "Icerik":  "foreach (System.Windows.Forms.Control control in clientListFlowPanel.Controls)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  110,
+        "Icerik":  "if (control is ClientCard card)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  112,
+        "Icerik":  "card.IsChecked = isChecked;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  116,
+        "Icerik":  "UpdateCheckedClients();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  123,
+        "Icerik":  "public void UpdateCheckedClients()"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  125,
+        "Icerik":  "var checkedList = new List\u003cClientInfo\u003e();"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  126,
+        "Icerik":  "foreach (System.Windows.Forms.Control control in clientListFlowPanel.Controls)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  128,
+        "Icerik":  "if (control is ClientCard card \u0026\u0026 card.IsChecked)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  130,
+        "Icerik":  "var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  131,
+        "Icerik":  "checkedList.Add(clientInfo);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  135,
+        "Icerik":  "ClientState.Instance.UpdateCheckedClients(checkedList);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  141,
+        "Icerik":  "private void ClientCard_OnCardSelected(object sender, System.EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  143,
+        "Icerik":  "if (sender is ClientCard selectedCard)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  145,
+        "Icerik":  "SelectClient(selectedCard);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  153,
+        "Icerik":  "public void SelectClient(ClientCard card)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  156,
+        "Icerik":  "if (_currentlySelectedCard != null)"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  158,
+        "Icerik":  "_currentlySelectedCard.IsSelected = false;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  163,
+        "Icerik":  "_currentlySelectedCard.IsSelected = true;"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  166,
+        "Icerik":  "var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  169,
+        "Icerik":  "UpdateSelectedCardGameWindowText(clientInfo);"
+    },
+    {
+        "Dosya":  "Controls\\ClientsControl.cs",
+        "Satir":  172,
+        "Icerik":  "ClientState.Instance.SelectedClient = clientInfo;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Constants;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  2,
+        "Icerik":  "using Aether.Native;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  3,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  4,
+        "Icerik":  "using System.ComponentModel;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Drawing;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  6,
+        "Icerik":  "using System.Drawing.Drawing2D;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  7,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  14,
+        "Icerik":  "public class CustomScrollBar : UserControl"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  16,
+        "Icerik":  "private ScrollableControl? _targetControl;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  17,
+        "Icerik":  "private int _minimum = 0;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  18,
+        "Icerik":  "private int _maximum = 100;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  19,
+        "Icerik":  "private int _value = 0;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  20,
+        "Icerik":  "private int _largeChange = 10;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  22,
+        "Icerik":  "private bool _isHovered = false;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  23,
+        "Icerik":  "private bool _isMouseDown = false;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  24,
+        "Icerik":  "private Point _dragStartPoint;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  25,
+        "Icerik":  "private int _dragStartValue;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  27,
+        "Icerik":  "public event EventHandler? Scroll;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  28,
+        "Icerik":  "public event EventHandler? ValueChanged;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  30,
+        "Icerik":  "public CustomScrollBar()"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  32,
+        "Icerik":  "SetStyle(ControlStyles.AllPaintingInWmPaint |"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  33,
+        "Icerik":  "ControlStyles.OptimizedDoubleBuffer |"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  34,
+        "Icerik":  "ControlStyles.ResizeRedraw |"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  35,
+        "Icerik":  "ControlStyles.UserPaint |"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  39,
+        "Icerik":  "Width = 12;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  45,
+        "Icerik":  "[Category(\"Behavior\")]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  46,
+        "Icerik":  "[System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  47,
+        "Icerik":  "public ScrollableControl? TargetControl"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  52,
+        "Icerik":  "if (_targetControl != value)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  54,
+        "Icerik":  "if (_targetControl != null)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  57,
+        "Icerik":  "_targetControl.Resize -= TargetControl_LayoutChanged;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  64,
+        "Icerik":  "if (_targetControl != null)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  67,
+        "Icerik":  "_targetControl.Resize += TargetControl_LayoutChanged;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  72,
+        "Icerik":  "HideNativeScrollBar();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  75,
+        "Icerik":  "SyncWithTarget();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  80,
+        "Icerik":  "public void HideNativeScrollBar()"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  82,
+        "Icerik":  "if (_targetControl != null \u0026\u0026 _targetControl.IsHandleCreated)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  84,
+        "Icerik":  "Win32Native.ShowScrollBar(_targetControl.Handle, Win32Native.SB_VERT, false);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  85,
+        "Icerik":  "Win32Native.ShowScrollBar(_targetControl.Handle, Win32Native.SB_HORZ, false);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  89,
+        "Icerik":  "[Category(\"Behavior\")]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  90,
+        "Icerik":  "[System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  91,
+        "Icerik":  "public int Minimum"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  93,
+        "Icerik":  "get =\u003e _minimum;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  96,
+        "Icerik":  "_minimum = value;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  97,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  101,
+        "Icerik":  "[Category(\"Behavior\")]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  102,
+        "Icerik":  "[System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  103,
+        "Icerik":  "public int Maximum"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  105,
+        "Icerik":  "get =\u003e _maximum;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  108,
+        "Icerik":  "_maximum = Math.Max(_minimum, value);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  109,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  113,
+        "Icerik":  "[Category(\"Behavior\")]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  114,
+        "Icerik":  "[System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  115,
+        "Icerik":  "public int Value"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  120,
+        "Icerik":  "int val = Math.Clamp(value, _minimum, _maximum);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  121,
+        "Icerik":  "if (_value != val)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  124,
+        "Icerik":  "ValueChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  126,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  131,
+        "Icerik":  "[Category(\"Behavior\")]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  132,
+        "Icerik":  "[System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  133,
+        "Icerik":  "public int LargeChange"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  139,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  146,
+        "Icerik":  "public void SyncWithTarget()"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  148,
+        "Icerik":  "if (_targetControl == null) return;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  150,
+        "Icerik":  "HideNativeScrollBar();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  152,
+        "Icerik":  "int contentHeight = 0;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  153,
+        "Icerik":  "int currentScrollY = -_targetControl.AutoScrollPosition.Y;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  155,
+        "Icerik":  "foreach (Control ctrl in _targetControl.Controls)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  157,
+        "Icerik":  "if (ctrl.Visible)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  159,
+        "Icerik":  "int absoluteBottom = ctrl.Bottom + currentScrollY + ctrl.Margin.Bottom;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  160,
+        "Icerik":  "contentHeight = Math.Max(contentHeight, absoluteBottom);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  164,
+        "Icerik":  "int visibleHeight = _targetControl.ClientSize.Height;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  165,
+        "Icerik":  "int maxScroll = Math.Max(0, contentHeight - visibleHeight);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  167,
+        "Icerik":  "_maximum = maxScroll;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  168,
+        "Icerik":  "_largeChange = Math.Max(1, visibleHeight);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  169,
+        "Icerik":  "_value = Math.Clamp(currentScrollY, 0, _maximum);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  171,
+        "Icerik":  "Visible = maxScroll \u003e 0;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  172,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  175,
+        "Icerik":  "private void TargetControl_MouseWheel(object? sender, MouseEventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  177,
+        "Icerik":  "int delta = e.Delta \u003e 0 ? -60 : 60;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  181,
+        "Icerik":  "private void TargetControl_LayoutChanged(object? sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  183,
+        "Icerik":  "SyncWithTarget();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  186,
+        "Icerik":  "private void TargetControl_ControlAddedRemoved(object? sender, ControlEventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  188,
+        "Icerik":  "SyncWithTarget();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  191,
+        "Icerik":  "private void ApplyScrollToTarget()"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  193,
+        "Icerik":  "if (_targetControl == null) return;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  195,
+        "Icerik":  "_targetControl.AutoScrollPosition = new Point(0, _value);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  196,
+        "Icerik":  "HideNativeScrollBar();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  199,
+        "Icerik":  "protected override void OnMouseEnter(EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  202,
+        "Icerik":  "_isHovered = true;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  203,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  206,
+        "Icerik":  "protected override void OnMouseLeave(EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  209,
+        "Icerik":  "_isHovered = false;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  210,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  213,
+        "Icerik":  "protected override void OnMouseDown(MouseEventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  216,
+        "Icerik":  "if (e.Button == MouseButtons.Left)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  219,
+        "Icerik":  "if (thumbRect.Contains(e.Location))"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  221,
+        "Icerik":  "_isMouseDown = true;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  222,
+        "Icerik":  "_dragStartPoint = e.Location;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  227,
+        "Icerik":  "if (e.Y \u003c thumbRect.Top)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  231,
+        "Icerik":  "else if (e.Y \u003e thumbRect.Bottom)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  236,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  240,
+        "Icerik":  "protected override void OnMouseUp(MouseEventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  243,
+        "Icerik":  "_isMouseDown = false;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  244,
+        "Icerik":  "Invalidate();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  247,
+        "Icerik":  "protected override void OnMouseMove(MouseEventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  250,
+        "Icerik":  "if (_isMouseDown)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  252,
+        "Icerik":  "int trackHeight = Height - GetThumbHeight();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  253,
+        "Icerik":  "if (trackHeight \u003e 0)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  255,
+        "Icerik":  "int deltaY = e.Y - _dragStartPoint.Y;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  256,
+        "Icerik":  "float percentDelta = (float)deltaY / trackHeight;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  257,
+        "Icerik":  "int valueDelta = (int)(percentDelta * (_maximum - _minimum));"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  259,
+        "Icerik":  "Scroll?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  264,
+        "Icerik":  "private int GetThumbHeight()"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  266,
+        "Icerik":  "if (_maximum \u003c= _minimum) return Height;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  267,
+        "Icerik":  "float ratio = (float)_largeChange / (_maximum - _minimum + _largeChange);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  268,
+        "Icerik":  "int thumbHeight = (int)(Height * ratio);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  269,
+        "Icerik":  "return Math.Max(25, thumbHeight);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  272,
+        "Icerik":  "private Rectangle GetThumbRectangle()"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  274,
+        "Icerik":  "int thumbHeight = GetThumbHeight();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  275,
+        "Icerik":  "int trackHeight = Height - thumbHeight;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  277,
+        "Icerik":  "int thumbY = 0;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  278,
+        "Icerik":  "if (_maximum \u003e _minimum \u0026\u0026 trackHeight \u003e 0)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  280,
+        "Icerik":  "float percent = (float)(_value - _minimum) / (_maximum - _minimum);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  281,
+        "Icerik":  "thumbY = (int)(percent * trackHeight);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  284,
+        "Icerik":  "return new Rectangle(2, thumbY + 2, Width - 4, thumbHeight - 4);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  287,
+        "Icerik":  "protected override void OnPaint(PaintEventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  289,
+        "Icerik":  "base.OnPaint(e);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  291,
+        "Icerik":  "Graphics g = e.Graphics;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  292,
+        "Icerik":  "g.SmoothingMode = SmoothingMode.AntiAlias;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  295,
+        "Icerik":  "using (SolidBrush trackBrush = new SolidBrush(Color.FromArgb(30, 30, 35)))"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  297,
+        "Icerik":  "using (GraphicsPath trackPath = GetRoundedPath(new Rectangle(1, 0, Width - 2, Height), 4))"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  299,
+        "Icerik":  "g.FillPath(trackBrush, trackPath);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  303,
+        "Icerik":  "if (_maximum \u003c= _minimum) return;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  307,
+        "Icerik":  "if (_isMouseDown)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  309,
+        "Icerik":  "thumbColor = Colors.YesilKoyu; // Sürükleme esnasında"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  311,
+        "Icerik":  "else if (_isHovered)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  313,
+        "Icerik":  "thumbColor = Colors.MaviAcik;  // Mouse üzerindeyken"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  317,
+        "Icerik":  "thumbColor = Colors.MaviKoyu;  // Normal durum"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  321,
+        "Icerik":  "if (thumbRect.Width \u003e 0 \u0026\u0026 thumbRect.Height \u003e 0)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  323,
+        "Icerik":  "using (SolidBrush thumbBrush = new SolidBrush(thumbColor))"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  325,
+        "Icerik":  "using (GraphicsPath thumbPath = GetRoundedPath(thumbRect, Math.Min(thumbRect.Width, thumbRect.Height) / 2))"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  327,
+        "Icerik":  "g.FillPath(thumbBrush, thumbPath);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  333,
+        "Icerik":  "private GraphicsPath GetRoundedPath(Rectangle rect, int cornerRadius)"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  335,
+        "Icerik":  "GraphicsPath path = new GraphicsPath();"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  336,
+        "Icerik":  "if (rect.Width \u003c= 0 || rect.Height \u003c= 0) return path;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  338,
+        "Icerik":  "int diameter = Math.Max(1, cornerRadius * 2);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  339,
+        "Icerik":  "Rectangle arc = new Rectangle(rect.X, rect.Y, diameter, diameter);"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  344,
+        "Icerik":  "arc.X = rect.Right - diameter;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  347,
+        "Icerik":  "arc.Y = rect.Bottom - diameter;"
+    },
+    {
+        "Dosya":  "Controls\\CustomScrollBar.cs",
+        "Satir":  353,
+        "Icerik":  "path.CloseFigure();"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Native;"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  2,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  3,
+        "Icerik":  "using System.ComponentModel;"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  4,
+        "Icerik":  "using System.Drawing;"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  13,
+        "Icerik":  "public class DoubleBufferedFlowLayoutPanel : FlowLayoutPanel"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  15,
+        "Icerik":  "public DoubleBufferedFlowLayoutPanel()"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  18,
+        "Icerik":  "SetStyle(ControlStyles.AllPaintingInWmPaint |"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  19,
+        "Icerik":  "ControlStyles.OptimizedDoubleBuffer |"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  20,
+        "Icerik":  "ControlStyles.UserPaint |"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  21,
+        "Icerik":  "ControlStyles.ResizeRedraw, true);"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  25,
+        "Icerik":  "protected override void OnHandleCreated(EventArgs e)"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  28,
+        "Icerik":  "HideNativeScrollBars();"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  31,
+        "Icerik":  "public void HideNativeScrollBars()"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  33,
+        "Icerik":  "if (IsHandleCreated)"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  35,
+        "Icerik":  "Win32Native.ShowScrollBar(Handle, Win32Native.SB_VERT, false);"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  36,
+        "Icerik":  "Win32Native.ShowScrollBar(Handle, Win32Native.SB_HORZ, false);"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  40,
+        "Icerik":  "protected override void WndProc(ref Message m)"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  42,
+        "Icerik":  "if (m.Msg == Win32Native.WM_NCCALCSIZE || m.Msg == Win32Native.WM_NCPAINT)"
+    },
+    {
+        "Dosya":  "Controls\\DoubleBufferedFlowLayoutPanel.cs",
+        "Satir":  44,
+        "Icerik":  "HideNativeScrollBars();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Controls;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  2,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  3,
+        "Icerik":  "using Aether.Pages;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  4,
+        "Icerik":  "using Aether.States;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  5,
+        "Icerik":  "using Sunny.UI;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  6,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  7,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  8,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  12,
+        "Icerik":  "public partial class MainForm : Form"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  14,
+        "Icerik":  "private bool _isUpdatingSelectAll = false;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  17,
+        "Icerik":  "private readonly Dictionary\u003cstring, (UIButton Button, Func\u003cUserControl\u003e ControlCreator)\u003e _pageMap = new();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  19,
+        "Icerik":  "public MainForm()"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  21,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  22,
+        "Icerik":  "RegisterPageButtons();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  23,
+        "Icerik":  "FormBorderStyle = FormBorderStyle.FixedSingle;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  24,
+        "Icerik":  "MaximizeBox = false;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  25,
+        "Icerik":  "MinimizeBox = true;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  28,
+        "Icerik":  "selectAllButton.Click += SelectAllButton_Click;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  31,
+        "Icerik":  "showPagePanel.Resize += ShowPagePanel_Resize;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  37,
+        "Icerik":  "private void RegisterPageButtons()"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  42,
+        "Icerik":  "_pageMap[\"FishBot\"]  = (pFishBotButton,  () =\u003e new FishBotPage());"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  43,
+        "Icerik":  "_pageMap[\"Puzzle\"]   = (pPuzzleButton,   () =\u003e new FishPuzzlePage());"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  46,
+        "Icerik":  "_pageMap[\"AntiBan\"]  = (pAntiBanButton,  () =\u003e new AntiBanPage());"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  48,
+        "Icerik":  "foreach (var kvp in _pageMap)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  50,
+        "Icerik":  "string pageKey = kvp.Key;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  51,
+        "Icerik":  "UIButton btn = kvp.Value.Button;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  53,
+        "Icerik":  "btn.Click += (sender, e) =\u003e NavigateToPage(pageKey);"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  57,
+        "Icerik":  "private void MainForm_Load(object sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  60,
+        "Icerik":  "ClientState.Instance.OnCheckedClientsChanged += ClientState_OnCheckedClientsChanged;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  63,
+        "Icerik":  "NavigateToPage(\"FishBot\");"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  70,
+        "Icerik":  "public void NavigateToPage(string pageKey)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  72,
+        "Icerik":  "if (!_pageMap.ContainsKey(pageKey)) return;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  75,
+        "Icerik":  "if (PageState.Instance.CurrentPage != pageKey)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  77,
+        "Icerik":  "PageState.Instance.CurrentPage = pageKey;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  81,
+        "Icerik":  "foreach (var kvp in _pageMap)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  83,
+        "Icerik":  "bool isCurrent = kvp.Key.Equals(pageKey, StringComparison.OrdinalIgnoreCase);"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  84,
+        "Icerik":  "kvp.Value.Button.Enabled = !isCurrent;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  91,
+        "Icerik":  "UserControl pageControl = _pageMap[pageKey].ControlCreator.Invoke();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  92,
+        "Icerik":  "pageControl.Margin = new System.Windows.Forms.Padding(0);"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  93,
+        "Icerik":  "pageControl.Padding = new System.Windows.Forms.Padding(0);"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  94,
+        "Icerik":  "pageControl.Width = showPagePanel.ClientSize.Width;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  99,
+        "Icerik":  "pageScrollBar.SyncWithTarget();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  102,
+        "Icerik":  "private void ShowPagePanel_Resize(object? sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  105,
+        "Icerik":  "foreach (System.Windows.Forms.Control ctrl in showPagePanel.Controls)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  107,
+        "Icerik":  "ctrl.Margin = new System.Windows.Forms.Padding(0);"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  108,
+        "Icerik":  "ctrl.Width = showPagePanel.ClientSize.Width;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  111,
+        "Icerik":  "pageScrollBar.SyncWithTarget();"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  114,
+        "Icerik":  "private void SelectAllButton_Click(object? sender, EventArgs e)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  119,
+        "Icerik":  "private void SelectAllButton_ValueChanged(object sender, bool value)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  124,
+        "Icerik":  "private void ToggleSelectAll(bool isChecked)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  126,
+        "Icerik":  "if (_isUpdatingSelectAll) return;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  130,
+        "Icerik":  "_isUpdatingSelectAll = true;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  131,
+        "Icerik":  "clientsControl1.SetAllChecked(isChecked);"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  133,
+        "Icerik":  "finally"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  135,
+        "Icerik":  "_isUpdatingSelectAll = false;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  139,
+        "Icerik":  "private void ClientState_OnCheckedClientsChanged(object? sender, IReadOnlyList\u003cClientInfo\u003e checkedList)"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  141,
+        "Icerik":  "if (_isUpdatingSelectAll) return;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  143,
+        "Icerik":  "_isUpdatingSelectAll = true;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  146,
+        "Icerik":  "int totalClients = clientsControl1.TotalClientsCount;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  147,
+        "Icerik":  "selectAllButton.Checked = totalClients \u003e 0 \u0026\u0026 checkedList.Count == totalClients;"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  149,
+        "Icerik":  "finally"
+    },
+    {
+        "Dosya":  "Forms\\MainForm.cs",
+        "Satir":  151,
+        "Icerik":  "_isUpdatingSelectAll = false;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  2,
+        "Icerik":  "using Aether.Pages;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  3,
+        "Icerik":  "using Sunny.UI;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  4,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  15,
+        "Icerik":  "public static class FishBotPageBinder"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  24,
+        "Icerik":  "public static void SaveToSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  26,
+        "Icerik":  "SaveGeneralSettings(page, settings);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  27,
+        "Icerik":  "SaveChannelSettings(page, settings);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  28,
+        "Icerik":  "SaveFishFilterSettings(page, settings);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  31,
+        "Icerik":  "private static void SaveGeneralSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  33,
+        "Icerik":  "settings.CloseGameEnabled = page.CloseGameCheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  34,
+        "Icerik":  "settings.CloseGameAfterMinutes = page.CloseGameMinuteSelectUpDown.IntValue;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  36,
+        "Icerik":  "settings.CharacterScreenEnabled = page.CharacterScreenCheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  37,
+        "Icerik":  "settings.CharacterScreenAfterMinutes = page.CharacterScreenUpDown.IntValue;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  39,
+        "Icerik":  "settings.BuyCampfireEnabled = page.BuyCampfireCheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  40,
+        "Icerik":  "settings.CampfireCount = page.CampFireCountUpDown.IntValue;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  42,
+        "Icerik":  "settings.BuyWormEnabled = page.BuyWormCheckbox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  43,
+        "Icerik":  "settings.WormCount = page.WormCountUpDown.IntValue;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  45,
+        "Icerik":  "settings.AnimationMode = page.AnimationModeSwitch.Active ? \"armor\" : \"mount\";"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  47,
+        "Icerik":  "settings.InventoryPage = page.InventoryPageSelectUpDown.IntValue;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  49,
+        "Icerik":  "if (int.TryParse(page.MinFishSpeedTextBox.Text, out int minMs))"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  50,
+        "Icerik":  "settings.FishingSpeedMinMs = minMs;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  51,
+        "Icerik":  "if (int.TryParse(page.MaxFishSpeedTextBox.Text, out int maxMs))"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  52,
+        "Icerik":  "settings.FishingSpeedMaxMs = maxMs;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  55,
+        "Icerik":  "private static void SaveChannelSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  57,
+        "Icerik":  "settings.ChangeChannelEnabled = page.ChangeChannelCheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  58,
+        "Icerik":  "settings.ChangeChannelAfterMinutes = page.ChangeChannelMinuteUpDown.IntValue;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  59,
+        "Icerik":  "settings.SelectAllChannels = page.SelectAllChannelsCheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  60,
+        "Icerik":  "settings.Ch1 = page.Ch1CheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  61,
+        "Icerik":  "settings.Ch2 = page.Ch2CheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  62,
+        "Icerik":  "settings.Ch3 = page.Ch3CheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  63,
+        "Icerik":  "settings.Ch4 = page.Ch4CheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  64,
+        "Icerik":  "settings.Ch5 = page.Ch5CheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  65,
+        "Icerik":  "settings.Ch6 = page.Ch6CheckBox.Checked;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  72,
+        "Icerik":  "private static void SaveFishFilterSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  74,
+        "Icerik":  "foreach (Control tablePanel in page.FishFilterPanel.Controls)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  76,
+        "Icerik":  "foreach (Control ctrl in tablePanel.Controls)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  78,
+        "Icerik":  "if (ctrl is UICheckBox cb \u0026\u0026 cb.Tag is string tag)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  80,
+        "Icerik":  "var parts = tag.Split(\u0027|\u0027);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  81,
+        "Icerik":  "if (parts.Length == 3)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  83,
+        "Icerik":  "var item = settings.GetOrCreateFilterItem(parts[0], parts[1]);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  84,
+        "Icerik":  "item.SetCheck(parts[2], cb.Checked);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  98,
+        "Icerik":  "public static void LoadFromSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  100,
+        "Icerik":  "LoadGeneralSettings(page, settings);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  101,
+        "Icerik":  "LoadChannelSettings(page, settings);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  102,
+        "Icerik":  "LoadFishFilterSettings(page, settings);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  105,
+        "Icerik":  "private static void LoadGeneralSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  107,
+        "Icerik":  "page.CloseGameCheckBox.Checked = settings.CloseGameEnabled;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  108,
+        "Icerik":  "page.CloseGameMinuteSelectUpDown.IntValue = settings.CloseGameAfterMinutes;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  110,
+        "Icerik":  "page.CharacterScreenCheckBox.Checked = settings.CharacterScreenEnabled;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  111,
+        "Icerik":  "page.CharacterScreenUpDown.IntValue = settings.CharacterScreenAfterMinutes;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  113,
+        "Icerik":  "page.BuyCampfireCheckBox.Checked = settings.BuyCampfireEnabled;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  114,
+        "Icerik":  "page.CampFireCountUpDown.IntValue = settings.CampfireCount;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  116,
+        "Icerik":  "page.BuyWormCheckbox.Checked = settings.BuyWormEnabled;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  117,
+        "Icerik":  "page.WormCountUpDown.IntValue = settings.WormCount;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  119,
+        "Icerik":  "page.AnimationModeSwitch.Active = settings.AnimationMode == \"armor\";"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  121,
+        "Icerik":  "page.InventoryPageSelectUpDown.IntValue = settings.InventoryPage;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  123,
+        "Icerik":  "page.MinFishSpeedTextBox.Text = settings.FishingSpeedMinMs.ToString();"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  124,
+        "Icerik":  "page.MaxFishSpeedTextBox.Text = settings.FishingSpeedMaxMs.ToString();"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  127,
+        "Icerik":  "private static void LoadChannelSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  129,
+        "Icerik":  "page.ChangeChannelCheckBox.Checked = settings.ChangeChannelEnabled;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  130,
+        "Icerik":  "page.ChangeChannelMinuteUpDown.IntValue = settings.ChangeChannelAfterMinutes;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  131,
+        "Icerik":  "page.SelectAllChannelsCheckBox.Checked = settings.SelectAllChannels;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  132,
+        "Icerik":  "page.Ch1CheckBox.Checked = settings.Ch1;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  133,
+        "Icerik":  "page.Ch2CheckBox.Checked = settings.Ch2;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  134,
+        "Icerik":  "page.Ch3CheckBox.Checked = settings.Ch3;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  135,
+        "Icerik":  "page.Ch4CheckBox.Checked = settings.Ch4;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  136,
+        "Icerik":  "page.Ch5CheckBox.Checked = settings.Ch5;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  137,
+        "Icerik":  "page.Ch6CheckBox.Checked = settings.Ch6;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  144,
+        "Icerik":  "private static void LoadFishFilterSettings(FishBotPage page, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  146,
+        "Icerik":  "foreach (Control tablePanel in page.FishFilterPanel.Controls)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  148,
+        "Icerik":  "foreach (Control ctrl in tablePanel.Controls)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  150,
+        "Icerik":  "if (ctrl is UICheckBox cb \u0026\u0026 cb.Tag is string tag)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  152,
+        "Icerik":  "var parts = tag.Split(\u0027|\u0027);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  153,
+        "Icerik":  "if (parts.Length == 3)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  155,
+        "Icerik":  "if (settings.FishFilter.TryGetValue(parts[0], out var category) \u0026\u0026"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  156,
+        "Icerik":  "category.TryGetValue(parts[1], out var item))"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPageBinder.cs",
+        "Satir":  158,
+        "Icerik":  "cb.Checked = item.GetCheck(parts[2], cb.Checked);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  2,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  3,
+        "Icerik":  "using System.IO;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  4,
+        "Icerik":  "using System.Text.Json;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Text.Json.Serialization;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  13,
+        "Icerik":  "public static class FishBotPresetManager"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  16,
+        "Icerik":  "private static readonly string FolderPath = Path.Combine("
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  17,
+        "Icerik":  "Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  18,
+        "Icerik":  "\".mmdfishbot\");"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  20,
+        "Icerik":  "private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  22,
+        "Icerik":  "WriteIndented = true,"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  23,
+        "Icerik":  "PropertyNamingPolicy = JsonNamingPolicy.CamelCase,"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  24,
+        "Icerik":  "DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  34,
+        "Icerik":  "public static void EnsureFolder()"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  36,
+        "Icerik":  "if (!Directory.Exists(FolderPath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  37,
+        "Icerik":  "Directory.CreateDirectory(FolderPath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  49,
+        "Icerik":  "public static string SavePreset(string presetName, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  52,
+        "Icerik":  "string filePath = GetFilePath(presetName);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  53,
+        "Icerik":  "string json = JsonSerializer.Serialize(settings, SerializerOptions);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  54,
+        "Icerik":  "File.WriteAllText(filePath, json);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  55,
+        "Icerik":  "return filePath;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  66,
+        "Icerik":  "public static FishBotSettings? LoadPreset(string presetName)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  68,
+        "Icerik":  "string filePath = GetFilePath(presetName);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  69,
+        "Icerik":  "if (!File.Exists(filePath)) return null;"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  73,
+        "Icerik":  "string json = File.ReadAllText(filePath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  74,
+        "Icerik":  "return JsonSerializer.Deserialize\u003cFishBotSettings\u003e(json, SerializerOptions);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  90,
+        "Icerik":  "public static string[] GetPresetNames()"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  92,
+        "Icerik":  "if (!Directory.Exists(FolderPath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  93,
+        "Icerik":  "return Array.Empty\u003cstring\u003e();"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  95,
+        "Icerik":  "var files = Directory.GetFiles(FolderPath, \"*.json\");"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  96,
+        "Icerik":  "var names = new string[files.Length];"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  97,
+        "Icerik":  "for (int i = 0; i \u003c files.Length; i++)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  98,
+        "Icerik":  "names[i] = Path.GetFileNameWithoutExtension(files[i]);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  111,
+        "Icerik":  "public static void DeletePreset(string presetName)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  113,
+        "Icerik":  "string filePath = GetFilePath(presetName);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  114,
+        "Icerik":  "if (File.Exists(filePath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  115,
+        "Icerik":  "File.Delete(filePath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  121,
+        "Icerik":  "public static bool PresetExists(string presetName)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  122,
+        "Icerik":  "=\u003e File.Exists(GetFilePath(presetName));"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  128,
+        "Icerik":  "private static string GetFilePath(string presetName)"
+    },
+    {
+        "Dosya":  "Helpers\\FishBotPresetManager.cs",
+        "Satir":  129,
+        "Icerik":  "=\u003e Path.Combine(FolderPath, $\"{presetName}.json\");"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Constants;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  2,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  3,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  4,
+        "Icerik":  "using System.Drawing;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  5,
+        "Icerik":  "using System.IO;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  6,
+        "Icerik":  "using System.Text.Json;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  7,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  11,
+        "Icerik":  "public record ColumnConfig(string HeaderText, string HeaderColor, int X, bool DefaultChecked);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  13,
+        "Icerik":  "public record TableConfig("
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  14,
+        "Icerik":  "string Id,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  15,
+        "Icerik":  "string Title,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  16,
+        "Icerik":  "string FolderPath,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  17,
+        "Icerik":  "string CategoryColor,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  18,
+        "Icerik":  "string NameHeader,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  19,
+        "Icerik":  "List\u003cColumnConfig\u003e Columns"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  25,
+        "Icerik":  "public static class FishFilterTableBuilder"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  27,
+        "Icerik":  "private const int RowHeight = 40;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  28,
+        "Icerik":  "private const int HeaderHeight = 45;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  29,
+        "Icerik":  "private const int TitleHeight = 35;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  30,
+        "Icerik":  "private const int PanelWidth = 649;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  32,
+        "Icerik":  "public static void BuildTables(Sunny.UI.UIPanel fishFilterPanel, Sunny.UI.UILine channelsLine, UserControl pageControl)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  34,
+        "Icerik":  "fishFilterPanel.Controls.Clear();"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  35,
+        "Icerik":  "fishFilterPanel.BackColor = Colors.ArkaPlanKoyu;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  36,
+        "Icerik":  "fishFilterPanel.FillColor = Colors.ArkaPlanKoyu;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  37,
+        "Icerik":  "fishFilterPanel.FillColor2 = Colors.ArkaPlanKoyu;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  39,
+        "Icerik":  "int currentY = 0;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  40,
+        "Icerik":  "var configs = LoadConfigs();"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  42,
+        "Icerik":  "foreach (var cfg in configs)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  44,
+        "Icerik":  "var panel = CreateGenericTable(cfg, ref currentY);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  45,
+        "Icerik":  "if (panel != null)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  47,
+        "Icerik":  "fishFilterPanel.Controls.Add(panel);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  52,
+        "Icerik":  "fishFilterPanel.Height = currentY + 10;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  53,
+        "Icerik":  "pageControl.Size = new Size(pageControl.Width, channelsLine.Bottom + fishFilterPanel.Height + 50);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  56,
+        "Icerik":  "private static List\u003cTableConfig\u003e LoadConfigs()"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  58,
+        "Icerik":  "string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, \"Assets\", \"fish_filter_config.json\");"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  59,
+        "Icerik":  "if (!File.Exists(jsonPath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  61,
+        "Icerik":  "jsonPath = Path.Combine(Application.StartupPath, \"..\", \"..\", \"..\", \"Assets\", \"fish_filter_config.json\");"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  64,
+        "Icerik":  "if (File.Exists(jsonPath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  66,
+        "Icerik":  "string json = File.ReadAllText(jsonPath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  67,
+        "Icerik":  "var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  68,
+        "Icerik":  "return JsonSerializer.Deserialize\u003cList\u003cTableConfig\u003e\u003e(json, options) ?? new List\u003cTableConfig\u003e();"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  71,
+        "Icerik":  "return new List\u003cTableConfig\u003e();"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  74,
+        "Icerik":  "private static Sunny.UI.UIPanel? CreateGenericTable(TableConfig cfg, ref int currentY)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  76,
+        "Icerik":  "string[] files = ResolveAssetFiles(cfg.FolderPath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  77,
+        "Icerik":  "if (files.Length == 0) return null;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  79,
+        "Icerik":  "int totalHeight = TitleHeight + HeaderHeight + (files.Length * RowHeight) + 15;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  82,
+        "Icerik":  "Sunny.UI.UIPanel container = new Sunny.UI.UIPanel"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  84,
+        "Icerik":  "Location = new Point(0, currentY),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  85,
+        "Icerik":  "Size = new Size(PanelWidth, totalHeight),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  86,
+        "Icerik":  "BackColor = Colors.ArkaPlanAcik,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  87,
+        "Icerik":  "FillColor = Colors.ArkaPlanAcik,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  88,
+        "Icerik":  "FillColor2 = Colors.ArkaPlanAcik,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  90,
+        "Icerik":  "Radius = 15,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  95,
+        "Icerik":  "container.Controls.Add(new Label"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  97,
+        "Icerik":  "Text = cfg.Title,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  98,
+        "Icerik":  "Font = new Font(\"Calibri\", 14F, FontStyle.Bold),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  100,
+        "Icerik":  "Location = new Point(15, 10),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  101,
+        "Icerik":  "AutoSize = true"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  104,
+        "Icerik":  "int tableTop = TitleHeight + 5;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  107,
+        "Icerik":  "container.Controls.Add(new Label"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  110,
+        "Icerik":  "Font = new Font(\"Segoe UI\", 11F, FontStyle.Bold),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  111,
+        "Icerik":  "ForeColor = Color.White,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  112,
+        "Icerik":  "Location = new Point(20, tableTop + 8),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  113,
+        "Icerik":  "Size = new Size(cfg.Columns.Count \u003e 2 ? 180 : (cfg.Columns.Count \u003e 1 ? 220 : 300), 25),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  114,
+        "Icerik":  "TextAlign = ContentAlignment.MiddleLeft"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  118,
+        "Icerik":  "int headerSpacing = cfg.Columns.Count switch { 1 =\u003e 0, 2 =\u003e 240, _ =\u003e 105 };"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  119,
+        "Icerik":  "int headerStartX = cfg.Columns.Count switch { 1 =\u003e 515, 2 =\u003e 275, _ =\u003e 210 };"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  121,
+        "Icerik":  "for (int i = 0; i \u003c cfg.Columns.Count; i++)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  123,
+        "Icerik":  "var col = cfg.Columns[i];"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  124,
+        "Icerik":  "container.Controls.Add(new Label"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  127,
+        "Icerik":  "Font = new Font(\"Segoe UI\", 10F, FontStyle.Bold),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  129,
+        "Icerik":  "Location = new Point(headerStartX + (i * headerSpacing), tableTop + 8),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  130,
+        "Icerik":  "Size = new Size(cfg.Columns.Count \u003e 2 ? 95 : 110, 25),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  131,
+        "Icerik":  "TextAlign = ContentAlignment.MiddleCenter"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  136,
+        "Icerik":  "container.Controls.Add(new Sunny.UI.UILine"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  138,
+        "Icerik":  "Location = new Point(15, tableTop + RowHeight - 2),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  139,
+        "Icerik":  "Size = new Size(PanelWidth - 30, 2),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  140,
+        "Icerik":  "LineColor = Colors.CizgiRengi,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  141,
+        "Icerik":  "FillColor = Color.Transparent"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  145,
+        "Icerik":  "int yOffset = tableTop + RowHeight + 5;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  146,
+        "Icerik":  "foreach (string filePath in files)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  148,
+        "Icerik":  "string formattedName = FormatName(Path.GetFileNameWithoutExtension(filePath));"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  151,
+        "Icerik":  "container.Controls.Add(new PictureBox"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  153,
+        "Icerik":  "Location = new Point(20, yOffset + 4),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  154,
+        "Icerik":  "Size = new Size(30, 30),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  155,
+        "Icerik":  "SizeMode = PictureBoxSizeMode.Zoom,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  156,
+        "Icerik":  "Image = Image.FromFile(filePath)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  160,
+        "Icerik":  "container.Controls.Add(new Label"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  163,
+        "Icerik":  "Font = new Font(\"Segoe UI\", 10F, FontStyle.Regular),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  164,
+        "Icerik":  "ForeColor = Color.White,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  165,
+        "Icerik":  "Location = new Point(55, yOffset + 7),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  166,
+        "Icerik":  "Size = new Size(cfg.Columns.Count \u003e 2 ? 150 : (cfg.Columns.Count \u003e 1 ? 200 : 250), 25),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  167,
+        "Icerik":  "TextAlign = ContentAlignment.MiddleLeft"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  171,
+        "Icerik":  "foreach (var col in cfg.Columns)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  173,
+        "Icerik":  "container.Controls.Add(new Sunny.UI.UICheckBox"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  176,
+        "Icerik":  "Location = new Point(col.X, yOffset + 6),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  177,
+        "Icerik":  "Size = new Size(25, 25),"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  178,
+        "Icerik":  "CheckBoxSize = 22,"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  182,
+        "Icerik":  "Tag = $\"{cfg.Id}|{Path.GetFileNameWithoutExtension(filePath)}|{col.HeaderText}\""
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  186,
+        "Icerik":  "yOffset += RowHeight;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  189,
+        "Icerik":  "currentY += totalHeight;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  190,
+        "Icerik":  "return container;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  193,
+        "Icerik":  "private static string[] ResolveAssetFiles(string relativeFolderPath)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  195,
+        "Icerik":  "string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, \"Assets\", \"FishIcons\", relativeFolderPath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  196,
+        "Icerik":  "if (!Directory.Exists(assetPath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  198,
+        "Icerik":  "string projectAssetPath = Path.Combine(Application.StartupPath, \"..\", \"..\", \"..\", \"Assets\", \"FishIcons\", relativeFolderPath);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  199,
+        "Icerik":  "if (Directory.Exists(projectAssetPath))"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  202,
+        "Icerik":  "return Directory.Exists(assetPath) ? Directory.GetFiles(assetPath, \"*.png\") : Array.Empty\u003cstring\u003e();"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  205,
+        "Icerik":  "private static string FormatName(string rawName)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  207,
+        "Icerik":  "if (string.IsNullOrWhiteSpace(rawName)) return rawName;"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  208,
+        "Icerik":  "string clean = rawName.Replace(\u0027_\u0027, \u0027 \u0027);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  209,
+        "Icerik":  "string[] words = clean.Split(\u0027 \u0027, StringSplitOptions.RemoveEmptyEntries);"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  210,
+        "Icerik":  "for (int i = 0; i \u003c words.Length; i++)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  212,
+        "Icerik":  "if (words[i].Length \u003e 0)"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  213,
+        "Icerik":  "words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();"
+    },
+    {
+        "Dosya":  "Helpers\\FishFilterTableBuilder.cs",
+        "Satir":  215,
+        "Icerik":  "return string.Join(\" \", words);"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  2,
+        "Icerik":  "using Sunny.UI;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  3,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  4,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Diagnostics;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  13,
+        "Icerik":  "public static class GameWindowProcessHelper"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  15,
+        "Icerik":  "private const string TargetProcessName = \"metin2client\";"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  20,
+        "Icerik":  "public static List\u003cGameWindowProcessInfo\u003e GetActiveGameWindowProcesses()"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  22,
+        "Icerik":  "var result = new List\u003cGameWindowProcessInfo\u003e();"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  30,
+        "Icerik":  "if (processes.Length == 0)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  32,
+        "Icerik":  "processes = Process.GetProcessesByName(\"metin2\");"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  35,
+        "Icerik":  "foreach (var proc in processes)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  39,
+        "Icerik":  "if (!proc.HasExited \u0026\u0026 proc.MainWindowHandle != IntPtr.Zero)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  41,
+        "Icerik":  "result.Add(new GameWindowProcessInfo"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  43,
+        "Icerik":  "ProcessId = proc.Id,"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  44,
+        "Icerik":  "Handle = proc.MainWindowHandle,"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  45,
+        "Icerik":  "Title = proc.MainWindowTitle,"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  69,
+        "Icerik":  "public static void PopulateGameWindowComboBox(UIComboBox comboBox)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  71,
+        "Icerik":  "if (comboBox == null) return;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  73,
+        "Icerik":  "comboBox.Items.Clear();"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  74,
+        "Icerik":  "comboBox.Items.Add(\"-- Seç --\");"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  76,
+        "Icerik":  "var activeWindows = GetActiveGameWindowProcesses();"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  77,
+        "Icerik":  "var activeHandles = new HashSet\u003cIntPtr\u003e();"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  79,
+        "Icerik":  "foreach (var windowInfo in activeWindows)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  81,
+        "Icerik":  "comboBox.Items.Add(windowInfo);"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  82,
+        "Icerik":  "activeHandles.Add(windowInfo.Handle);"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  86,
+        "Icerik":  "Aether.States.ClientState.Instance.ValidateAndCleanInvalidHandles(activeHandles);"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  88,
+        "Icerik":  "comboBox.SelectedIndex = 0;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  95,
+        "Icerik":  "public static void SelectMatchingHandleInComboBox(UIComboBox comboBox, IntPtr targetHandle)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  97,
+        "Icerik":  "if (comboBox == null || comboBox.Items.Count == 0) return;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  99,
+        "Icerik":  "if (targetHandle != IntPtr.Zero)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  101,
+        "Icerik":  "for (int i = 0; i \u003c comboBox.Items.Count; i++)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  103,
+        "Icerik":  "if (comboBox.Items[i] is GameWindowProcessInfo procInfo \u0026\u0026 procInfo.Handle == targetHandle)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  105,
+        "Icerik":  "comboBox.SelectedIndex = i;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  112,
+        "Icerik":  "comboBox.SelectedIndex = 0;"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  118,
+        "Icerik":  "public static void BringWindowToFront(IntPtr hWnd)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  120,
+        "Icerik":  "if (hWnd != IntPtr.Zero)"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  122,
+        "Icerik":  "Aether.Native.Win32Native.ShowWindow(hWnd, Aether.Native.Win32Native.SW_RESTORE);"
+    },
+    {
+        "Dosya":  "Helpers\\GameWindowProcessHelper.cs",
+        "Satir":  123,
+        "Icerik":  "Aether.Native.Win32Native.SetForegroundWindow(hWnd);"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  7,
+        "Icerik":  "public sealed class ClientInfo"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  10,
+        "Icerik":  "public int Id { get; }"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  13,
+        "Icerik":  "public string Name { get; }"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  16,
+        "Icerik":  "public System.IntPtr Handle { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  19,
+        "Icerik":  "public int ProcessId { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  21,
+        "Icerik":  "public ClientInfo(int id, string name)"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  23,
+        "Icerik":  "Id = id;"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  25,
+        "Icerik":  "Handle = System.IntPtr.Zero;"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  26,
+        "Icerik":  "ProcessId = 0;"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  29,
+        "Icerik":  "public ClientInfo(int id, string name, System.IntPtr handle, int processId = 0)"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  31,
+        "Icerik":  "Id = id;"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  34,
+        "Icerik":  "ProcessId = processId;"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  37,
+        "Icerik":  "public override string ToString() =\u003e $\"Client #{Id}: {Name}\";"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  39,
+        "Icerik":  "public override bool Equals(object? obj) =\u003e obj is ClientInfo other \u0026\u0026 Id == other.Id;"
+    },
+    {
+        "Dosya":  "Models\\ClientInfo.cs",
+        "Satir":  40,
+        "Icerik":  "public override int GetHashCode() =\u003e Id.GetHashCode();"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  1,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  8,
+        "Icerik":  "public class ClientModel"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  10,
+        "Icerik":  "public int Id { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  11,
+        "Icerik":  "public string Name { get; set; } = string.Empty;"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  12,
+        "Icerik":  "public bool IsSelected { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  13,
+        "Icerik":  "public bool IsChecked { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  16,
+        "Icerik":  "public bool IsFishBotRunning { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  17,
+        "Icerik":  "public bool IsUpgradeBotRunning { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  18,
+        "Icerik":  "public bool IsFishPuzzleRunning { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  19,
+        "Icerik":  "public bool IsAlchemyRunning { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  21,
+        "Icerik":  "public ClientModel() { }"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  23,
+        "Icerik":  "public ClientModel(int id, string name)"
+    },
+    {
+        "Dosya":  "Models\\ClientModel.cs",
+        "Satir":  25,
+        "Icerik":  "Id = id;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  9,
+        "Icerik":  "public class FishBotSettings"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  12,
+        "Icerik":  "public string SettingsName { get; set; } = string.Empty;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  15,
+        "Icerik":  "public bool CloseGameEnabled { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  16,
+        "Icerik":  "public int CloseGameAfterMinutes { get; set; } = 25;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  19,
+        "Icerik":  "public bool ChangeChannelEnabled { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  20,
+        "Icerik":  "public int ChangeChannelAfterMinutes { get; set; } = 25;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  21,
+        "Icerik":  "public bool SelectAllChannels { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  22,
+        "Icerik":  "public bool Ch1 { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  23,
+        "Icerik":  "public bool Ch2 { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  24,
+        "Icerik":  "public bool Ch3 { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  25,
+        "Icerik":  "public bool Ch4 { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  26,
+        "Icerik":  "public bool Ch5 { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  27,
+        "Icerik":  "public bool Ch6 { get; set; } = true;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  30,
+        "Icerik":  "public bool CharacterScreenEnabled { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  31,
+        "Icerik":  "public int CharacterScreenAfterMinutes { get; set; } = 25;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  34,
+        "Icerik":  "public bool BuyCampfireEnabled { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  35,
+        "Icerik":  "public int CampfireCount { get; set; } = 5;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  38,
+        "Icerik":  "public bool BuyWormEnabled { get; set; } = false;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  39,
+        "Icerik":  "public int WormCount { get; set; } = 5;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  43,
+        "Icerik":  "public string AnimationMode { get; set; } = \"mount\";"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  46,
+        "Icerik":  "public int InventoryPage { get; set; } = 1;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  49,
+        "Icerik":  "public int FishingSpeedMinMs { get; set; } = 150;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  50,
+        "Icerik":  "public int FishingSpeedMaxMs { get; set; } = 250;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  55,
+        "Icerik":  "public Dictionary\u003cstring, Dictionary\u003cstring, FishFilterItemState\u003e\u003e FishFilter { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  56,
+        "Icerik":  "= new Dictionary\u003cstring, Dictionary\u003cstring, FishFilterItemState\u003e\u003e();"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  61,
+        "Icerik":  "public FishFilterItemState GetOrCreateFilterItem(string categoryId, string itemKey)"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  63,
+        "Icerik":  "if (!FishFilter.TryGetValue(categoryId, out var category))"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  65,
+        "Icerik":  "category = new Dictionary\u003cstring, FishFilterItemState\u003e();"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  66,
+        "Icerik":  "FishFilter[categoryId] = category;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  69,
+        "Icerik":  "if (!category.TryGetValue(itemKey, out var item))"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  71,
+        "Icerik":  "item = new FishFilterItemState(itemKey);"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  72,
+        "Icerik":  "category[itemKey] = item;"
+    },
+    {
+        "Dosya":  "Models\\FishBotSettings.cs",
+        "Satir":  75,
+        "Icerik":  "return item;"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  9,
+        "Icerik":  "public class FishFilterItemState"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  12,
+        "Icerik":  "public string ItemKey { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  15,
+        "Icerik":  "public Dictionary\u003cstring, bool\u003e ColumnChecks { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  17,
+        "Icerik":  "public FishFilterItemState(string itemKey)"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  19,
+        "Icerik":  "ItemKey = itemKey;"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  20,
+        "Icerik":  "ColumnChecks = new Dictionary\u003cstring, bool\u003e();"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  24,
+        "Icerik":  "public bool GetCheck(string columnKey, bool defaultValue = false)"
+    },
+    {
+        "Dosya":  "Models\\FishFilterItemState.cs",
+        "Satir":  30,
+        "Icerik":  "public void SetCheck(string columnKey, bool value)"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  1,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  8,
+        "Icerik":  "public class GameWindowProcessInfo"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  10,
+        "Icerik":  "public int ProcessId { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  11,
+        "Icerik":  "public IntPtr Handle { get; set; }"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  12,
+        "Icerik":  "public string Title { get; set; } = string.Empty;"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  13,
+        "Icerik":  "public string ProcessName { get; set; } = string.Empty;"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  15,
+        "Icerik":  "public override string ToString()"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  17,
+        "Icerik":  "return string.IsNullOrWhiteSpace(Title)"
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  18,
+        "Icerik":  "? $\"{ProcessName} (PID: {ProcessId} | HWND: 0x{Handle.ToInt64():X})\""
+    },
+    {
+        "Dosya":  "Models\\GameWindowProcessInfo.cs",
+        "Satir":  19,
+        "Icerik":  ": $\"{Title} (PID: {ProcessId} | HWND: 0x{Handle.ToInt64():X})\";"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  1,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  2,
+        "Icerik":  "using System.Runtime.InteropServices;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  4,
+        "Icerik":  "namespace Aether.Native"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  9,
+        "Icerik":  "public static class Win32Native"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  11,
+        "Icerik":  "#region Win32 Constants"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  14,
+        "Icerik":  "public const int WM_HOTKEY = 0x0312;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  15,
+        "Icerik":  "public const int WM_NCCALCSIZE = 0x0083;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  16,
+        "Icerik":  "public const int WM_NCPAINT = 0x0085;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  19,
+        "Icerik":  "public const int GWL_EXSTYLE = -20;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  20,
+        "Icerik":  "public const int WS_EX_TRANSPARENT = 0x20;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  21,
+        "Icerik":  "public const int WS_EX_LAYERED = 0x80000;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  22,
+        "Icerik":  "public const uint WDA_EXCLUDE = 0x00000003;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  25,
+        "Icerik":  "public const int SB_HORZ = 0;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  26,
+        "Icerik":  "public const int SB_VERT = 1;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  27,
+        "Icerik":  "public const int SB_BOTH = 3;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  30,
+        "Icerik":  "public const uint MOUSEEVENTF_LEFTDOWN = 0x02;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  31,
+        "Icerik":  "public const uint MOUSEEVENTF_LEFTUP = 0x04;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  34,
+        "Icerik":  "public const uint KEYEVENTF_KEYUP = 0x0002;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  37,
+        "Icerik":  "public const uint VK_SPACE = 0x20;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  38,
+        "Icerik":  "public const uint VK_ESCAPE = 0x1B;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  39,
+        "Icerik":  "public const uint VK_1 = 0x31;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  40,
+        "Icerik":  "public const uint VK_2 = 0x32;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  41,
+        "Icerik":  "public const uint VK_3 = 0x33;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  42,
+        "Icerik":  "public const uint VK_4 = 0x34;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  43,
+        "Icerik":  "public const uint VK_5 = 0x35;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  44,
+        "Icerik":  "public const uint VK_CONTROL = 0x11;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  45,
+        "Icerik":  "public const uint VK_G = 0x47;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  47,
+        "Icerik":  "#endregion"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  49,
+        "Icerik":  "#region User32.dll Functions"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  51,
+        "Icerik":  "[DllImport(\"user32.dll\", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  52,
+        "Icerik":  "public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  54,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  55,
+        "Icerik":  "public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  57,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  58,
+        "Icerik":  "public static extern bool UnregisterHotKey(IntPtr hWnd, int id);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  60,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  61,
+        "Icerik":  "public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  63,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  64,
+        "Icerik":  "public static extern uint MapVirtualKey(uint uCode, uint uMapType);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  66,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  67,
+        "Icerik":  "public static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  69,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  70,
+        "Icerik":  "public static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  72,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  73,
+        "Icerik":  "public static extern int GetWindowLong(IntPtr hWnd, int nIndex);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  75,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  76,
+        "Icerik":  "public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  78,
+        "Icerik":  "public const int SW_RESTORE = 9;"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  80,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  81,
+        "Icerik":  "public static extern bool SetForegroundWindow(IntPtr hWnd);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  83,
+        "Icerik":  "[DllImport(\"user32.dll\")]"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  84,
+        "Icerik":  "public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);"
+    },
+    {
+        "Dosya":  "Native\\Win32Native.cs",
+        "Satir":  86,
+        "Icerik":  "#endregion"
+    },
+    {
+        "Dosya":  "Pages\\AlchemyPage.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Pages\\AlchemyPage.cs",
+        "Satir":  5,
+        "Icerik":  "public partial class AlchemyPage : BaseBotPage"
+    },
+    {
+        "Dosya":  "Pages\\AlchemyPage.cs",
+        "Satir":  7,
+        "Icerik":  "public AlchemyPage()"
+    },
+    {
+        "Dosya":  "Pages\\AlchemyPage.cs",
+        "Satir":  9,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Pages\\AlchemyPage.cs",
+        "Satir":  12,
+        "Icerik":  "protected override Label ClientNameLabel =\u003e clientNameLabel;"
+    },
+    {
+        "Dosya":  "Pages\\AntiBanPage.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Pages\\AntiBanPage.cs",
+        "Satir":  5,
+        "Icerik":  "public partial class AntiBanPage : BaseBotPage"
+    },
+    {
+        "Dosya":  "Pages\\AntiBanPage.cs",
+        "Satir":  7,
+        "Icerik":  "public AntiBanPage()"
+    },
+    {
+        "Dosya":  "Pages\\AntiBanPage.cs",
+        "Satir":  9,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Pages\\AntiBanPage.cs",
+        "Satir":  12,
+        "Icerik":  "protected override Label ClientNameLabel =\u003e clientNameLabel;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  2,
+        "Icerik":  "using Aether.States;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  3,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  4,
+        "Icerik":  "using System.ComponentModel;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  16,
+        "Icerik":  "[DesignerCategory(\"Component\")]"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  17,
+        "Icerik":  "public class BaseBotPage : UserControl"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  24,
+        "Icerik":  "[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  25,
+        "Icerik":  "protected virtual Label? ClientNameLabel =\u003e null;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  27,
+        "Icerik":  "public BaseBotPage()"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  32,
+        "Icerik":  "protected override void OnLoad(EventArgs e)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  36,
+        "Icerik":  "if (!DesignMode)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  39,
+        "Icerik":  "UpdateClientDisplay(ClientState.Instance.SelectedClient);"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  42,
+        "Icerik":  "ClientState.Instance.OnSelectedClientChanged += OnSelectedClientChanged;"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  46,
+        "Icerik":  "private void OnSelectedClientChanged(object? sender, ClientInfo? clientInfo)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  48,
+        "Icerik":  "if (InvokeRequired)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  49,
+        "Icerik":  "Invoke(new Action(() =\u003e UpdateClientDisplay(clientInfo)));"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  51,
+        "Icerik":  "UpdateClientDisplay(clientInfo);"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  54,
+        "Icerik":  "private void UpdateClientDisplay(ClientInfo? clientInfo)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  56,
+        "Icerik":  "if (ClientNameLabel != null)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  58,
+        "Icerik":  "ClientNameLabel.Text = clientInfo?.Name ?? \"Seçim Yok\";"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  62,
+        "Icerik":  "protected override void OnHandleDestroyed(EventArgs e)"
+    },
+    {
+        "Dosya":  "Pages\\BaseBotPage.cs",
+        "Satir":  65,
+        "Icerik":  "ClientState.Instance.OnSelectedClientChanged -= OnSelectedClientChanged;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Helpers;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  2,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  3,
+        "Icerik":  "using Aether.States;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  4,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  5,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  9,
+        "Icerik":  "public partial class FishBotPage : BaseBotPage"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  12,
+        "Icerik":  "private int? _lastLoadedClientId = null;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  14,
+        "Icerik":  "public FishBotPage()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  16,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  19,
+        "Icerik":  "protected override Label ClientNameLabel =\u003e clientNameLabel;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  22,
+        "Icerik":  "internal Sunny.UI.UICheckBox CloseGameCheckBox =\u003e closeGameCheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  23,
+        "Icerik":  "internal Sunny.UI.UIUpDownTextBox CloseGameMinuteSelectUpDown =\u003e closeGameMinuteSelectUpDown;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  24,
+        "Icerik":  "internal Sunny.UI.UICheckBox CharacterScreenCheckBox =\u003e characterScreenCheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  25,
+        "Icerik":  "internal Sunny.UI.UIUpDownTextBox CharacterScreenUpDown =\u003e characterScreenUpDown;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  26,
+        "Icerik":  "internal Sunny.UI.UICheckBox BuyCampfireCheckBox =\u003e buyCampfireCheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  27,
+        "Icerik":  "internal Sunny.UI.UIUpDownTextBox CampFireCountUpDown =\u003e campFireCountUpDown;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  28,
+        "Icerik":  "internal Sunny.UI.UICheckBox BuyWormCheckbox =\u003e buyWormCheckbox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  29,
+        "Icerik":  "internal Sunny.UI.UIUpDownTextBox WormCountUpDown =\u003e wormCountUpDown;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  30,
+        "Icerik":  "internal Sunny.UI.UISwitch AnimationModeSwitch =\u003e animationModeSwitch;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  31,
+        "Icerik":  "internal Sunny.UI.UIUpDownTextBox InventoryPageSelectUpDown =\u003e inventoryPageSelectUpDown;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  32,
+        "Icerik":  "internal Sunny.UI.UITextBox MinFishSpeedTextBox =\u003e minFishSpeedTextBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  33,
+        "Icerik":  "internal Sunny.UI.UITextBox MaxFishSpeedTextBox =\u003e maxFishSpeedTextBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  34,
+        "Icerik":  "internal Sunny.UI.UICheckBox ChangeChannelCheckBox =\u003e changeChannelCheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  35,
+        "Icerik":  "internal Sunny.UI.UIUpDownTextBox ChangeChannelMinuteUpDown =\u003e changeChannelMinuteUpDown;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  36,
+        "Icerik":  "internal Sunny.UI.UICheckBox SelectAllChannelsCheckBox =\u003e selectAllChannelsCheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  37,
+        "Icerik":  "internal Sunny.UI.UICheckBox Ch1CheckBox =\u003e ch1CheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  38,
+        "Icerik":  "internal Sunny.UI.UICheckBox Ch2CheckBox =\u003e ch2CheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  39,
+        "Icerik":  "internal Sunny.UI.UICheckBox Ch3CheckBox =\u003e ch3CheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  40,
+        "Icerik":  "internal Sunny.UI.UICheckBox Ch4CheckBox =\u003e ch4CheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  41,
+        "Icerik":  "internal Sunny.UI.UICheckBox Ch5CheckBox =\u003e ch5CheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  42,
+        "Icerik":  "internal Sunny.UI.UICheckBox Ch6CheckBox =\u003e ch6CheckBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  43,
+        "Icerik":  "internal Sunny.UI.UIPanel FishFilterPanel =\u003e fishFilterPanel;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  46,
+        "Icerik":  "internal Sunny.UI.UITextBox BotSettingsNameTextBox =\u003e botSettingsNameTextBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  47,
+        "Icerik":  "internal Sunny.UI.UIComboBox BotSettingsListComboBox =\u003e botSettingsListComboBox;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  49,
+        "Icerik":  "protected override void OnLoad(EventArgs e)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  54,
+        "Icerik":  "if (!DesignMode)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  57,
+        "Icerik":  "FishFilterTableBuilder.BuildTables(fishFilterPanel, channelsLine, this);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  60,
+        "Icerik":  "GameWindowProcessHelper.PopulateGameWindowComboBox(gameWindowSelectComboBox);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  63,
+        "Icerik":  "LoadSettingsForCurrentClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  66,
+        "Icerik":  "SyncComboBoxWithSelectedClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  69,
+        "Icerik":  "ClientState.Instance.OnSelectedClientChanged += (s, clientInfo) =\u003e"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  71,
+        "Icerik":  "SaveSettingsForLastClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  72,
+        "Icerik":  "LoadSettingsForCurrentClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  73,
+        "Icerik":  "SyncComboBoxWithSelectedClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  77,
+        "Icerik":  "refresGameWindowList.Click += (s, ev) =\u003e"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  79,
+        "Icerik":  "GameWindowProcessHelper.PopulateGameWindowComboBox(gameWindowSelectComboBox);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  80,
+        "Icerik":  "SyncComboBoxWithSelectedClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  84,
+        "Icerik":  "highlightGameWindowButton.Click += (s, ev) =\u003e"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  86,
+        "Icerik":  "if (gameWindowSelectComboBox.SelectedItem is Aether.Models.GameWindowProcessInfo windowInfo)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  88,
+        "Icerik":  "GameWindowProcessHelper.BringWindowToFront(windowInfo.Handle);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  93,
+        "Icerik":  "selectGameWindow.Click += (s, ev) =\u003e"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  95,
+        "Icerik":  "if (gameWindowSelectComboBox.SelectedItem is Aether.Models.GameWindowProcessInfo windowInfo)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  97,
+        "Icerik":  "var currentSelected = ClientState.Instance.SelectedClient;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  98,
+        "Icerik":  "int? currentId = currentSelected?.Id;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  101,
+        "Icerik":  "var existingOwner = ClientState.Instance.FindClientByHandle(windowInfo.Handle, currentId);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  103,
+        "Icerik":  "if (existingOwner != null)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  107,
+        "Icerik":  "$\"Bu pencere zaten \u0027{existingOwner.Name}\u0027 (Client #{existingOwner.Id})\u0027ye tanımlanmış durumda.\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  108,
+        "Icerik":  "\"Pencere Seçim Hatası\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  110,
+        "Icerik":  "MessageBoxIcon.Warning"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  115,
+        "Icerik":  "ClientState.Instance.UpdateSelectedClientHandle(windowInfo.Handle, windowInfo.ProcessId);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  120,
+        "Icerik":  "ClientState.Instance.UpdateSelectedClientHandle(IntPtr.Zero, 0);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  128,
+        "Icerik":  "RefreshPresetList();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  131,
+        "Icerik":  "addBotSettingsButton.Click += (s, ev) =\u003e SavePreset();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  134,
+        "Icerik":  "loadBotSettingsButton.Click += (s, ev) =\u003e LoadSelectedPreset();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  137,
+        "Icerik":  "deleteBotSettingsButton.Click += (s, ev) =\u003e DeleteSelectedPreset();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  148,
+        "Icerik":  "private void LoadSettingsForCurrentClient()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  150,
+        "Icerik":  "var client = ClientState.Instance.SelectedClient;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  151,
+        "Icerik":  "if (client == null) return;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  153,
+        "Icerik":  "_lastLoadedClientId = client.Id;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  154,
+        "Icerik":  "var settings = FishBotSettingsRegistry.Instance.GetOrCreate(client.Id);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  155,
+        "Icerik":  "FishBotPageBinder.LoadFromSettings(this, settings);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  164,
+        "Icerik":  "private void SaveSettingsForLastClient()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  166,
+        "Icerik":  "if (_lastLoadedClientId == null) return;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  168,
+        "Icerik":  "var settings = FishBotSettingsRegistry.Instance.GetOrCreate(_lastLoadedClientId.Value);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  169,
+        "Icerik":  "FishBotPageBinder.SaveToSettings(this, settings);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  176,
+        "Icerik":  "private void SetupChannelCheckBoxHandlers()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  183,
+        "Icerik":  "changeChannelCheckBox.Click += (s, e) =\u003e"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  193,
+        "Icerik":  "selectAllChannelsCheckBox.Click += (s, e) =\u003e"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  202,
+        "Icerik":  "internal void SetChannelControlsEnabled(bool enabled)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  211,
+        "Icerik":  "changeChannelMinuteUpDown.Enabled = enabled;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  214,
+        "Icerik":  "private void SetAllChannelsChecked(bool isChecked)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  216,
+        "Icerik":  "ch1CheckBox.Checked = isChecked;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  217,
+        "Icerik":  "ch2CheckBox.Checked = isChecked;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  218,
+        "Icerik":  "ch3CheckBox.Checked = isChecked;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  219,
+        "Icerik":  "ch4CheckBox.Checked = isChecked;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  220,
+        "Icerik":  "ch5CheckBox.Checked = isChecked;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  221,
+        "Icerik":  "ch6CheckBox.Checked = isChecked;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  231,
+        "Icerik":  "private void RefreshPresetList()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  233,
+        "Icerik":  "FishBotPresetManager.EnsureFolder();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  234,
+        "Icerik":  "var names = FishBotPresetManager.GetPresetNames();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  236,
+        "Icerik":  "botSettingsListComboBox.Items.Clear();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  237,
+        "Icerik":  "foreach (var name in names)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  238,
+        "Icerik":  "botSettingsListComboBox.Items.Add(name);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  240,
+        "Icerik":  "if (botSettingsListComboBox.Items.Count \u003e 0)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  241,
+        "Icerik":  "botSettingsListComboBox.SelectedIndex = 0;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  247,
+        "Icerik":  "private void SavePreset()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  249,
+        "Icerik":  "string presetName = botSettingsNameTextBox.Text?.Trim() ?? string.Empty;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  250,
+        "Icerik":  "if (string.IsNullOrEmpty(presetName))"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  253,
+        "Icerik":  "\"Lütfen bir preset ismi girin.\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  254,
+        "Icerik":  "\"Kayıt Hatası\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  256,
+        "Icerik":  "MessageBoxIcon.Warning);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  261,
+        "Icerik":  "SaveSettingsForLastClient();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  263,
+        "Icerik":  "var client = ClientState.Instance.SelectedClient;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  264,
+        "Icerik":  "int clientId = client?.Id ?? (_lastLoadedClientId ?? 0);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  265,
+        "Icerik":  "var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientId);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  266,
+        "Icerik":  "settings.SettingsName = presetName;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  268,
+        "Icerik":  "FishBotPresetManager.SavePreset(presetName, settings);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  269,
+        "Icerik":  "RefreshPresetList();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  272,
+        "Icerik":  "int idx = botSettingsListComboBox.Items.IndexOf(presetName);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  273,
+        "Icerik":  "if (idx \u003e= 0) botSettingsListComboBox.SelectedIndex = idx;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  276,
+        "Icerik":  "$\"\u0027{presetName}\u0027 başarıyla kaydedildi.\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  277,
+        "Icerik":  "\"Preset Kaydedildi\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  279,
+        "Icerik":  "MessageBoxIcon.Information);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  285,
+        "Icerik":  "private void LoadSelectedPreset()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  287,
+        "Icerik":  "if (botSettingsListComboBox.SelectedItem is not string presetName)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  290,
+        "Icerik":  "\"Lütfen yüklenecek bir preset seçin.\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  291,
+        "Icerik":  "\"Yükleme Hatası\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  293,
+        "Icerik":  "MessageBoxIcon.Warning);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  297,
+        "Icerik":  "var loaded = FishBotPresetManager.LoadPreset(presetName);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  298,
+        "Icerik":  "if (loaded == null)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  301,
+        "Icerik":  "$\"\u0027{presetName}\u0027 preset dosyası okunamadı.\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  302,
+        "Icerik":  "\"Yükleme Hatası\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  304,
+        "Icerik":  "MessageBoxIcon.Error);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  308,
+        "Icerik":  "var client = ClientState.Instance.SelectedClient;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  309,
+        "Icerik":  "if (client == null) return;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  312,
+        "Icerik":  "FishBotSettingsRegistry.Instance.Set(client.Id, loaded);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  313,
+        "Icerik":  "_lastLoadedClientId = client.Id;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  316,
+        "Icerik":  "FishBotPageBinder.LoadFromSettings(this, loaded);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  323,
+        "Icerik":  "private void DeleteSelectedPreset()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  325,
+        "Icerik":  "if (botSettingsListComboBox.SelectedItem is not string presetName)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  328,
+        "Icerik":  "\"Lütfen silinecek bir preset seçin.\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  329,
+        "Icerik":  "\"Silme Hatası\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  331,
+        "Icerik":  "MessageBoxIcon.Warning);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  336,
+        "Icerik":  "$\"\u0027{presetName}\u0027 presetini kalıcı olarak silmek istediğinize emin misiniz?\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  337,
+        "Icerik":  "\"Preset Sil\","
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  339,
+        "Icerik":  "MessageBoxIcon.Question,"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  342,
+        "Icerik":  "if (result == DialogResult.Yes)"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  344,
+        "Icerik":  "FishBotPresetManager.DeletePreset(presetName);"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  345,
+        "Icerik":  "RefreshPresetList();"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  353,
+        "Icerik":  "private void SyncComboBoxWithSelectedClient()"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  355,
+        "Icerik":  "var selectedClient = ClientState.Instance.SelectedClient;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  356,
+        "Icerik":  "IntPtr currentHandle = selectedClient?.Handle ?? IntPtr.Zero;"
+    },
+    {
+        "Dosya":  "Pages\\FishBotPage.cs",
+        "Satir":  357,
+        "Icerik":  "GameWindowProcessHelper.SelectMatchingHandleInComboBox(gameWindowSelectComboBox, currentHandle);"
+    },
+    {
+        "Dosya":  "Pages\\FishPuzzlePage.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Pages\\FishPuzzlePage.cs",
+        "Satir":  5,
+        "Icerik":  "public partial class FishPuzzlePage : BaseBotPage"
+    },
+    {
+        "Dosya":  "Pages\\FishPuzzlePage.cs",
+        "Satir":  7,
+        "Icerik":  "public FishPuzzlePage()"
+    },
+    {
+        "Dosya":  "Pages\\FishPuzzlePage.cs",
+        "Satir":  9,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Pages\\FishPuzzlePage.cs",
+        "Satir":  12,
+        "Icerik":  "protected override Label ClientNameLabel =\u003e clientNameLabel;"
+    },
+    {
+        "Dosya":  "Pages\\UpgradePage.cs",
+        "Satir":  1,
+        "Icerik":  "using System.Windows.Forms;"
+    },
+    {
+        "Dosya":  "Pages\\UpgradePage.cs",
+        "Satir":  5,
+        "Icerik":  "public partial class UpgradePage : BaseBotPage"
+    },
+    {
+        "Dosya":  "Pages\\UpgradePage.cs",
+        "Satir":  7,
+        "Icerik":  "public UpgradePage()"
+    },
+    {
+        "Dosya":  "Pages\\UpgradePage.cs",
+        "Satir":  9,
+        "Icerik":  "InitializeComponent();"
+    },
+    {
+        "Dosya":  "Pages\\UpgradePage.cs",
+        "Satir":  12,
+        "Icerik":  "protected override Label ClientNameLabel =\u003e clientNameLabel;"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  2,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  4,
+        "Icerik":  "namespace Aether.Services"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  12,
+        "Icerik":  "public static class ClientService"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  17,
+        "Icerik":  "public static List\u003cClientModel\u003e GenerateDefaultClients(int count = 10)"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  19,
+        "Icerik":  "var list = new List\u003cClientModel\u003e();"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  20,
+        "Icerik":  "for (int i = 1; i \u003c= count; i++)"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  22,
+        "Icerik":  "list.Add(new ClientModel(i, $\"Client {i}\"));"
+    },
+    {
+        "Dosya":  "Services\\ClientService.cs",
+        "Satir":  24,
+        "Icerik":  "return list;"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Native;"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  2,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  3,
+        "Icerik":  "using System.Threading.Tasks;"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  5,
+        "Icerik":  "namespace Aether.Services"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  10,
+        "Icerik":  "public class InputAutomationService"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  12,
+        "Icerik":  "private static readonly Lazy\u003cInputAutomationService\u003e _instance = new Lazy\u003cInputAutomationService\u003e(() =\u003e new InputAutomationService());"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  13,
+        "Icerik":  "public static InputAutomationService Instance =\u003e _instance.Value;"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  15,
+        "Icerik":  "private readonly Random _random = new Random();"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  20,
+        "Icerik":  "public async Task TriggerMacroSequenceAsync(Action\u003cstring\u003e? logger = null)"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  24,
+        "Icerik":  "byte ctrlScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_CONTROL, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  25,
+        "Icerik":  "byte gScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_G, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  26,
+        "Icerik":  "byte oneScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_1, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  27,
+        "Icerik":  "byte twoScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_2, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  30,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  31,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  32,
+        "Icerik":  "await Task.Delay(35);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  33,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, Win32Native.KEYEVENTF_KEYUP, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  34,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, Win32Native.KEYEVENTF_KEYUP, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  36,
+        "Icerik":  "await Task.Delay(_random.Next(300, 350));"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  39,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  40,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  41,
+        "Icerik":  "await Task.Delay(35);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  42,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, Win32Native.KEYEVENTF_KEYUP, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  43,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, Win32Native.KEYEVENTF_KEYUP, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  45,
+        "Icerik":  "await Task.Delay(_random.Next(150, 200));"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  48,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_1, oneScan, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  49,
+        "Icerik":  "await Task.Delay(35);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  50,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_1, oneScan, Win32Native.KEYEVENTF_KEYUP, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  52,
+        "Icerik":  "await Task.Delay(_random.Next(150, 200));"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  55,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_2, twoScan, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  56,
+        "Icerik":  "await Task.Delay(35);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  57,
+        "Icerik":  "Win32Native.keybd_event((byte)Win32Native.VK_2, twoScan, Win32Native.KEYEVENTF_KEYUP, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  59,
+        "Icerik":  "logger?.Invoke(\"Makro dizisi başarıyla tamamlandı.\");"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  61,
+        "Icerik":  "catch (Exception ex)"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  63,
+        "Icerik":  "logger?.Invoke($\"Makro Hatası: {ex.Message}\");"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  70,
+        "Icerik":  "public void SendLeftClick()"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  72,
+        "Icerik":  "Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);"
+    },
+    {
+        "Dosya":  "Services\\InputAutomationService.cs",
+        "Satir":  73,
+        "Icerik":  "Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  2,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  3,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  14,
+        "Icerik":  "public class ClientState"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  16,
+        "Icerik":  "private static readonly Lazy\u003cClientState\u003e _instance = new Lazy\u003cClientState\u003e(() =\u003e new ClientState());"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  21,
+        "Icerik":  "public static ClientState Instance =\u003e _instance.Value;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  23,
+        "Icerik":  "private ClientInfo? _selectedClient;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  24,
+        "Icerik":  "private List\u003cClientInfo\u003e _checkedClients = new List\u003cClientInfo\u003e();"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  27,
+        "Icerik":  "private readonly Dictionary\u003cint, ClientInfo\u003e _clientRegistry = new Dictionary\u003cint, ClientInfo\u003e();"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  32,
+        "Icerik":  "public ClientInfo GetOrCreateClientInfo(int id, string name)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  34,
+        "Icerik":  "if (!_clientRegistry.TryGetValue(id, out var clientInfo))"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  36,
+        "Icerik":  "clientInfo = new ClientInfo(id, name);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  37,
+        "Icerik":  "_clientRegistry[id] = clientInfo;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  39,
+        "Icerik":  "return clientInfo;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  46,
+        "Icerik":  "public ClientInfo? FindClientByHandle(IntPtr handle, int? excludeClientId = null)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  48,
+        "Icerik":  "if (handle == IntPtr.Zero) return null;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  50,
+        "Icerik":  "foreach (var kvp in _clientRegistry)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  52,
+        "Icerik":  "if (excludeClientId.HasValue \u0026\u0026 kvp.Key == excludeClientId.Value)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  53,
+        "Icerik":  "continue;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  55,
+        "Icerik":  "if (kvp.Value.Handle == handle)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  68,
+        "Icerik":  "public void ValidateAndCleanInvalidHandles(ISet\u003cIntPtr\u003e activeHandles)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  72,
+        "Icerik":  "foreach (var client in _clientRegistry.Values)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  74,
+        "Icerik":  "if (client.Handle != IntPtr.Zero \u0026\u0026 !activeHandles.Contains(client.Handle))"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  76,
+        "Icerik":  "client.Handle = IntPtr.Zero;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  79,
+        "Icerik":  "if (_selectedClient != null \u0026\u0026 _selectedClient.Id == client.Id)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  81,
+        "Icerik":  "OnSelectedClientChanged?.Invoke(this, _selectedClient);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  86,
+        "Icerik":  "if (hasChanged)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  88,
+        "Icerik":  "OnSelectedClientChanged?.Invoke(this, _selectedClient);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  93,
+        "Icerik":  "private bool _isFishBotRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  94,
+        "Icerik":  "private bool _isUpgradeBotRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  95,
+        "Icerik":  "private bool _isFishPuzzleRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  96,
+        "Icerik":  "private bool _isAlchemyRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  99,
+        "Icerik":  "public event EventHandler\u003cClientInfo?\u003e? OnSelectedClientChanged;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  102,
+        "Icerik":  "public event EventHandler\u003cIReadOnlyList\u003cClientInfo\u003e\u003e? OnCheckedClientsChanged;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  105,
+        "Icerik":  "public event EventHandler? OnBotStateChanged;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  110,
+        "Icerik":  "public static void Initialize()"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  112,
+        "Icerik":  "var _ = Instance;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  113,
+        "Icerik":  "Instance.Reset();"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  119,
+        "Icerik":  "public void Reset()"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  121,
+        "Icerik":  "_selectedClient = null;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  122,
+        "Icerik":  "_checkedClients.Clear();"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  123,
+        "Icerik":  "_clientRegistry.Clear();"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  124,
+        "Icerik":  "_isFishBotRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  125,
+        "Icerik":  "_isUpgradeBotRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  126,
+        "Icerik":  "_isFishPuzzleRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  127,
+        "Icerik":  "_isAlchemyRunning = false;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  129,
+        "Icerik":  "OnSelectedClientChanged?.Invoke(this, null);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  130,
+        "Icerik":  "OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly());"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  131,
+        "Icerik":  "OnBotStateChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  135,
+        "Icerik":  "public ClientInfo? SelectedClient"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  137,
+        "Icerik":  "get =\u003e _selectedClient;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  140,
+        "Icerik":  "if (value != null)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  143,
+        "Icerik":  "var registered = GetOrCreateClientInfo(value.Id, value.Name);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  144,
+        "Icerik":  "if (_selectedClient != registered)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  146,
+        "Icerik":  "_selectedClient = registered;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  147,
+        "Icerik":  "OnSelectedClientChanged?.Invoke(this, _selectedClient);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  152,
+        "Icerik":  "if (_selectedClient != null)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  154,
+        "Icerik":  "_selectedClient = null;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  155,
+        "Icerik":  "OnSelectedClientChanged?.Invoke(this, null);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  164,
+        "Icerik":  "public void UpdateSelectedClientHandle(IntPtr handle, int processId = 0)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  166,
+        "Icerik":  "if (_selectedClient != null)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  168,
+        "Icerik":  "_selectedClient.Handle = handle;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  169,
+        "Icerik":  "_selectedClient.ProcessId = processId;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  170,
+        "Icerik":  "OnSelectedClientChanged?.Invoke(this, _selectedClient);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  175,
+        "Icerik":  "public List\u003cClientInfo\u003e CheckedClients"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  177,
+        "Icerik":  "get =\u003e _checkedClients;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  180,
+        "Icerik":  "_checkedClients = value ?? new List\u003cClientInfo\u003e();"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  181,
+        "Icerik":  "OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly());"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  186,
+        "Icerik":  "public bool IsFishBotRunning"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  188,
+        "Icerik":  "get =\u003e _isFishBotRunning;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  191,
+        "Icerik":  "if (_isFishBotRunning != value)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  193,
+        "Icerik":  "_isFishBotRunning = value;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  194,
+        "Icerik":  "OnBotStateChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  200,
+        "Icerik":  "public bool IsUpgradeBotRunning"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  202,
+        "Icerik":  "get =\u003e _isUpgradeBotRunning;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  205,
+        "Icerik":  "if (_isUpgradeBotRunning != value)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  207,
+        "Icerik":  "_isUpgradeBotRunning = value;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  208,
+        "Icerik":  "OnBotStateChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  214,
+        "Icerik":  "public bool IsFishPuzzleRunning"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  216,
+        "Icerik":  "get =\u003e _isFishPuzzleRunning;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  219,
+        "Icerik":  "if (_isFishPuzzleRunning != value)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  221,
+        "Icerik":  "_isFishPuzzleRunning = value;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  222,
+        "Icerik":  "OnBotStateChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  228,
+        "Icerik":  "public bool IsAlchemyRunning"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  230,
+        "Icerik":  "get =\u003e _isAlchemyRunning;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  233,
+        "Icerik":  "if (_isAlchemyRunning != value)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  235,
+        "Icerik":  "_isAlchemyRunning = value;"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  236,
+        "Icerik":  "OnBotStateChanged?.Invoke(this, EventArgs.Empty);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  244,
+        "Icerik":  "public void UpdateCheckedClients(IEnumerable\u003cClientInfo\u003e clients)"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  246,
+        "Icerik":  "_checkedClients = new List\u003cClientInfo\u003e(clients);"
+    },
+    {
+        "Dosya":  "States\\ClientState.cs",
+        "Satir":  247,
+        "Icerik":  "OnCheckedClientsChanged?.Invoke(this, _checkedClients.AsReadOnly());"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  1,
+        "Icerik":  "using Aether.Models;"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  2,
+        "Icerik":  "using System.Collections.Generic;"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  10,
+        "Icerik":  "public class FishBotSettingsRegistry"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  12,
+        "Icerik":  "private static readonly System.Lazy\u003cFishBotSettingsRegistry\u003e _instance"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  13,
+        "Icerik":  "= new System.Lazy\u003cFishBotSettingsRegistry\u003e(() =\u003e new FishBotSettingsRegistry());"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  16,
+        "Icerik":  "public static FishBotSettingsRegistry Instance =\u003e _instance.Value;"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  19,
+        "Icerik":  "private readonly Dictionary\u003cint, FishBotSettings\u003e _settingsMap"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  20,
+        "Icerik":  "= new Dictionary\u003cint, FishBotSettings\u003e();"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  22,
+        "Icerik":  "private FishBotSettingsRegistry() { }"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  28,
+        "Icerik":  "public FishBotSettings GetOrCreate(int clientId)"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  30,
+        "Icerik":  "if (!_settingsMap.TryGetValue(clientId, out var settings))"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  32,
+        "Icerik":  "settings = new FishBotSettings();"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  33,
+        "Icerik":  "_settingsMap[clientId] = settings;"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  36,
+        "Icerik":  "return settings;"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  42,
+        "Icerik":  "public bool HasSettings(int clientId) =\u003e _settingsMap.ContainsKey(clientId);"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  47,
+        "Icerik":  "public void Reset(int clientId)"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  49,
+        "Icerik":  "_settingsMap[clientId] = new FishBotSettings();"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  56,
+        "Icerik":  "public void Set(int clientId, FishBotSettings settings)"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  58,
+        "Icerik":  "_settingsMap[clientId] = settings;"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  64,
+        "Icerik":  "public void ResetAll()"
+    },
+    {
+        "Dosya":  "States\\FishBotSettingsRegistry.cs",
+        "Satir":  66,
+        "Icerik":  "_settingsMap.Clear();"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  1,
+        "Icerik":  "using System;"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  8,
+        "Icerik":  "public class PageState"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  10,
+        "Icerik":  "private static readonly Lazy\u003cPageState\u003e _instance = new Lazy\u003cPageState\u003e(() =\u003e new PageState());"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  15,
+        "Icerik":  "public static PageState Instance =\u003e _instance.Value;"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  17,
+        "Icerik":  "private string _currentPage = \"FishBot\";"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  22,
+        "Icerik":  "public event EventHandler\u003cstring\u003e? OnPageChanged;"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  27,
+        "Icerik":  "public static void Initialize()"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  29,
+        "Icerik":  "var _ = Instance;"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  30,
+        "Icerik":  "Instance.Reset();"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  36,
+        "Icerik":  "public void Reset()"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  38,
+        "Icerik":  "_currentPage = \"FishBot\";"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  39,
+        "Icerik":  "OnPageChanged?.Invoke(this, _currentPage);"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  45,
+        "Icerik":  "public string CurrentPage"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  50,
+        "Icerik":  "if (_currentPage != value \u0026\u0026 !string.IsNullOrEmpty(value))"
+    },
+    {
+        "Dosya":  "States\\PageState.cs",
+        "Satir":  53,
+        "Icerik":  "OnPageChanged?.Invoke(this, _currentPage);"
+    }
+]
