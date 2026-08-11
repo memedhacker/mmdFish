@@ -3,9 +3,9 @@ using System;
 namespace Aether.Models
 {
     /// <summary>
-    /// Çalışan client sürecinin (Process) pencere adı, PID ve HWND (Handle) bilgilerini temsil eden model.
+    /// Çalışan oyun penceresi sürecinin (Process) pencere adı, PID ve HWND (Handle) bilgilerini temsil eden model.
     /// </summary>
-    public class ClientProcessInfo
+    public class GameWindowProcessInfo
     {
         public int ProcessId { get; set; }
         public IntPtr Handle { get; set; }

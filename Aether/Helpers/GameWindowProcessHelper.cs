@@ -3,24 +3,23 @@ using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Aether.Helpers
 {
     /// <summary>
-    /// Sistemde çalışan 'metin2client' (veya benzeri metin2) süreçlerini tespit ederek
+    /// Sistemde çalışan 'metin2client' (veya benzeri oyun penceresi) süreçlerini tespit ederek
     /// UI üzerindeki ComboBox'a dolduran yardımcı sınıf.
     /// </summary>
-    public static class ClientProcessHelper
+    public static class GameWindowProcessHelper
     {
         private const string TargetProcessName = "metin2client";
 
         /// <summary>
-        /// Sistemdeki 'metin2client' süreçlerini tarar ve ClientProcessInfo listesi olarak döner.
+        /// Sistemdeki oyun penceresi süreçlerini tarar ve GameWindowProcessInfo listesi olarak döner.
         /// </summary>
-        public static List<ClientProcessInfo> GetActiveClientProcesses()
+        public static List<GameWindowProcessInfo> GetActiveGameWindowProcesses()
         {
-            var result = new List<ClientProcessInfo>();
+            var result = new List<GameWindowProcessInfo>();
 
             try
             {
@@ -39,7 +38,7 @@ namespace Aether.Helpers
                     {
                         if (!proc.HasExited && proc.MainWindowHandle != IntPtr.Zero)
                         {
-                            result.Add(new ClientProcessInfo
+                            result.Add(new GameWindowProcessInfo
                             {
                                 ProcessId = proc.Id,
                                 Handle = proc.MainWindowHandle,
@@ -63,23 +62,53 @@ namespace Aether.Helpers
         }
 
         /// <summary>
-        /// Aktif 'metin2client' süreçlerini tarar ve verilen UIComboBox içerisine ekler.
+        /// Aktif oyun penceresi süreçlerini tarar ve verilen UIComboBox içerisine ekler.
+        /// Ayrıca kapanmış olan oyun pencerelerinin HWND'lerini ClientState üzerinden otomatik temizler.
         /// İlk sıraya varsayılan olarak '-- Seç --' metnini yerleştirir.
         /// </summary>
-        public static void PopulateClientComboBox(UIComboBox comboBox)
+        public static void PopulateGameWindowComboBox(UIComboBox comboBox)
         {
             if (comboBox == null) return;
 
             comboBox.Items.Clear();
             comboBox.Items.Add("-- Seç --");
 
-            var activeClients = GetActiveClientProcesses();
+            var activeWindows = GetActiveGameWindowProcesses();
+            var activeHandles = new HashSet<IntPtr>();
 
-            foreach (var clientInfo in activeClients)
+            foreach (var windowInfo in activeWindows)
             {
-                comboBox.Items.Add(clientInfo);
+                comboBox.Items.Add(windowInfo);
+                activeHandles.Add(windowInfo.Handle);
             }
 
+            // Kapanmış pencerelerin HWND state kayıtlarını temizle
+            Aether.States.ClientState.Instance.ValidateAndCleanInvalidHandles(activeHandles);
+
+            comboBox.SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// ComboBox ögeleri arasından verilen HWND (handle) değerine sahip ögeyi seçer.
+        /// Eğer handle IntPtr.Zero ise veya eşleşen süreç listede yoksa varsayılan 0. indeksi ('-- Seç --') seçer.
+        /// </summary>
+        public static void SelectMatchingHandleInComboBox(UIComboBox comboBox, IntPtr targetHandle)
+        {
+            if (comboBox == null || comboBox.Items.Count == 0) return;
+
+            if (targetHandle != IntPtr.Zero)
+            {
+                for (int i = 0; i < comboBox.Items.Count; i++)
+                {
+                    if (comboBox.Items[i] is GameWindowProcessInfo procInfo && procInfo.Handle == targetHandle)
+                    {
+                        comboBox.SelectedIndex = i;
+                        return;
+                    }
+                }
+            }
+
+            // Eşleşme yoksa veya handle boşsa 0. indeksi ('-- Seç --') seç
             comboBox.SelectedIndex = 0;
         }
 

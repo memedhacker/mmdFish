@@ -12,10 +12,26 @@ namespace Aether.Models
         /// <summary> Client'ın gösterilen adı. </summary>
         public string Name { get; }
 
+        /// <summary> Bağlanan oyun penceresinin HWND tutacağı. </summary>
+        public System.IntPtr Handle { get; set; }
+
+        /// <summary> Bağlanan oyun sürecinin PID (Process ID) değeri. </summary>
+        public int ProcessId { get; set; }
+
         public ClientInfo(int id, string name)
         {
             Id = id;
             Name = name;
+            Handle = System.IntPtr.Zero;
+            ProcessId = 0;
+        }
+
+        public ClientInfo(int id, string name, System.IntPtr handle, int processId = 0)
+        {
+            Id = id;
+            Name = name;
+            Handle = handle;
+            ProcessId = processId;
         }
 
         public override string ToString() => $"Client #{Id}: {Name}";

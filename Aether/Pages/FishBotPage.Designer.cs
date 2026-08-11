@@ -32,10 +32,11 @@ namespace Aether.Pages
             panelHeader = new Panel();
             clientNameLabel = new Label();
             label1 = new Label();
-            clientSelectComboBox = new Sunny.UI.UIComboBox();
-            refreshClientListButton = new Sunny.UI.UIButton();
-            highlightClientButton = new Sunny.UI.UIButton();
+            gameWindowSelectComboBox = new Sunny.UI.UIComboBox();
+            refresGameWindowList = new Sunny.UI.UIButton();
+            highlightGameWindowButton = new Sunny.UI.UIButton();
             clientPanel = new Sunny.UI.UIPanel();
+            selectGameWindow = new Sunny.UI.UIButton();
             uıPanel1 = new Sunny.UI.UIPanel();
             closeGameMinuteSelectUpDown = new Sunny.UI.UIUpDownTextBox();
             closeGameCheckBox = new Sunny.UI.UICheckBox();
@@ -75,6 +76,13 @@ namespace Aether.Pages
             fishBotTime = new Label();
             fishBotStatus = new Label();
             fishFilterPanel = new Sunny.UI.UIPanel();
+            uıPanel9 = new Sunny.UI.UIPanel();
+            botSettingsListComboBox = new Sunny.UI.UIComboBox();
+            label9 = new Label();
+            addBotSettingsButton = new Sunny.UI.UIButton();
+            deleteBotSettingsButton = new Sunny.UI.UIButton();
+            loadBotSettingsButton = new Sunny.UI.UIButton();
+            botSettingsNameTextBox = new Sunny.UI.UITextBox();
             panelHeader.SuspendLayout();
             clientPanel.SuspendLayout();
             uıPanel1.SuspendLayout();
@@ -85,6 +93,7 @@ namespace Aether.Pages
             uıPanel6.SuspendLayout();
             uıPanel7.SuspendLayout();
             uıPanel8.SuspendLayout();
+            uıPanel9.SuspendLayout();
             SuspendLayout();
             // 
             // lblTitle
@@ -125,82 +134,83 @@ namespace Aether.Pages
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 15F);
             label1.ForeColor = SystemColors.ControlLightLight;
-            label1.Location = new Point(15, 50);
+            label1.Location = new Point(13, 25);
             label1.Name = "label1";
             label1.Size = new Size(98, 28);
             label1.TabIndex = 1;
             label1.Text = "Client seç:";
             // 
-            // clientSelectComboBox
+            // gameWindowSelectComboBox
             // 
-            clientSelectComboBox.DataSource = null;
-            clientSelectComboBox.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
-            clientSelectComboBox.FillColor = Color.White;
-            clientSelectComboBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            clientSelectComboBox.ItemHoverColor = Color.FromArgb(155, 200, 255);
-            clientSelectComboBox.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            clientSelectComboBox.Location = new Point(120, 68);
-            clientSelectComboBox.Margin = new Padding(4, 5, 4, 5);
-            clientSelectComboBox.MinimumSize = new Size(63, 0);
-            clientSelectComboBox.Name = "clientSelectComboBox";
-            clientSelectComboBox.Padding = new Padding(0, 0, 30, 2);
-            clientSelectComboBox.Radius = 15;
-            clientSelectComboBox.Size = new Size(181, 35);
-            clientSelectComboBox.SymbolSize = 24;
-            clientSelectComboBox.TabIndex = 2;
-            clientSelectComboBox.Text = "Seç....";
-            clientSelectComboBox.TextAlignment = ContentAlignment.MiddleLeft;
-            clientSelectComboBox.Watermark = "";
+            gameWindowSelectComboBox.DataSource = null;
+            gameWindowSelectComboBox.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
+            gameWindowSelectComboBox.FillColor = Color.White;
+            gameWindowSelectComboBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            gameWindowSelectComboBox.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            gameWindowSelectComboBox.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            gameWindowSelectComboBox.Location = new Point(13, 66);
+            gameWindowSelectComboBox.Margin = new Padding(4, 5, 4, 5);
+            gameWindowSelectComboBox.MinimumSize = new Size(63, 0);
+            gameWindowSelectComboBox.Name = "gameWindowSelectComboBox";
+            gameWindowSelectComboBox.Padding = new Padding(0, 0, 30, 2);
+            gameWindowSelectComboBox.Radius = 15;
+            gameWindowSelectComboBox.Size = new Size(265, 35);
+            gameWindowSelectComboBox.SymbolSize = 24;
+            gameWindowSelectComboBox.TabIndex = 2;
+            gameWindowSelectComboBox.Text = "Seç....";
+            gameWindowSelectComboBox.TextAlignment = ContentAlignment.MiddleLeft;
+            gameWindowSelectComboBox.Watermark = "";
             // 
-            // refreshClientListButton
+            // refresGameWindowList
             // 
-            refreshClientListButton.FillColor = Color.FromArgb(135, 193, 109);
-            refreshClientListButton.FillColor2 = Color.FromArgb(135, 193, 109);
-            refreshClientListButton.FillHoverColor = Color.FromArgb(135, 193, 109);
-            refreshClientListButton.FillPressColor = Color.FromArgb(99, 168, 71);
-            refreshClientListButton.FillSelectedColor = Color.FromArgb(99, 168, 71);
-            refreshClientListButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            refreshClientListButton.ForeColor = Color.Black;
-            refreshClientListButton.Location = new Point(120, 25);
-            refreshClientListButton.MinimumSize = new Size(1, 1);
-            refreshClientListButton.Name = "refreshClientListButton";
-            refreshClientListButton.RectColor = Color.FromArgb(135, 193, 109);
-            refreshClientListButton.RectHoverColor = Color.FromArgb(135, 193, 109);
-            refreshClientListButton.RectPressColor = Color.FromArgb(99, 168, 71);
-            refreshClientListButton.RectSelectedColor = Color.FromArgb(99, 168, 71);
-            refreshClientListButton.Size = new Size(74, 35);
-            refreshClientListButton.TabIndex = 3;
-            refreshClientListButton.Text = "Yenile";
-            refreshClientListButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            refresGameWindowList.FillColor = Color.FromArgb(135, 193, 109);
+            refresGameWindowList.FillColor2 = Color.FromArgb(135, 193, 109);
+            refresGameWindowList.FillHoverColor = Color.FromArgb(135, 193, 109);
+            refresGameWindowList.FillPressColor = Color.FromArgb(99, 168, 71);
+            refresGameWindowList.FillSelectedColor = Color.FromArgb(99, 168, 71);
+            refresGameWindowList.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            refresGameWindowList.ForeColor = Color.Black;
+            refresGameWindowList.Location = new Point(131, 25);
+            refresGameWindowList.MinimumSize = new Size(1, 1);
+            refresGameWindowList.Name = "refresGameWindowList";
+            refresGameWindowList.RectColor = Color.FromArgb(135, 193, 109);
+            refresGameWindowList.RectHoverColor = Color.FromArgb(135, 193, 109);
+            refresGameWindowList.RectPressColor = Color.FromArgb(99, 168, 71);
+            refresGameWindowList.RectSelectedColor = Color.FromArgb(99, 168, 71);
+            refresGameWindowList.Size = new Size(98, 35);
+            refresGameWindowList.TabIndex = 3;
+            refresGameWindowList.Text = "Yenile";
+            refresGameWindowList.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
-            // highlightClientButton
+            // highlightGameWindowButton
             // 
-            highlightClientButton.FillColor = Color.FromArgb(255, 139, 164);
-            highlightClientButton.FillColor2 = Color.FromArgb(255, 139, 164);
-            highlightClientButton.FillHoverColor = Color.FromArgb(255, 139, 164);
-            highlightClientButton.FillPressColor = Color.FromArgb(244, 103, 136);
-            highlightClientButton.FillSelectedColor = Color.FromArgb(244, 103, 136);
-            highlightClientButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            highlightClientButton.ForeColor = Color.Black;
-            highlightClientButton.Location = new Point(200, 25);
-            highlightClientButton.MinimumSize = new Size(1, 1);
-            highlightClientButton.Name = "highlightClientButton";
-            highlightClientButton.RectColor = Color.FromArgb(255, 139, 164);
-            highlightClientButton.RectHoverColor = Color.FromArgb(255, 139, 164);
-            highlightClientButton.RectPressColor = Color.FromArgb(244, 103, 136);
-            highlightClientButton.RectSelectedColor = Color.FromArgb(244, 103, 136);
-            highlightClientButton.Size = new Size(101, 35);
-            highlightClientButton.TabIndex = 3;
-            highlightClientButton.Text = "Öne Çıkart";
-            highlightClientButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            highlightGameWindowButton.FillColor = Color.FromArgb(255, 139, 164);
+            highlightGameWindowButton.FillColor2 = Color.FromArgb(255, 139, 164);
+            highlightGameWindowButton.FillHoverColor = Color.FromArgb(255, 139, 164);
+            highlightGameWindowButton.FillPressColor = Color.FromArgb(244, 103, 136);
+            highlightGameWindowButton.FillSelectedColor = Color.FromArgb(244, 103, 136);
+            highlightGameWindowButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            highlightGameWindowButton.ForeColor = Color.Black;
+            highlightGameWindowButton.Location = new Point(235, 25);
+            highlightGameWindowButton.MinimumSize = new Size(1, 1);
+            highlightGameWindowButton.Name = "highlightGameWindowButton";
+            highlightGameWindowButton.RectColor = Color.FromArgb(255, 139, 164);
+            highlightGameWindowButton.RectHoverColor = Color.FromArgb(255, 139, 164);
+            highlightGameWindowButton.RectPressColor = Color.FromArgb(244, 103, 136);
+            highlightGameWindowButton.RectSelectedColor = Color.FromArgb(244, 103, 136);
+            highlightGameWindowButton.Size = new Size(101, 35);
+            highlightGameWindowButton.TabIndex = 3;
+            highlightGameWindowButton.Text = "Öne Çıkart";
+            highlightGameWindowButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
             // clientPanel
             // 
             clientPanel.BackColor = Color.FromArgb(30, 30, 35);
-            clientPanel.Controls.Add(clientSelectComboBox);
-            clientPanel.Controls.Add(highlightClientButton);
+            clientPanel.Controls.Add(selectGameWindow);
+            clientPanel.Controls.Add(gameWindowSelectComboBox);
+            clientPanel.Controls.Add(highlightGameWindowButton);
             clientPanel.Controls.Add(label1);
-            clientPanel.Controls.Add(refreshClientListButton);
+            clientPanel.Controls.Add(refresGameWindowList);
             clientPanel.FillColor = Color.FromArgb(30, 30, 35);
             clientPanel.FillColor2 = Color.FromArgb(30, 30, 35);
             clientPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
@@ -215,6 +225,17 @@ namespace Aether.Pages
             clientPanel.Text = null;
             clientPanel.TextAlignment = ContentAlignment.MiddleCenter;
             // 
+            // selectGameWindow
+            // 
+            selectGameWindow.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            selectGameWindow.Location = new Point(285, 66);
+            selectGameWindow.MinimumSize = new Size(1, 1);
+            selectGameWindow.Name = "selectGameWindow";
+            selectGameWindow.Size = new Size(53, 35);
+            selectGameWindow.TabIndex = 4;
+            selectGameWindow.Text = "Seç";
+            selectGameWindow.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            // 
             // uıPanel1
             // 
             uıPanel1.BackColor = Color.FromArgb(30, 30, 35);
@@ -224,7 +245,7 @@ namespace Aether.Pages
             uıPanel1.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel1.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel1.Location = new Point(15, 232);
+            uıPanel1.Location = new Point(15, 351);
             uıPanel1.Margin = new Padding(4, 5, 4, 5);
             uıPanel1.MinimumSize = new Size(1, 1);
             uıPanel1.Name = "uıPanel1";
@@ -296,7 +317,7 @@ namespace Aether.Pages
             uıPanel2.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel2.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel2.Location = new Point(250, 232);
+            uıPanel2.Location = new Point(250, 351);
             uıPanel2.Margin = new Padding(4, 5, 4, 5);
             uıPanel2.MinimumSize = new Size(1, 1);
             uıPanel2.Name = "uıPanel2";
@@ -313,7 +334,7 @@ namespace Aether.Pages
             uıLine1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             uıLine1.ForeColor = Color.FromArgb(99, 168, 71);
             uıLine1.LineColor = Color.FromArgb(99, 168, 71);
-            uıLine1.Location = new Point(14, 89);
+            uıLine1.Location = new Point(14, 76);
             uıLine1.MinimumSize = new Size(1, 1);
             uıLine1.Name = "uıLine1";
             uıLine1.Size = new Size(378, 29);
@@ -326,7 +347,7 @@ namespace Aether.Pages
             changeChannelMinuteUpDown.DoubleValue = 25D;
             changeChannelMinuteUpDown.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             changeChannelMinuteUpDown.IntValue = 25;
-            changeChannelMinuteUpDown.Location = new Point(13, 52);
+            changeChannelMinuteUpDown.Location = new Point(169, 35);
             changeChannelMinuteUpDown.Margin = new Padding(4, 5, 4, 5);
             changeChannelMinuteUpDown.Minimum = 0D;
             changeChannelMinuteUpDown.MinimumSize = new Size(1, 16);
@@ -348,7 +369,7 @@ namespace Aether.Pages
             ch6CheckBox.Enabled = false;
             ch6CheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             ch6CheckBox.ForeColor = SystemColors.ControlLightLight;
-            ch6CheckBox.Location = new Point(321, 163);
+            ch6CheckBox.Location = new Point(321, 150);
             ch6CheckBox.MinimumSize = new Size(1, 1);
             ch6CheckBox.Name = "ch6CheckBox";
             ch6CheckBox.Size = new Size(71, 29);
@@ -363,7 +384,7 @@ namespace Aether.Pages
             ch3CheckBox.Enabled = false;
             ch3CheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             ch3CheckBox.ForeColor = SystemColors.ControlLightLight;
-            ch3CheckBox.Location = new Point(321, 128);
+            ch3CheckBox.Location = new Point(321, 115);
             ch3CheckBox.MinimumSize = new Size(1, 1);
             ch3CheckBox.Name = "ch3CheckBox";
             ch3CheckBox.Size = new Size(71, 29);
@@ -378,7 +399,7 @@ namespace Aether.Pages
             ch5CheckBox.Enabled = false;
             ch5CheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             ch5CheckBox.ForeColor = SystemColors.ControlLightLight;
-            ch5CheckBox.Location = new Point(244, 163);
+            ch5CheckBox.Location = new Point(244, 150);
             ch5CheckBox.MinimumSize = new Size(1, 1);
             ch5CheckBox.Name = "ch5CheckBox";
             ch5CheckBox.Size = new Size(71, 29);
@@ -393,7 +414,7 @@ namespace Aether.Pages
             ch2CheckBox.Enabled = false;
             ch2CheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             ch2CheckBox.ForeColor = SystemColors.ControlLightLight;
-            ch2CheckBox.Location = new Point(244, 128);
+            ch2CheckBox.Location = new Point(244, 115);
             ch2CheckBox.MinimumSize = new Size(1, 1);
             ch2CheckBox.Name = "ch2CheckBox";
             ch2CheckBox.Size = new Size(71, 29);
@@ -408,7 +429,7 @@ namespace Aether.Pages
             ch4CheckBox.Enabled = false;
             ch4CheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             ch4CheckBox.ForeColor = SystemColors.ControlLightLight;
-            ch4CheckBox.Location = new Point(167, 163);
+            ch4CheckBox.Location = new Point(167, 150);
             ch4CheckBox.MinimumSize = new Size(1, 1);
             ch4CheckBox.Name = "ch4CheckBox";
             ch4CheckBox.Size = new Size(71, 29);
@@ -423,7 +444,7 @@ namespace Aether.Pages
             ch1CheckBox.Enabled = false;
             ch1CheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             ch1CheckBox.ForeColor = SystemColors.ControlLightLight;
-            ch1CheckBox.Location = new Point(167, 128);
+            ch1CheckBox.Location = new Point(167, 115);
             ch1CheckBox.MinimumSize = new Size(1, 1);
             ch1CheckBox.Name = "ch1CheckBox";
             ch1CheckBox.Size = new Size(71, 29);
@@ -438,7 +459,7 @@ namespace Aether.Pages
             selectAllChannelsCheckBox.Enabled = false;
             selectAllChannelsCheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             selectAllChannelsCheckBox.ForeColor = SystemColors.ControlLightLight;
-            selectAllChannelsCheckBox.Location = new Point(14, 146);
+            selectAllChannelsCheckBox.Location = new Point(14, 133);
             selectAllChannelsCheckBox.MinimumSize = new Size(1, 1);
             selectAllChannelsCheckBox.Name = "selectAllChannelsCheckBox";
             selectAllChannelsCheckBox.Size = new Size(178, 29);
@@ -451,7 +472,7 @@ namespace Aether.Pages
             changeChannelCheckBox.CheckBoxSize = 25;
             changeChannelCheckBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             changeChannelCheckBox.ForeColor = SystemColors.ControlLightLight;
-            changeChannelCheckBox.Location = new Point(13, 15);
+            changeChannelCheckBox.Location = new Point(13, 35);
             changeChannelCheckBox.MinimumSize = new Size(1, 1);
             changeChannelCheckBox.Name = "changeChannelCheckBox";
             changeChannelCheckBox.Size = new Size(178, 29);
@@ -463,7 +484,7 @@ namespace Aether.Pages
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F);
             label3.ForeColor = SystemColors.ControlLightLight;
-            label3.Location = new Point(91, 56);
+            label3.Location = new Point(247, 39);
             label3.Name = "label3";
             label3.Size = new Size(100, 21);
             label3.TabIndex = 1;
@@ -475,7 +496,7 @@ namespace Aether.Pages
             channelsLine.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             channelsLine.ForeColor = Color.FromArgb(99, 168, 71);
             channelsLine.LineColor = Color.FromArgb(99, 168, 71);
-            channelsLine.Location = new Point(15, 572);
+            channelsLine.Location = new Point(15, 696);
             channelsLine.MinimumSize = new Size(1, 1);
             channelsLine.Name = "channelsLine";
             channelsLine.Size = new Size(649, 29);
@@ -491,7 +512,7 @@ namespace Aether.Pages
             uıPanel3.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel3.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel3.Location = new Point(15, 347);
+            uıPanel3.Location = new Point(15, 466);
             uıPanel3.Margin = new Padding(4, 5, 4, 5);
             uıPanel3.MinimumSize = new Size(1, 1);
             uıPanel3.Name = "uıPanel3";
@@ -555,7 +576,7 @@ namespace Aether.Pages
             uıPanel4.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel4.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel4.Location = new Point(15, 466);
+            uıPanel4.Location = new Point(15, 585);
             uıPanel4.Margin = new Padding(4, 5, 4, 5);
             uıPanel4.MinimumSize = new Size(1, 1);
             uıPanel4.Name = "uıPanel4";
@@ -619,7 +640,7 @@ namespace Aether.Pages
             uıPanel5.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel5.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel5.Location = new Point(250, 466);
+            uıPanel5.Location = new Point(250, 585);
             uıPanel5.Margin = new Padding(4, 5, 4, 5);
             uıPanel5.MinimumSize = new Size(1, 1);
             uıPanel5.Name = "uıPanel5";
@@ -682,7 +703,7 @@ namespace Aether.Pages
             uıPanel6.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel6.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel6.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel6.Location = new Point(466, 466);
+            uıPanel6.Location = new Point(466, 585);
             uıPanel6.Margin = new Padding(4, 5, 4, 5);
             uıPanel6.MinimumSize = new Size(1, 1);
             uıPanel6.Name = "uıPanel6";
@@ -726,7 +747,7 @@ namespace Aether.Pages
             uıPanel7.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel7.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel7.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel7.Location = new Point(391, 145);
+            uıPanel7.Location = new Point(391, 147);
             uıPanel7.Margin = new Padding(4, 5, 4, 5);
             uıPanel7.MinimumSize = new Size(1, 1);
             uıPanel7.Name = "uıPanel7";
@@ -793,7 +814,7 @@ namespace Aether.Pages
             fishBotTime.AutoSize = true;
             fishBotTime.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
             fishBotTime.ForeColor = SystemColors.ControlLightLight;
-            fishBotTime.Location = new Point(168, 16);
+            fishBotTime.Location = new Point(172, 19);
             fishBotTime.Name = "fishBotTime";
             fishBotTime.Size = new Size(94, 28);
             fishBotTime.TabIndex = 1;
@@ -804,7 +825,7 @@ namespace Aether.Pages
             fishBotStatus.AutoSize = true;
             fishBotStatus.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
             fishBotStatus.ForeColor = SystemColors.ControlLightLight;
-            fishBotStatus.Location = new Point(13, 16);
+            fishBotStatus.Location = new Point(17, 19);
             fishBotStatus.Name = "fishBotStatus";
             fishBotStatus.Size = new Size(161, 28);
             fishBotStatus.TabIndex = 1;
@@ -816,16 +837,137 @@ namespace Aether.Pages
             fishFilterPanel.FillColor = Color.FromArgb(24, 24, 27);
             fishFilterPanel.FillColor2 = Color.FromArgb(24, 24, 27);
             fishFilterPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            fishFilterPanel.Location = new Point(15, 608);
+            fishFilterPanel.Location = new Point(15, 728);
             fishFilterPanel.Margin = new Padding(0);
             fishFilterPanel.MinimumSize = new Size(1, 1);
             fishFilterPanel.Name = "fishFilterPanel";
             fishFilterPanel.Radius = 0;
             fishFilterPanel.RectColor = Color.Transparent;
-            fishFilterPanel.Size = new Size(649, 1200);
+            fishFilterPanel.Size = new Size(649, 1080);
             fishFilterPanel.TabIndex = 5;
             fishFilterPanel.Text = null;
             fishFilterPanel.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
+            // uıPanel9
+            // 
+            uıPanel9.BackColor = Color.FromArgb(30, 30, 35);
+            uıPanel9.Controls.Add(botSettingsNameTextBox);
+            uıPanel9.Controls.Add(loadBotSettingsButton);
+            uıPanel9.Controls.Add(botSettingsListComboBox);
+            uıPanel9.Controls.Add(deleteBotSettingsButton);
+            uıPanel9.Controls.Add(label9);
+            uıPanel9.Controls.Add(addBotSettingsButton);
+            uıPanel9.FillColor = Color.FromArgb(30, 30, 35);
+            uıPanel9.FillColor2 = Color.FromArgb(30, 30, 35);
+            uıPanel9.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            uıPanel9.Location = new Point(15, 218);
+            uıPanel9.Margin = new Padding(4, 5, 4, 5);
+            uıPanel9.MinimumSize = new Size(1, 1);
+            uıPanel9.Name = "uıPanel9";
+            uıPanel9.Radius = 15;
+            uıPanel9.RectColor = Color.White;
+            uıPanel9.Size = new Size(649, 123);
+            uıPanel9.TabIndex = 4;
+            uıPanel9.Text = null;
+            uıPanel9.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
+            // botSettingsListComboBox
+            // 
+            botSettingsListComboBox.DataSource = null;
+            botSettingsListComboBox.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
+            botSettingsListComboBox.FillColor = Color.White;
+            botSettingsListComboBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            botSettingsListComboBox.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            botSettingsListComboBox.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            botSettingsListComboBox.Location = new Point(175, 61);
+            botSettingsListComboBox.Margin = new Padding(4, 5, 4, 5);
+            botSettingsListComboBox.MinimumSize = new Size(63, 0);
+            botSettingsListComboBox.Name = "botSettingsListComboBox";
+            botSettingsListComboBox.Padding = new Padding(0, 0, 30, 2);
+            botSettingsListComboBox.Size = new Size(268, 29);
+            botSettingsListComboBox.SymbolSize = 24;
+            botSettingsListComboBox.TabIndex = 0;
+            botSettingsListComboBox.Text = "Seç";
+            botSettingsListComboBox.TextAlignment = ContentAlignment.MiddleLeft;
+            botSettingsListComboBox.Watermark = "";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 15F);
+            label9.ForeColor = SystemColors.ControlLightLight;
+            label9.Location = new Point(41, 42);
+            label9.Name = "label9";
+            label9.Size = new Size(109, 28);
+            label9.TabIndex = 1;
+            label9.Text = "Ön Ayarlar:";
+            // 
+            // addBotSettingsButton
+            // 
+            addBotSettingsButton.FillColor = Color.FromArgb(135, 193, 109);
+            addBotSettingsButton.FillColor2 = Color.FromArgb(135, 193, 109);
+            addBotSettingsButton.FillHoverColor = Color.FromArgb(135, 193, 109);
+            addBotSettingsButton.FillPressColor = Color.FromArgb(99, 168, 71);
+            addBotSettingsButton.FillSelectedColor = Color.FromArgb(99, 168, 71);
+            addBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            addBotSettingsButton.ForeColor = Color.Black;
+            addBotSettingsButton.Location = new Point(451, 22);
+            addBotSettingsButton.MinimumSize = new Size(1, 1);
+            addBotSettingsButton.Name = "addBotSettingsButton";
+            addBotSettingsButton.RectColor = Color.FromArgb(135, 193, 109);
+            addBotSettingsButton.RectHoverColor = Color.FromArgb(135, 193, 109);
+            addBotSettingsButton.RectPressColor = Color.FromArgb(99, 168, 71);
+            addBotSettingsButton.RectSelectedColor = Color.FromArgb(99, 168, 71);
+            addBotSettingsButton.Size = new Size(144, 29);
+            addBotSettingsButton.TabIndex = 3;
+            addBotSettingsButton.Text = "Ekle";
+            addBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            // 
+            // deleteBotSettingsButton
+            // 
+            deleteBotSettingsButton.FillColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.FillColor2 = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.FillHoverColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.FillPressColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.FillSelectedColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            deleteBotSettingsButton.ForeColor = Color.Black;
+            deleteBotSettingsButton.Location = new Point(524, 61);
+            deleteBotSettingsButton.MinimumSize = new Size(1, 1);
+            deleteBotSettingsButton.Name = "deleteBotSettingsButton";
+            deleteBotSettingsButton.RectColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.RectHoverColor = Color.FromArgb(255, 139, 164);
+            deleteBotSettingsButton.RectPressColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.RectSelectedColor = Color.FromArgb(244, 103, 136);
+            deleteBotSettingsButton.Size = new Size(71, 29);
+            deleteBotSettingsButton.TabIndex = 3;
+            deleteBotSettingsButton.Text = "Sil";
+            deleteBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            // 
+            // loadBotSettingsButton
+            // 
+            loadBotSettingsButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            loadBotSettingsButton.Location = new Point(453, 61);
+            loadBotSettingsButton.MinimumSize = new Size(1, 1);
+            loadBotSettingsButton.Name = "loadBotSettingsButton";
+            loadBotSettingsButton.Size = new Size(67, 29);
+            loadBotSettingsButton.TabIndex = 4;
+            loadBotSettingsButton.Text = "Yükle";
+            loadBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            // 
+            // botSettingsNameTextBox
+            // 
+            botSettingsNameTextBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            botSettingsNameTextBox.Location = new Point(175, 22);
+            botSettingsNameTextBox.Margin = new Padding(4, 5, 4, 5);
+            botSettingsNameTextBox.MinimumSize = new Size(1, 16);
+            botSettingsNameTextBox.Name = "botSettingsNameTextBox";
+            botSettingsNameTextBox.Padding = new Padding(5);
+            botSettingsNameTextBox.ShowText = false;
+            botSettingsNameTextBox.Size = new Size(268, 29);
+            botSettingsNameTextBox.TabIndex = 5;
+            botSettingsNameTextBox.TextAlignment = ContentAlignment.MiddleLeft;
+            botSettingsNameTextBox.Watermark = "Ayar İsmi";
             // 
             // FishBotPage
             // 
@@ -834,14 +976,15 @@ namespace Aether.Pages
             BackColor = Color.FromArgb(24, 24, 27);
             Controls.Add(fishFilterPanel);
             Controls.Add(channelsLine);
+            Controls.Add(uıPanel7);
             Controls.Add(uıPanel2);
             Controls.Add(uıPanel6);
             Controls.Add(uıPanel5);
             Controls.Add(uıPanel4);
+            Controls.Add(uıPanel9);
             Controls.Add(uıPanel3);
             Controls.Add(uıPanel1);
             Controls.Add(uıPanel8);
-            Controls.Add(uıPanel7);
             Controls.Add(clientPanel);
             Controls.Add(panelHeader);
             Name = "FishBotPage";
@@ -866,6 +1009,8 @@ namespace Aether.Pages
             uıPanel7.PerformLayout();
             uıPanel8.ResumeLayout(false);
             uıPanel8.PerformLayout();
+            uıPanel9.ResumeLayout(false);
+            uıPanel9.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -875,9 +1020,9 @@ namespace Aether.Pages
         private Panel panelHeader;
         private Label clientNameLabel;
         private Label label1;
-        private Sunny.UI.UIComboBox clientSelectComboBox;
-        private Sunny.UI.UIButton refreshClientListButton;
-        private Sunny.UI.UIButton highlightClientButton;
+        private Sunny.UI.UIComboBox gameWindowSelectComboBox;
+        private Sunny.UI.UIButton refresGameWindowList;
+        private Sunny.UI.UIButton highlightGameWindowButton;
         private Sunny.UI.UIPanel clientPanel;
         private Sunny.UI.UIPanel uıPanel1;
         private Sunny.UI.UICheckBox closeGameCheckBox;
@@ -918,5 +1063,13 @@ namespace Aether.Pages
         private Label fishBotStatus;
         private Sunny.UI.UILine uıLine1;
         private Sunny.UI.UIPanel fishFilterPanel;
+        private Sunny.UI.UIButton selectGameWindow;
+        private Sunny.UI.UIPanel uıPanel9;
+        private Sunny.UI.UIComboBox botSettingsListComboBox;
+        private Sunny.UI.UITextBox botSettingsNameTextBox;
+        private Sunny.UI.UIButton loadBotSettingsButton;
+        private Sunny.UI.UIButton deleteBotSettingsButton;
+        private Label label9;
+        private Sunny.UI.UIButton addBotSettingsButton;
     }
 }

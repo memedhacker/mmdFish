@@ -23,6 +23,72 @@ namespace Aether.States
         private ClientInfo? _selectedClient;
         private List<ClientInfo> _checkedClients = new List<ClientInfo>();
 
+        // Her bir ClientId (1, 2, 3...) için kalıcı ClientInfo nesnelerini tutan harita
+        private readonly Dictionary<int, ClientInfo> _clientRegistry = new Dictionary<int, ClientInfo>();
+
+        /// <summary>
+        /// Verilen ID ve Name ile kalıcı kayıttaki ClientInfo nesnesini döner veya oluşturur.
+        /// </summary>
+        public ClientInfo GetOrCreateClientInfo(int id, string name)
+        {
+            if (!_clientRegistry.TryGetValue(id, out var clientInfo))
+            {
+                clientInfo = new ClientInfo(id, name);
+                _clientRegistry[id] = clientInfo;
+            }
+            return clientInfo;
+        }
+
+        /// <summary>
+        /// Belirtilen HWND adresini kullanan başka bir istemci (Client) olup olmadığını arar.
+        /// Hariç tutulacak client varsa (örneğin seçili olan), excludeClientId ile belirtilebilir.
+        /// </summary>
+        public ClientInfo? FindClientByHandle(IntPtr handle, int? excludeClientId = null)
+        {
+            if (handle == IntPtr.Zero) return null;
+
+            foreach (var kvp in _clientRegistry)
+            {
+                if (excludeClientId.HasValue && kvp.Key == excludeClientId.Value)
+                    continue;
+
+                if (kvp.Value.Handle == handle)
+                {
+                    return kvp.Value;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Sistemde hâlâ açık olan aktif HWND tutacaklarının kümesini alır.
+        /// Kayıtlı client'lar arasında penceresi kapanmış (artık aktif kümede olmayan) olanların HWND bilgisini sıfırlar.
+        /// </summary>
+        public void ValidateAndCleanInvalidHandles(ISet<IntPtr> activeHandles)
+        {
+            bool hasChanged = false;
+
+            foreach (var client in _clientRegistry.Values)
+            {
+                if (client.Handle != IntPtr.Zero && !activeHandles.Contains(client.Handle))
+                {
+                    client.Handle = IntPtr.Zero;
+                    hasChanged = true;
+
+                    if (_selectedClient != null && _selectedClient.Id == client.Id)
+                    {
+                        OnSelectedClientChanged?.Invoke(this, _selectedClient);
+                    }
+                }
+            }
+
+            if (hasChanged)
+            {
+                OnSelectedClientChanged?.Invoke(this, _selectedClient);
+            }
+        }
+
         // Bot modül durum değişkenleri (Default: false)
         private bool _isFishBotRunning = false;
         private bool _isUpgradeBotRunning = false;
@@ -54,6 +120,7 @@ namespace Aether.States
         {
             _selectedClient = null;
             _checkedClients.Clear();
+            _clientRegistry.Clear();
             _isFishBotRunning = false;
             _isUpgradeBotRunning = false;
             _isFishPuzzleRunning = false;
@@ -70,11 +137,37 @@ namespace Aether.States
             get => _selectedClient;
             set
             {
-                if (!Equals(_selectedClient, value))
+                if (value != null)
                 {
-                    _selectedClient = value;
-                    OnSelectedClientChanged?.Invoke(this, _selectedClient);
+                    // Kayıttaki ortak nesneyi kullan ki saklanan HWND korunabilsin
+                    var registered = GetOrCreateClientInfo(value.Id, value.Name);
+                    if (_selectedClient != registered)
+                    {
+                        _selectedClient = registered;
+                        OnSelectedClientChanged?.Invoke(this, _selectedClient);
+                    }
                 }
+                else
+                {
+                    if (_selectedClient != null)
+                    {
+                        _selectedClient = null;
+                        OnSelectedClientChanged?.Invoke(this, null);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Seçili olan client'a pencere tutacağını (HWND) ve süreç numarasını (PID) bağlar ve dinleyicileri bilgilendirir.
+        /// </summary>
+        public void UpdateSelectedClientHandle(IntPtr handle, int processId = 0)
+        {
+            if (_selectedClient != null)
+            {
+                _selectedClient.Handle = handle;
+                _selectedClient.ProcessId = processId;
+                OnSelectedClientChanged?.Invoke(this, _selectedClient);
             }
         }
 

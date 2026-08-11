@@ -27,13 +27,13 @@ Aether/
 │   └── MainForm.cs      ← Uygulama ana penceresi (shell/navigator)
 │
 ├── Helpers/
-│   ├── ClientProcessHelper.cs   ← 'metin2client' süreç ve HWND tespiti yapan yardımcı sınıf (static)
-│   └── FishFilterTableBuilder.cs ← FishBot filtresi için dinamik tablo oluşturucu (static)
+│   ├── FishFilterTableBuilder.cs ← FishBot filtresi için dinamik tablo oluşturucu (static)
+│   └── GameWindowProcessHelper.cs ← 'metin2client' süreç ve HWND tespiti yapan yardımcı sınıf (static)
 │
 ├── Models/
 │   ├── ClientInfo.cs        ← State katmanı için hafif DTO
 │   ├── ClientModel.cs       ← Client veri modeli (domain)
-│   └── ClientProcessInfo.cs ← Süreç PID, HWND ve başlık bilgilerini taşıyan model
+│   └── GameWindowProcessInfo.cs ← Süreç PID, HWND ve başlık bilgilerini taşıyan model
 │
 ├── Native/
 │   └── Win32Native.cs   ← Win32 API P/Invoke merkezi
@@ -207,19 +207,29 @@ panel.RectColor   = Colors.YesilAcik;  // #87C16D
 | Dosya | Açıklama |
 |-------|----------|
 | `Models/ClientInfo.cs` | State katmanı için UI bağımsız client DTO'su |
-| `Pages/BaseBotPage.cs` | Tüm bot sayfaları için ortak taban sınıf |
+| `Models/GameWindowProcessInfo.cs` | Çalışan oyun penceresine (Process) ait PID, HWND (Handle) ve başlık DTO'su |
+| `Pages/BaseBotPage.cs` | Tüm bot sayfaları için ortak taban sınıf (`[DesignerCategory("Form")]` desteğiyle) |
+| `Helpers/FishFilterTableBuilder.cs` | Balık filtresi tablolarını JSON'dan okuyup jenerik olarak inşa eden statik yardımcı sınıf |
+| `Helpers/GameWindowProcessHelper.cs` | `metin2client.exe` süreçlerini tarayıp ComboBox'a bağlayan ve pencereleri öne getiren statik yardımcı sınıf |
+| `Assets/fish_filter_config.json` | Tablo başlıkları, renkler, sütunlar ve balık/eşya klasör konfigürasyonlarını içeren JSON dosyası |
 
 ### Güncellenen Dosyalar
 | Dosya | Değişiklik |
 |-------|------------|
-| `States/ClientState.cs` | `ClientCard` → `ClientInfo`; katman bağımlılığı giderildi |
-| `Controls/ClientsControl.cs` | Kullanılmayan 2 event kaldırıldı; `_currentlySelectedCard` ile görsel takip; `ClientInfo` entegrasyonu |
-| `Controls/ClientCard.cs` | 4 bot state property kaldırıldı (ClientModel ve ClientState ile çakışıyordu) |
+| `States/ClientState.cs` | `ClientCard` → `ClientInfo`; katman bağımlılığı giderildi; `UpdateSelectedClientHandle` eklendi |
+| `Controls/ClientsControl.cs` | Kullanılmayan 2 event kaldırıldı; `_currentlySelectedCard` ile görsel takip; `ClientState.OnSelectedClientChanged` ile kartın `selectedGameWindow` label'ı canlı güncelleniyor |
+| `Controls/ClientCard.cs` | 4 bot state property kaldırıldı; `GameWindowText` eklenerek HWND değerini yeşil renkle yazması sağlandı |
+| `Models/ClientInfo.cs` | `Handle` (HWND) alanı eklendi |
+| `Pages/FishBotPage.cs` | `selectGameWindow` tıklanması ile seçili client'a HWND bağlama mantığı entegre edildi |
 | `Controls/CustomScrollBar.cs` | `[DesignerSerializationVisibility(Hidden)]` attribute eklendi (WFO1000 hataları giderildi) |
+| `Constants/Colors.cs` | `ArkaPlanKoyu`, `ArkaPlanAcik`, `CizgiRengi` ve `Turuncu` renk sabitleri eklendi |
+| `Native/Win32Native.cs` | `SetForegroundWindow` ve `ShowWindow` P/Invoke fonksiyonları ve `SW_RESTORE` sabiti eklendi |
 | `Pages/AlchemyPage.cs` | 51 satır → 12 satır; `BaseBotPage`'den türetildi |
 | `Pages/AntiBanPage.cs` | 51 satır → 12 satır; `BaseBotPage`'den türetildi |
 | `Pages/UpgradePage.cs` | 51 satır → 12 satır; `BaseBotPage`'den türetildi |
 | `Pages/FishPuzzlePage.cs` | 51 satır → 12 satır; `BaseBotPage`'den türetildi |
-| `Pages/FishBotPage.cs` | `BaseBotPage`'den türetildi; `BuildFishFilterTable` → `OnLoad`'a alındı; `Colors.cs` entegrasyonu |
+| `Pages/FishBotPage.cs` | `BaseBotPage`'den türetildi; Tablo kodu `FishFilterTableBuilder`'a, Süreç/HWND kodu `GameWindowProcessHelper`'a aktarıldı |
 | `Forms/MainForm.cs` | Kullanılmayan `SelectedClient`/`CheckedClients` proxy'leri kaldırıldı; `PageState` döngüsel aboneliği kaldırıldı; event tipi `ClientInfo`'ya güncellendi |
 | `Services/ClientService.cs` | Gereksiz singleton → `static class`'a dönüştürüldü |
+| `FISH_FILTER_TABLE_GUIDE.md` | Jenerik JSON tablosu mimarisi, 4 farklı kategori ve sütun işlevleri belgelendi |
+

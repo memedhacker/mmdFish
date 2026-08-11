@@ -82,6 +82,24 @@ namespace Aether.Controls
             set => uıCheckBox1.Checked = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string GameWindowText
+        {
+            get => selectedGameWindow.Text;
+            set
+            {
+                selectedGameWindow.Text = value;
+                if (!string.IsNullOrWhiteSpace(value) && value != "Client Seçilmedi")
+                {
+                    selectedGameWindow.ForeColor = Colors.YesilAcik;
+                }
+                else
+                {
+                    selectedGameWindow.ForeColor = Color.Red;
+                }
+            }
+        }
+
 
         private void UpdateCardAppearance()
         {

@@ -32,7 +32,7 @@
             cardPanel = new Sunny.UI.UIPanel();
             uıCheckBox1 = new Sunny.UI.UICheckBox();
             pictureBox1 = new PictureBox();
-            lblIsSelected = new Label();
+            selectedGameWindow = new Label();
             cardPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -54,7 +54,7 @@
             cardPanel.BackColor = Color.Transparent;
             cardPanel.Controls.Add(uıCheckBox1);
             cardPanel.Controls.Add(pictureBox1);
-            cardPanel.Controls.Add(lblIsSelected);
+            cardPanel.Controls.Add(selectedGameWindow);
             cardPanel.Controls.Add(lblClientName);
             cardPanel.FillColor = Color.Transparent;
             cardPanel.FillColor2 = Color.Transparent;
@@ -95,16 +95,16 @@
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
             // 
-            // lblIsSelected
+            // selectedGameWindow
             // 
-            lblIsSelected.AutoSize = true;
-            lblIsSelected.Font = new Font("Microsoft Sans Serif", 8F);
-            lblIsSelected.ForeColor = Color.Red;
-            lblIsSelected.Location = new Point(54, 43);
-            lblIsSelected.Name = "lblIsSelected";
-            lblIsSelected.Size = new Size(81, 13);
-            lblIsSelected.TabIndex = 1;
-            lblIsSelected.Text = "Client Seçilmedi";
+            selectedGameWindow.AutoSize = true;
+            selectedGameWindow.Font = new Font("Microsoft Sans Serif", 8F);
+            selectedGameWindow.ForeColor = Color.Red;
+            selectedGameWindow.Location = new Point(54, 43);
+            selectedGameWindow.Name = "selectedGameWindow";
+            selectedGameWindow.Size = new Size(81, 13);
+            selectedGameWindow.TabIndex = 1;
+            selectedGameWindow.Text = "Client Seçilmedi";
             // 
             // ClientCard
             // 
@@ -123,7 +123,7 @@
 
         private Label lblClientName;
         private Sunny.UI.UIPanel cardPanel;
-        private Label lblIsSelected;
+        private Label selectedGameWindow;
         private PictureBox pictureBox1;
         private Sunny.UI.UICheckBox uıCheckBox1;
     }

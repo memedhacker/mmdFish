@@ -14,6 +14,32 @@ namespace Aether.Controls
         {
             InitializeComponent();
             LoadClients();
+
+            // ClientState'teki seçili client değiştikçe veya HWND güncellendikçe kart üzerindeki yazıyı güncelle
+            ClientState.Instance.OnSelectedClientChanged += ClientState_OnSelectedClientChanged;
+        }
+
+        private void ClientState_OnSelectedClientChanged(object? sender, ClientInfo? clientInfo)
+        {
+            UpdateSelectedCardGameWindowText(clientInfo);
+        }
+
+        public void UpdateSelectedCardGameWindowText(ClientInfo? clientInfo)
+        {
+            if (_currentlySelectedCard == null) return;
+
+            if (clientInfo != null && clientInfo.Handle != System.IntPtr.Zero && clientInfo.ProcessId != 0)
+            {
+                _currentlySelectedCard.GameWindowText = $"PID: {clientInfo.ProcessId}";
+            }
+            else if (clientInfo != null && clientInfo.Handle != System.IntPtr.Zero)
+            {
+                _currentlySelectedCard.GameWindowText = $"HWND: 0x{clientInfo.Handle.ToInt64():X}";
+            }
+            else
+            {
+                _currentlySelectedCard.GameWindowText = "Client Seçilmedi";
+            }
         }
 
         /// <summary>
@@ -101,7 +127,8 @@ namespace Aether.Controls
             {
                 if (control is ClientCard card && card.IsChecked)
                 {
-                    checkedList.Add(new ClientInfo(card.ClientNumber, card.ClientName));
+                    var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);
+                    checkedList.Add(clientInfo);
                 }
             }
 
@@ -135,8 +162,14 @@ namespace Aether.Controls
             _currentlySelectedCard = card;
             _currentlySelectedCard.IsSelected = true;
 
-            // State katmanına UI bağımsız ClientInfo ilet
-            ClientState.Instance.SelectedClient = new ClientInfo(card.ClientNumber, card.ClientName);
+            // State katmanında saklanan kalıcı nesneyi al
+            var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);
+
+            // Seçili kart üzerindeki HWND bilgisini tazele
+            UpdateSelectedCardGameWindowText(clientInfo);
+
+            // State katmanına duyur
+            ClientState.Instance.SelectedClient = clientInfo;
         }
     }
 }
