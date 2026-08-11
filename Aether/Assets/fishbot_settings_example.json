@@ -1,0 +1,101 @@
+{
+  "settingsName": "Örnek Bot Ayarları",
+
+  "closeGame": {
+    "enabled": false,
+    "afterMinutes": 25
+  },
+
+  "changeChannel": {
+    "enabled": false,
+    "afterMinutes": 25,
+    "selectAllChannels": true,
+    "channels": {
+      "ch1": true,
+      "ch2": true,
+      "ch3": true,
+      "ch4": true,
+      "ch5": true,
+      "ch6": true
+    }
+  },
+
+  "characterScreen": {
+    "enabled": false,
+    "afterMinutes": 25
+  },
+
+  "buyCampfire": {
+    "enabled": false,
+    "count": 5
+  },
+
+  "buyWorm": {
+    "enabled": false,
+    "count": 5
+  },
+
+  "animationMode": "mount",
+
+  "inventoryPage": 1,
+
+  "fishingSpeed": {
+    "minMs": 150,
+    "maxMs": 250
+  },
+
+  "fishFilter": {
+    "rare": [
+      { "name": "Altın_Sudak_Balığı",  "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Aynalı_Sazan",         "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Kadife_Balığı",         "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Kral_Yengeci",          "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Kurbağa_Balığı",        "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Palamut_Balığı",        "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Sevimli_Balık",         "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Yabbie_Yengeci",        "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Yılan_Başı_Balığı",    "catch": true,  "cook": false, "kill": false, "drop": false }
+    ],
+    "common": [
+      { "name": "Büyük_Sudak_Balığı",   "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Dere_Alabalığı",        "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Gökkuşağı_Alabalığı",  "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Hamsi",                 "catch": true,  "cook": false, "kill": false, "drop": true  },
+      { "name": "Levrek",                "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Lüfer_Balığı",          "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Nehir_Alabalığı",       "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Ot_Sazanı",             "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Ringa_Balığı",          "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Sazan",                 "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Som_Balığı",            "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Sudak_Balığı",          "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Tekir_Balığı",          "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Yayın_Balığı",          "catch": true,  "cook": false, "kill": false, "drop": false },
+      { "name": "Zargana",               "catch": true,  "cook": false, "kill": false, "drop": false }
+    ],
+    "others": [
+      { "name": "Altın_Anahtar",             "catch": true,  "drop": false },
+      { "name": "Altın_Parçası",             "catch": true,  "drop": false },
+      { "name": "Altın_Yüzük",              "catch": true,  "drop": false },
+      { "name": "Beyaz_Saç_Boyası",         "catch": true,  "drop": false },
+      { "name": "Bilge_Kralın_Eldiveni",    "catch": true,  "drop": false },
+      { "name": "Bilge_Kralın_Sembolü",     "catch": true,  "drop": false },
+      { "name": "Deniz_Kızı_Anahtarı",      "catch": true,  "drop": false },
+      { "name": "Görünmezlik_Pelerini",     "catch": true,  "drop": false },
+      { "name": "Gümüş_Anahtar",            "catch": true,  "drop": false },
+      { "name": "Kahverengi_Saç_Boyası",    "catch": true,  "drop": false },
+      { "name": "Kırmızı_Saç_Boyası",       "catch": true,  "drop": false },
+      { "name": "Lucy'nin_Yüzüğü",          "catch": true,  "drop": false },
+      { "name": "Saç_Boyası_Temizleyici",   "catch": true,  "drop": false },
+      { "name": "Sarı_Saç_Boyası",          "catch": true,  "drop": false },
+      { "name": "Siyah_Saç_Boyası",         "catch": true,  "drop": false }
+    ],
+    "deadFishLoot": [
+      { "name": "Beyaz_İnci",      "drop": false },
+      { "name": "İstiridye",       "drop": false },
+      { "name": "Kankırmızı_İnci", "drop": false },
+      { "name": "Mavi_İnci",       "drop": false },
+      { "name": "Taş_Parçası",     "drop": true  }
+    ]
+  }
+}
