@@ -1,4 +1,4 @@
-﻿namespace Aether.Controls
+namespace Aether.Controls
 {
     partial class ClientCard
     {
@@ -31,10 +31,10 @@
             lblClientName = new Label();
             cardPanel = new Sunny.UI.UIPanel();
             uıCheckBox1 = new Sunny.UI.UICheckBox();
-            pictureBox1 = new PictureBox();
+            startClient = new PictureBox();
             selectedGameWindow = new Label();
             cardPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)startClient).BeginInit();
             SuspendLayout();
             // 
             // lblClientName
@@ -53,7 +53,7 @@
             // 
             cardPanel.BackColor = Color.Transparent;
             cardPanel.Controls.Add(uıCheckBox1);
-            cardPanel.Controls.Add(pictureBox1);
+            cardPanel.Controls.Add(startClient);
             cardPanel.Controls.Add(selectedGameWindow);
             cardPanel.Controls.Add(lblClientName);
             cardPanel.FillColor = Color.Transparent;
@@ -83,17 +83,17 @@
             uıCheckBox1.Size = new Size(41, 35);
             uıCheckBox1.TabIndex = 3;
             // 
-            // pictureBox1
+            // startClient
             // 
-            pictureBox1.BackColor = Color.Transparent;
-            pictureBox1.Cursor = Cursors.Hand;
-            pictureBox1.Image = Properties.Resources.play_button;
-            pictureBox1.Location = new Point(222, 24);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(30, 30);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 2;
-            pictureBox1.TabStop = false;
+            startClient.BackColor = Color.Transparent;
+            startClient.Cursor = Cursors.Hand;
+            startClient.Image = Properties.Resources.play_button;
+            startClient.Location = new Point(222, 24);
+            startClient.Name = "startClient";
+            startClient.Size = new Size(30, 30);
+            startClient.SizeMode = PictureBoxSizeMode.StretchImage;
+            startClient.TabIndex = 2;
+            startClient.TabStop = false;
             // 
             // selectedGameWindow
             // 
@@ -115,7 +115,7 @@
             Size = new Size(276, 76);
             cardPanel.ResumeLayout(false);
             cardPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)startClient).EndInit();
             ResumeLayout(false);
         }
 
@@ -124,7 +124,7 @@
         private Label lblClientName;
         private Sunny.UI.UIPanel cardPanel;
         private Label selectedGameWindow;
-        private PictureBox pictureBox1;
+        private PictureBox startClient;
         private Sunny.UI.UICheckBox uıCheckBox1;
     }
 }

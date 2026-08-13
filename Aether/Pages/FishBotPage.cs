@@ -10,6 +10,7 @@ namespace Aether.Pages
     {
         // Sayfa açıkken hangi client'ın ayarlarını gösterdiğimizi takip eder
         private int? _lastLoadedClientId = null;
+        private System.Windows.Forms.Timer? _statusTimer;
 
         public FishBotPage()
         {
@@ -65,12 +66,22 @@ namespace Aether.Pages
                 // Sayfa açıldığında aktif seçili client'ın HWND bilgisini ComboBox ile senkronize et
                 SyncComboBoxWithSelectedClient();
 
+                // Canlı bot durumu ve çalışma süresi (fishBotTime / fishBotStatus) güncelleme timer'ı
+                _statusTimer = new System.Windows.Forms.Timer();
+                _statusTimer.Interval = 500;
+                _statusTimer.Tick += (s, ev) => UpdateBotStatusAndTimerDisplay();
+                _statusTimer.Start();
+
+                Services.FishBotService.Instance.OnFishBotStateChanged += FishBotService_OnFishBotStateChanged;
+                UpdateBotStatusAndTimerDisplay();
+
                 // Client değiştiğinde: önce mevcut ayarları kaydet, sonra yeni client'ın ayarlarını yükle
                 ClientState.Instance.OnSelectedClientChanged += (s, clientInfo) =>
                 {
                     SaveSettingsForLastClient();
                     LoadSettingsForCurrentClient();
                     SyncComboBoxWithSelectedClient();
+                    UpdateBotStatusAndTimerDisplay();
                 };
 
                 // refreshClientListButton tıklanınca listeyi tekrar tara ve var olan seçimi korumaya çalış
@@ -365,6 +376,60 @@ namespace Aether.Pages
             var selectedClient = ClientState.Instance.SelectedClient;
             IntPtr currentHandle = selectedClient?.Handle ?? IntPtr.Zero;
             GameWindowProcessHelper.SelectMatchingHandleInComboBox(gameWindowSelectComboBox, currentHandle);
+        }
+
+        // -----------------------------------------------------------------
+        // Bot Durumu ve Çalışma Süresi (fishBotTime & fishBotStatus) Yönetimi
+        // -----------------------------------------------------------------
+
+        private void FishBotService_OnFishBotStateChanged(object? sender, (int ClientId, bool IsRunning) e)
+        {
+            UpdateBotStatusAndTimerDisplay();
+        }
+
+        private void UpdateBotStatusAndTimerDisplay()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(UpdateBotStatusAndTimerDisplay));
+                return;
+            }
+
+            var selectedClient = ClientState.Instance.SelectedClient;
+            if (selectedClient == null)
+            {
+                fishBotStatus.Text = "Çalışmıyor";
+                fishBotStatus.ForeColor = Color.Red;
+                fishBotTime.Text = "00:00:00";
+                return;
+            }
+
+            bool isRunning = Services.FishBotService.Instance.IsFishBotRunning(selectedClient.Id);
+            if (isRunning)
+            {
+                TimeSpan elapsed = Services.FishBotService.Instance.GetBotElapsedTime(selectedClient.Id);
+                fishBotStatus.Text = "Çalışıyor";
+                fishBotStatus.ForeColor = Constants.Colors.YesilAcik;
+                fishBotTime.Text = elapsed.ToString(@"hh\:mm\:ss");
+            }
+            else
+            {
+                fishBotStatus.Text = "Durdu";
+                fishBotStatus.ForeColor = Color.Red;
+                fishBotTime.Text = "00:00:00";
+            }
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            if (_statusTimer != null)
+            {
+                _statusTimer.Stop();
+                _statusTimer.Dispose();
+                _statusTimer = null;
+            }
+            Services.FishBotService.Instance.OnFishBotStateChanged -= FishBotService_OnFishBotStateChanged;
+            base.OnHandleDestroyed(e);
         }
     }
 }

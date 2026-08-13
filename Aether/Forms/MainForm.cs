@@ -165,19 +165,62 @@ namespace Aether.Forms
 
         private void testButton_Click(object sender, EventArgs e)
         {
-            // State log raporunu Masaüstüne kaydet
-            string logPath = Helpers.StateLoggerHelper.ExportAllStatesToDesktop();
+            /*
+             * ====================================================================================================
+             * 📘 İNTERAKTİF KOORDİNAT SEÇİM TESTİ VE BÖLGESEL YAKALAMA REHBERİ (TUTORIAL)
+             * ====================================================================================================
+             * 
+             * 🔹 1. TEST PENCERESİ: PreviewFullWindowWithSelection(client.Handle, client.Name)
+             *    - Seçili oyun penceresinin (kenarlıklar hariç) TÜM İÇ ALANINI (Client Area) çeker.
+             *    - Açılan pencere üzerinde fareyle sürükleyerek istediğiniz kare/dikdörtgen alanı seçebilirsiniz.
+             *    - Seçtiğiniz alanın (baslangic_x, baslangic_y, bitis_x, bitis_y) koordinatlarını ve hazır C# kodunu verir.
+             * 
+             * 🔹 2. KOD İÇİNDE KULLANIM: CaptureRegion(baslangic_x, baslangic_y, bitis_x, bitis_y)
+             *    - Test penceresinden aldığınız koordinatları bu fonksiyona vererek bot döngüsünde doğrudan kullanın:
+             * 
+             *    Bitmap? bolgeResmi = Helpers.WindowRegionCaptureHelper.CaptureRegion(
+             *        client.Handle,
+             *        baslangic_x: 100,
+             *        baslangic_y: 540,
+             *        bitis_x: 450,
+             *        bitis_y: 450);
+             * 
+             *    if (bolgeResmi != null)
+             *    {
+             *        // Template Matching ile arama yap:
+             *        var sonuc = Constants.TemplateConstants.Match(bolgeResmi, Constants.TemplateConstants.Waypoints.BiseyTakildi, 0.85);
+             *        if (sonuc.IsSuccess)
+             *        {
+             *            // Şablon bulundu! (sonuc.Location, sonuc.Confidence)
+             *        }
+             *    }
+             * ====================================================================================================
+             */
 
-            // Seçili olan client'ın HWND penceresinin ekran görüntüsünü al ve Masaüstüne kaydet
-            var (success, message, screenshotPath) = Helpers.WindowCaptureHelper.CaptureAndSaveSelectedClientToDesktop();
-
-            if (success)
+            // 1. Aktif seçili client ve HWND kontrolü
+            var client = ClientState.Instance.SelectedClient;
+            if (client == null || client.Handle == IntPtr.Zero || !Native.Win32Native.IsWindow(client.Handle))
             {
-                MessageBox.Show($"State Raporu: {logPath}\n\n{message}", "Test Et - Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Lütfen önce sol taraftaki listeden bir istemci (Client) seçin ve geçerli bir oyun penceresi (HWND) bağlı olduğundan emin olun.",
+                    "İstemci Seçilmedi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
             }
-            else
+
+            // 2. Seçili HWND'nin tam iç görüntüsünü çek ve fare ile koordinat seçebileceğiniz test aracını aç
+            var (success, message) = Helpers.WindowRegionCaptureHelper.PreviewFullWindowWithSelection(
+                client.Handle,
+                client.Name);
+
+            if (!success)
             {
-                MessageBox.Show($"State Raporu kaydedildi: {logPath}\n\nEkran Görüntüsü Uyarısı:\n{message}", "Test Et - HWND Ekran Görüntüsü Uyarısı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    message,
+                    "Hata",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
     }

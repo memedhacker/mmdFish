@@ -14,7 +14,8 @@ namespace Aether.Helpers
     public static class WindowCaptureHelper
     {
         /// <summary>
-        /// Belirtilen HWND (pencere tutacağı) üzerindeki pencerenin ekran görüntüsünü Bitmap olarak döndürür.
+        /// Belirtilen HWND (pencere tutacağı) üzerindeki pencerenin SADECE İÇ ALANININ (Client Area) ekran görüntüsünü Bitmap olarak döndürür.
+        /// Başlık çubuğu (title bar) ve pencere kenarlıkları (borders) dahil edilmez.
         /// Pencere başka bir pencerenin arkasında veya altta kalsa bile arka planda yakalar.
         /// </summary>
         /// <param name="hWnd">Yakalanacak pencerenin HWND adresi.</param>
@@ -36,55 +37,71 @@ namespace Aether.Helpers
                 System.Threading.Thread.Sleep(50); // DWM arabelleğinin güncellenmesi için kısa bir bekleme
             }
 
-            if (!Win32Native.GetWindowRect(hWnd, out Win32Native.RECT rect))
+            // 1. Pencerenin iç alan (Client Area) boyutlarını al
+            if (!Win32Native.GetClientRect(hWnd, out Win32Native.RECT clientRect))
             {
                 return null;
             }
 
-            int width = rect.Width;
-            int height = rect.Height;
+            int clientWidth = clientRect.Width;
+            int clientHeight = clientRect.Height;
 
-            if (width <= 0 || height <= 0)
+            // 2. Tam pencere (Window Rect) ve ekran ofsetlerini hesapla
+            Win32Native.GetWindowRect(hWnd, out Win32Native.RECT windowRect);
+            int windowWidth = windowRect.Width;
+            int windowHeight = windowRect.Height;
+
+            // İç alanın sol-üst köşesinin ekran koordinatları
+            Win32Native.POINT clientScreenPt = new Win32Native.POINT(0, 0);
+            Win32Native.ClientToScreen(hWnd, ref clientScreenPt);
+
+            // Pencerenin sol-üst kenarlık kalınlıkları (Offset)
+            int offsetX = Math.Max(0, clientScreenPt.X - windowRect.Left);
+            int offsetY = Math.Max(0, clientScreenPt.Y - windowRect.Top);
+
+            if (clientWidth <= 0 || clientHeight <= 0)
+            {
+                clientWidth = windowWidth;
+                clientHeight = windowHeight;
+                offsetX = 0;
+                offsetY = 0;
+            }
+
+            if (clientWidth <= 0 || clientHeight <= 0)
             {
                 return null;
             }
 
             Bitmap? resultBitmap = null;
 
-            // GDI Memory DC oluştur (Arka plandaki ve üst üste binmiş pencereleri sorunsuz çekebilmek için)
+            // YÖNTEM 1: PrintWindow + PW_CLIENTONLY (0x01) & PW_RENDERFULLCONTENT (0x02)
             IntPtr hdcScreen = Win32Native.GetDC(IntPtr.Zero);
             IntPtr hdcMem = Win32Native.CreateCompatibleDC(hdcScreen);
-            IntPtr hBitmap = Win32Native.CreateCompatibleBitmap(hdcScreen, width, height);
+            IntPtr hBitmap = Win32Native.CreateCompatibleBitmap(hdcScreen, clientWidth, clientHeight);
             IntPtr hOldBmp = Win32Native.SelectObject(hdcMem, hBitmap);
 
             try
             {
-                // 1. Öncelikli Yöntem: PrintWindow + PW_RENDERFULLCONTENT (0x02)
-                // Windows DWM yönlendirme yüzeyini kullanarak pencere en altta/arkada olsa bile tam çizimini alır.
-                bool printed = Win32Native.PrintWindow(hWnd, hdcMem, Win32Native.PW_RENDERFULLCONTENT);
+                bool printed = Win32Native.PrintWindow(hWnd, hdcMem, Win32Native.PW_CLIENTONLY | Win32Native.PW_RENDERFULLCONTENT);
 
-                // 2. Yöntem: Başarısız olursa standart PrintWindow (0) dene
                 if (!printed)
                 {
-                    printed = Win32Native.PrintWindow(hWnd, hdcMem, 0);
-                }
-
-                // 3. Yöntem: PrintWindow tamamen başarısız olursa pencerenin kendi DC'sinden BitBlt yap
-                if (!printed)
-                {
-                    IntPtr hWindowDC = Win32Native.GetWindowDC(hWnd);
-                    if (hWindowDC != IntPtr.Zero)
-                    {
-                        printed = Win32Native.BitBlt(hdcMem, 0, 0, width, height, hWindowDC, 0, 0, Win32Native.SRCCOPY);
-                        Win32Native.ReleaseDC(hWnd, hWindowDC);
-                    }
+                    printed = Win32Native.PrintWindow(hWnd, hdcMem, Win32Native.PW_CLIENTONLY);
                 }
 
                 if (printed)
                 {
                     using (Bitmap tempBmp = Image.FromHbitmap(hBitmap))
                     {
-                        resultBitmap = new Bitmap(tempBmp);
+                        Bitmap bmp = new Bitmap(tempBmp);
+                        if (!IsBitmapBlank(bmp))
+                        {
+                            resultBitmap = bmp;
+                        }
+                        else
+                        {
+                            bmp.Dispose();
+                        }
                     }
                 }
             }
@@ -94,22 +111,123 @@ namespace Aether.Helpers
             }
             finally
             {
-                // GDI kaynaklarını serbest bırak
                 Win32Native.SelectObject(hdcMem, hOldBmp);
                 Win32Native.DeleteObject(hBitmap);
                 Win32Native.DeleteDC(hdcMem);
                 Win32Native.ReleaseDC(IntPtr.Zero, hdcScreen);
             }
 
-            // Görüntü siyah/boş kalmışsa veya alınamadıysa ekrandan CopyFromScreen yedek yöntemini çalıştır
+            // YÖNTEM 2: Tam Pencere PrintWindow çekip iç alanı kırpma (Crop)
+            // (PW_CLIENTONLY bazı eski/özel pencerelerde çalışmadığında tam DWM çizimini alıp kenarlıkları keser)
+            if (resultBitmap == null && windowWidth > 0 && windowHeight > 0)
+            {
+                IntPtr hdcScreen2 = Win32Native.GetDC(IntPtr.Zero);
+                IntPtr hdcMem2 = Win32Native.CreateCompatibleDC(hdcScreen2);
+                IntPtr hBitmapFull = Win32Native.CreateCompatibleBitmap(hdcScreen2, windowWidth, windowHeight);
+                IntPtr hOldBmp2 = Win32Native.SelectObject(hdcMem2, hBitmapFull);
+
+                try
+                {
+                    bool printedFull = Win32Native.PrintWindow(hWnd, hdcMem2, Win32Native.PW_RENDERFULLCONTENT);
+                    if (!printedFull)
+                    {
+                        printedFull = Win32Native.PrintWindow(hWnd, hdcMem2, 0);
+                    }
+
+                    if (printedFull)
+                    {
+                        using (Bitmap tempFullBmp = Image.FromHbitmap(hBitmapFull))
+                        {
+                            using (Bitmap fullBmp = new Bitmap(tempFullBmp))
+                            {
+                                if (!IsBitmapBlank(fullBmp))
+                                {
+                                    int cropW = Math.Min(clientWidth, fullBmp.Width - offsetX);
+                                    int cropH = Math.Min(clientHeight, fullBmp.Height - offsetY);
+
+                                    if (cropW > 0 && cropH > 0 && (offsetX > 0 || offsetY > 0 || cropW < fullBmp.Width || cropH < fullBmp.Height))
+                                    {
+                                        Rectangle cropRect = new Rectangle(offsetX, offsetY, cropW, cropH);
+                                        resultBitmap = fullBmp.Clone(cropRect, PixelFormat.Format32bppArgb);
+                                    }
+                                    else
+                                    {
+                                        resultBitmap = new Bitmap(fullBmp);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    resultBitmap?.Dispose();
+                    resultBitmap = null;
+                }
+                finally
+                {
+                    Win32Native.SelectObject(hdcMem2, hOldBmp2);
+                    Win32Native.DeleteObject(hBitmapFull);
+                    Win32Native.DeleteDC(hdcMem2);
+                    Win32Native.ReleaseDC(IntPtr.Zero, hdcScreen2);
+                }
+            }
+
+            // YÖNTEM 3: Pencerenin kendi Client DC'sinden BitBlt kopyalama
+            if (resultBitmap == null)
+            {
+                IntPtr hdcScreen3 = Win32Native.GetDC(IntPtr.Zero);
+                IntPtr hdcMem3 = Win32Native.CreateCompatibleDC(hdcScreen3);
+                IntPtr hBitmapClient = Win32Native.CreateCompatibleBitmap(hdcScreen3, clientWidth, clientHeight);
+                IntPtr hOldBmp3 = Win32Native.SelectObject(hdcMem3, hBitmapClient);
+
+                try
+                {
+                    IntPtr hdcClient = Win32Native.GetDC(hWnd); // GetDC doğrudan Client DC verir
+                    if (hdcClient != IntPtr.Zero)
+                    {
+                        bool blt = Win32Native.BitBlt(hdcMem3, 0, 0, clientWidth, clientHeight, hdcClient, 0, 0, Win32Native.SRCCOPY);
+                        Win32Native.ReleaseDC(hWnd, hdcClient);
+
+                        if (blt)
+                        {
+                            using (Bitmap tempBmp = Image.FromHbitmap(hBitmapClient))
+                            {
+                                Bitmap bmp = new Bitmap(tempBmp);
+                                if (!IsBitmapBlank(bmp))
+                                {
+                                    resultBitmap = bmp;
+                                }
+                                else
+                                {
+                                    bmp.Dispose();
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    resultBitmap = null;
+                }
+                finally
+                {
+                    Win32Native.SelectObject(hdcMem3, hOldBmp3);
+                    Win32Native.DeleteObject(hBitmapClient);
+                    Win32Native.DeleteDC(hdcMem3);
+                    Win32Native.ReleaseDC(IntPtr.Zero, hdcScreen3);
+                }
+            }
+
+            // YÖNTEM 4 (Fallback): Ekrandan doğrudan Client Area bölgesini CopyFromScreen ile alma
             if (resultBitmap == null || IsBitmapBlank(resultBitmap))
             {
                 try
                 {
-                    Bitmap fallbackBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+                    Bitmap fallbackBmp = new Bitmap(clientWidth, clientHeight, PixelFormat.Format32bppArgb);
                     using (Graphics g = Graphics.FromImage(fallbackBmp))
                     {
-                        g.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
+                        g.CopyFromScreen(clientScreenPt.X, clientScreenPt.Y, 0, 0, new Size(clientWidth, clientHeight), CopyPixelOperation.SourceCopy);
                     }
 
                     if (!IsBitmapBlank(fallbackBmp))

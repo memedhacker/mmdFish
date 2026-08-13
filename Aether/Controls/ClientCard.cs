@@ -14,9 +14,11 @@ namespace Aether.Controls
     {
         private int clientNumber = 0;
         private bool isSelected = false;
+        private bool isBotRunning = false;
 
         public event EventHandler OnCardSelected;
         public event EventHandler OnCheckedChanged;
+        public event EventHandler? OnStartClientClicked;
 
         public ClientCard()
         {
@@ -31,6 +33,7 @@ namespace Aether.Controls
 
             uıCheckBox1.Click += (s, e) => OnCheckedChanged?.Invoke(this, EventArgs.Empty);
             uıCheckBox1.ValueChanged += (s, value) => OnCheckedChanged?.Invoke(this, EventArgs.Empty);
+            startClient.Click += (s, e) => OnStartClientClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void RegisterClickEvents(Control control)
@@ -38,7 +41,7 @@ namespace Aether.Controls
             control.Click += Card_Click;
             foreach (Control child in control.Controls)
             {
-                if (child != pictureBox1 && child != uıCheckBox1)
+                if (child != startClient && child != uıCheckBox1)
                 {
                     RegisterClickEvents(child);
                 }
@@ -80,6 +83,17 @@ namespace Aether.Controls
         {
             get => uıCheckBox1.Checked;
             set => uıCheckBox1.Checked = value;
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsBotRunning
+        {
+            get => isBotRunning;
+            set
+            {
+                isBotRunning = value;
+                startClient.Image = isBotRunning ? Properties.Resources.stop_button : Properties.Resources.play_button;
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

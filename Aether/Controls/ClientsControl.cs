@@ -17,6 +17,27 @@ namespace Aether.Controls
 
             // ClientState'teki seçili client değiştikçe veya HWND güncellendikçe kart üzerindeki yazıyı güncelle
             ClientState.Instance.OnSelectedClientChanged += ClientState_OnSelectedClientChanged;
+
+            // FishBotService çalışma durumları değiştikçe kart görsellerini güncelle
+            Services.FishBotService.Instance.OnFishBotStateChanged += FishBotService_OnFishBotStateChanged;
+        }
+
+        private void FishBotService_OnFishBotStateChanged(object? sender, (int ClientId, bool IsRunning) e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new System.Action(() => FishBotService_OnFishBotStateChanged(sender, e)));
+                return;
+            }
+
+            foreach (Control control in clientListFlowPanel.Controls)
+            {
+                if (control is ClientCard card && card.ClientNumber == e.ClientId)
+                {
+                    card.IsBotRunning = e.IsRunning;
+                    break;
+                }
+            }
         }
 
         private void ClientState_OnSelectedClientChanged(object? sender, ClientInfo? clientInfo)
@@ -65,8 +86,28 @@ namespace Aether.Controls
                 // Checkbox değiştiğinde tetiklenecek event aboneliği
                 card.OnCheckedChanged += (sender, e) => UpdateCheckedClients();
 
+                // startClient (Başlat/Durdur) butonuna tıklandığında balık botunu toggle et
+                card.OnStartClientClicked += (sender, e) =>
+                {
+                    var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);
+                    var (success, message) = Services.FishBotService.Instance.ToggleFishBot(clientInfo);
+
+                    if (!success)
+                    {
+                        MessageBox.Show(
+                            message,
+                            "Pencere (HWND) Seçim Uyarısı",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                    }
+                };
+
                 // Mouse tekerleği kart üzerindeyken de scrollbar'ı çalıştırır
                 AttachMouseWheel(card);
+
+                // Kartın mevcut bot çalışma durumunu senkronize et
+                card.IsBotRunning = Services.FishBotService.Instance.IsFishBotRunning(card.ClientNumber);
 
                 clientListFlowPanel.Controls.Add(card);
             }

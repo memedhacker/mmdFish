@@ -56,6 +56,19 @@ namespace Aether.Native
         #region Structs
 
         [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+
+            public POINT(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
             public int Left;
@@ -70,6 +83,9 @@ namespace Aether.Native
         #endregion
 
         #region User32.dll Functions
+
+        [DllImport("user32.dll")]
+        public static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
