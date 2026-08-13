@@ -267,6 +267,7 @@ namespace Aether.Forms
             testButton.TabIndex = 7;
             testButton.Text = "test et";
             testButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            testButton.Click += testButton_Click;
             // 
             // MainForm
             // 

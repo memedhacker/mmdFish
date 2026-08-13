@@ -23,16 +23,13 @@ namespace Aether.Forms
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = true;
+
+            // CustomScrollBar'ı showPagePanel paneline bağla
+            pageScrollBar.TargetControl = showPagePanel;
+
             // selectAllButton tıklama ve değer değişimi event abonelikleri
             selectAllButton.ValueChanged += SelectAllButton_ValueChanged;
             selectAllButton.Click += SelectAllButton_Click;
-
-            // Test / Log Çıktısı Alma Buton Bağlantısı (testButton)
-            testButton.Click += (s, e) =>
-            {
-                string path = Helpers.StateLoggerHelper.ExportAllStatesToDesktop();
-                MessageBox.Show($"Tüm state verileri başarıyla Masaüstüne kaydedildi:\n{path}", "State Log Raporu", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            };
 
             // Panel yeniden boyutlandırıldığında yüklenen sayfaları yatayda stretch yap
             showPagePanel.Resize += ShowPagePanel_Resize;
@@ -46,12 +43,12 @@ namespace Aether.Forms
             _pageMap.Clear();
 
             // Buton ve sayfa eşleşmeleri (Tekil nesneler olarak oluşturulur)
-            _pageMap["Home"]     = (null!,           new HomePage());
-            _pageMap["FishBot"]  = (pFishBotButton,  new FishBotPage());
-            _pageMap["Puzzle"]   = (pPuzzleButton,   new FishPuzzlePage());
-            _pageMap["Alchemy"]  = (pAlchemyButton,  new AlchemyPage());
-            _pageMap["Upgrade"]  = (pUpgradeButton,  new UpgradePage());
-            _pageMap["AntiBan"]  = (pAntiBanButton,  new AntiBanPage());
+            _pageMap["Home"] = (null!, new HomePage());
+            _pageMap["FishBot"] = (pFishBotButton, new FishBotPage());
+            _pageMap["Puzzle"] = (pPuzzleButton, new FishPuzzlePage());
+            _pageMap["Alchemy"] = (pAlchemyButton, new AlchemyPage());
+            _pageMap["Upgrade"] = (pUpgradeButton, new UpgradePage());
+            _pageMap["AntiBan"] = (pAntiBanButton, new AntiBanPage());
 
             foreach (var kvp in _pageMap)
             {
@@ -163,6 +160,24 @@ namespace Aether.Forms
             finally
             {
                 _isUpdatingSelectAll = false;
+            }
+        }
+
+        private void testButton_Click(object sender, EventArgs e)
+        {
+            // State log raporunu Masaüstüne kaydet
+            string logPath = Helpers.StateLoggerHelper.ExportAllStatesToDesktop();
+
+            // Seçili olan client'ın HWND penceresinin ekran görüntüsünü al ve Masaüstüne kaydet
+            var (success, message, screenshotPath) = Helpers.WindowCaptureHelper.CaptureAndSaveSelectedClientToDesktop();
+
+            if (success)
+            {
+                MessageBox.Show($"State Raporu: {logPath}\n\n{message}", "Test Et - Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show($"State Raporu kaydedildi: {logPath}\n\nEkran Görüntüsü Uyarısı:\n{message}", "Test Et - HWND Ekran Görüntüsü Uyarısı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

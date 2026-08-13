@@ -24,7 +24,9 @@ namespace Aether.Controls
         private Point _dragStartPoint;
         private int _dragStartValue;
 
-        public event EventHandler? Scroll;
+        private CustomScrollMessageFilter? _messageFilter;
+
+        public new event EventHandler? Scroll;
         public event EventHandler? ValueChanged;
 
         public CustomScrollBar()
@@ -36,7 +38,27 @@ namespace Aether.Controls
                      ControlStyles.SupportsTransparentBackColor, true);
 
             BackColor = Color.Transparent;
-            Width = 12;
+            Width = 14;
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            if (!DesignMode && _messageFilter == null)
+            {
+                _messageFilter = new CustomScrollMessageFilter(this);
+                Application.AddMessageFilter(_messageFilter);
+            }
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            if (_messageFilter != null)
+            {
+                Application.RemoveMessageFilter(_messageFilter);
+                _messageFilter = null;
+            }
+            base.OnHandleDestroyed(e);
         }
 
         /// <summary>
@@ -53,20 +75,28 @@ namespace Aether.Controls
                 {
                     if (_targetControl != null)
                     {
-                        _targetControl.MouseWheel -= TargetControl_MouseWheel;
                         _targetControl.Resize -= TargetControl_LayoutChanged;
                         _targetControl.ControlAdded -= TargetControl_ControlAddedRemoved;
                         _targetControl.ControlRemoved -= TargetControl_ControlAddedRemoved;
+
+                        foreach (Control child in _targetControl.Controls)
+                        {
+                            UnhookChildEvents(child);
+                        }
                     }
 
                     _targetControl = value;
 
                     if (_targetControl != null)
                     {
-                        _targetControl.MouseWheel += TargetControl_MouseWheel;
                         _targetControl.Resize += TargetControl_LayoutChanged;
                         _targetControl.ControlAdded += TargetControl_ControlAddedRemoved;
                         _targetControl.ControlRemoved += TargetControl_ControlAddedRemoved;
+
+                        foreach (Control child in _targetControl.Controls)
+                        {
+                            HookChildEvents(child);
+                        }
 
                         _targetControl.AutoScroll = true;
                         HideNativeScrollBar();
@@ -84,6 +114,27 @@ namespace Aether.Controls
                 Win32Native.ShowScrollBar(_targetControl.Handle, Win32Native.SB_VERT, false);
                 Win32Native.ShowScrollBar(_targetControl.Handle, Win32Native.SB_HORZ, false);
             }
+        }
+
+        private void HookChildEvents(Control child)
+        {
+            if (child == null) return;
+            child.SizeChanged -= ChildControl_SizeChanged;
+            child.SizeChanged += ChildControl_SizeChanged;
+            child.Resize -= ChildControl_SizeChanged;
+            child.Resize += ChildControl_SizeChanged;
+        }
+
+        private void UnhookChildEvents(Control child)
+        {
+            if (child == null) return;
+            child.SizeChanged -= ChildControl_SizeChanged;
+            child.Resize -= ChildControl_SizeChanged;
+        }
+
+        private void ChildControl_SizeChanged(object? sender, EventArgs e)
+        {
+            SyncWithTarget();
         }
 
         [Category("Behavior")]
@@ -150,7 +201,7 @@ namespace Aether.Controls
             HideNativeScrollBar();
 
             int contentHeight = 0;
-            int currentScrollY = -_targetControl.AutoScrollPosition.Y;
+            int currentScrollY = Math.Abs(_targetControl.AutoScrollPosition.Y);
 
             foreach (Control ctrl in _targetControl.Controls)
             {
@@ -160,6 +211,9 @@ namespace Aether.Controls
                     contentHeight = Math.Max(contentHeight, absoluteBottom);
                 }
             }
+
+            int displayHeight = _targetControl.DisplayRectangle.Height;
+            contentHeight = Math.Max(contentHeight, displayHeight);
 
             int visibleHeight = _targetControl.ClientSize.Height;
             int maxScroll = Math.Max(0, contentHeight - visibleHeight);
@@ -172,12 +226,6 @@ namespace Aether.Controls
             Invalidate();
         }
 
-        private void TargetControl_MouseWheel(object? sender, MouseEventArgs e)
-        {
-            int delta = e.Delta > 0 ? -60 : 60;
-            Value += delta;
-        }
-
         private void TargetControl_LayoutChanged(object? sender, EventArgs e)
         {
             SyncWithTarget();
@@ -185,6 +233,10 @@ namespace Aether.Controls
 
         private void TargetControl_ControlAddedRemoved(object? sender, ControlEventArgs e)
         {
+            if (e.Control != null)
+            {
+                HookChildEvents(e.Control);
+            }
             SyncWithTarget();
         }
 
@@ -352,6 +404,42 @@ namespace Aether.Controls
 
             path.CloseFigure();
             return path;
+        }
+
+        private class CustomScrollMessageFilter : IMessageFilter
+        {
+            private readonly CustomScrollBar _scrollBar;
+
+            public CustomScrollMessageFilter(CustomScrollBar scrollBar)
+            {
+                _scrollBar = scrollBar;
+            }
+
+            public bool PreFilterMessage(ref Message m)
+            {
+                const int WM_MOUSEWHEEL = 0x020A;
+                if (m.Msg == WM_MOUSEWHEEL)
+                {
+                    if (_scrollBar.TargetControl != null && _scrollBar.TargetControl.Visible && _scrollBar.Visible)
+                    {
+                        Point mousePt = Control.MousePosition;
+                        Control target = _scrollBar.TargetControl;
+
+                        if (target.IsHandleCreated)
+                        {
+                            Rectangle screenBounds = target.RectangleToScreen(target.ClientRectangle);
+                            if (screenBounds.Contains(mousePt))
+                            {
+                                short delta = (short)((m.WParam.ToInt64() >> 16) & 0xFFFF);
+                                int scrollAmount = delta > 0 ? -60 : 60;
+                                _scrollBar.Value += scrollAmount;
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
         }
     }
 }
