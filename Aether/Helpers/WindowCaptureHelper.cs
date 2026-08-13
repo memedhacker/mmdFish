@@ -19,9 +19,9 @@ namespace Aether.Helpers
         /// Pencere başka bir pencerenin arkasında veya altta kalsa bile arka planda yakalar.
         /// </summary>
         /// <param name="hWnd">Yakalanacak pencerenin HWND adresi.</param>
-        /// <param name="restoreIfIconic">Pencere simge durumundaysa (minimized) odak almadan arka planda açsın mı?</param>
+        /// <param name="restoreIfIconic">Pencere simge durumundaysa (minimized) odak almadan arka planda açsın mı? (Sürekli testlerde ses çıkarmaması için varsayılan false)</param>
         /// <returns>Başarılıysa Bitmap nesnesi (çağıran kişi Dispose etmelidir), başarısızsa null.</returns>
-        public static Bitmap? CaptureWindow(IntPtr hWnd, bool restoreIfIconic = true)
+        public static Bitmap? CaptureWindow(IntPtr hWnd, bool restoreIfIconic = false)
         {
             if (hWnd == IntPtr.Zero || !Win32Native.IsWindow(hWnd))
             {
@@ -30,7 +30,7 @@ namespace Aether.Helpers
 
             bool wasIconic = Win32Native.IsIconic(hWnd);
 
-            // Pencere simge durumundaysa (minimized), kullanıcının odağını çalmadan arka planda göster (SW_SHOWNOACTIVATE)
+            // Pencere simge durumundaysa ve özellikle istendiyse arka planda göster (SW_SHOWNOACTIVATE)
             if (wasIconic && restoreIfIconic)
             {
                 Win32Native.ShowWindow(hWnd, Win32Native.SW_SHOWNOACTIVATE);

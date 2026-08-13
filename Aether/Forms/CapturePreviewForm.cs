@@ -343,6 +343,13 @@ namespace Aether.Forms
                 ScrollBars = RichTextBoxScrollBars.Vertical
             };
 
+            // Tuş basıldığında Windows'un ReadOnly bip sesi çıkarmasını engelle
+            _rtbLogs.KeyDown += (s, e) =>
+            {
+                if (e.Control && (e.KeyCode == Keys.C || e.KeyCode == Keys.A)) return;
+                e.SuppressKeyPress = true;
+            };
+
             logPanel.Controls.Add(_rtbLogs);
             logPanel.Controls.Add(logHeader);
 
@@ -436,8 +443,21 @@ namespace Aether.Forms
             {
                 _perfStopwatch.Restart();
 
-                // 1. Ekran görüntüsünü arka planda al
-                Bitmap? latestBmp = Helpers.WindowCaptureHelper.CaptureWindow(_sourceHwnd);
+                // 1. Ekran görüntüsünü arka planda sessiz ve GPU tabanlı al (Ses veya pencere aktivasyonu tetiklemez)
+                Bitmap? latestBmp = Helpers.WindowRegionCaptureHelper.CaptureRegion(
+                    _sourceHwnd,
+                    0,
+                    0,
+                    _fullImage.Width,
+                    _fullImage.Height,
+                    restoreIfIconic: false,
+                    captureMode: Helpers.WindowCaptureMode.Auto);
+
+                if (latestBmp == null)
+                {
+                    latestBmp = Helpers.WindowCaptureHelper.CaptureWindow(_sourceHwnd, restoreIfIconic: false);
+                }
+
                 if (latestBmp == null)
                 {
                     AppendLog("⚠️ Ekran görüntüsü alınamadı (Pencere simge durumunda veya geçersiz).", Color.Orange);
@@ -526,23 +546,47 @@ namespace Aether.Forms
 
         private void AppendLog(string message, Color color)
         {
+            if (IsDisposed || !IsHandleCreated) return;
+
             if (InvokeRequired)
             {
-                Invoke(new Action(() => AppendLog(message, color)));
+                try
+                {
+                    BeginInvoke(new Action(() => AppendLog(message, color)));
+                }
+                catch
+                {
+                    // Form kapanırken fırlatılan istisnaları yut
+                }
                 return;
             }
 
-            _rtbLogs.SelectionStart = _rtbLogs.TextLength;
-            _rtbLogs.SelectionLength = 0;
-            _rtbLogs.SelectionColor = color;
-            _rtbLogs.AppendText(message + Environment.NewLine);
-            _rtbLogs.ScrollToCaret();
-
-            // Log boyutu 300 satırı geçerse başından temizle
-            if (_rtbLogs.Lines.Length > 300)
+            try
             {
-                _rtbLogs.Select(0, _rtbLogs.GetFirstCharIndexFromLine(100));
-                _rtbLogs.SelectedText = "";
+                // RichTextBox ReadOnly iken metin kesme/değiştirme işlemleri Windows varsayılan bip sesini (MessageBeep) tetikler.
+                // Bu nedenle işlem sırasında geçici olarak ReadOnly pasife alınır ve işlem bitince geri açılır.
+                _rtbLogs.ReadOnly = false;
+
+                // Log tamponu 250 satırı aştığında sessizce temizle
+                if (_rtbLogs.Lines.Length > 250)
+                {
+                    _rtbLogs.Clear();
+                }
+
+                _rtbLogs.SelectionStart = _rtbLogs.TextLength;
+                _rtbLogs.SelectionLength = 0;
+                _rtbLogs.SelectionColor = color;
+                _rtbLogs.AppendText(message + Environment.NewLine);
+                _rtbLogs.SelectionStart = _rtbLogs.TextLength;
+                _rtbLogs.ScrollToCaret();
+            }
+            catch
+            {
+                // Sessiz hata yakalama
+            }
+            finally
+            {
+                _rtbLogs.ReadOnly = true;
             }
         }
 
