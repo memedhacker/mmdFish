@@ -14,6 +14,13 @@ namespace Aether.Native
         public const int WM_HOTKEY = 0x0312;
         public const int WM_NCCALCSIZE = 0x0083;
         public const int WM_NCPAINT = 0x0085;
+        public const uint WM_MOUSEMOVE = 0x0200;
+        public const uint WM_LBUTTONDOWN = 0x0201;
+        public const uint WM_LBUTTONUP = 0x0202;
+        public const uint WM_RBUTTONDOWN = 0x0204;
+        public const uint WM_RBUTTONUP = 0x0205;
+        public const uint MK_LBUTTON = 0x0001;
+        public const uint MK_RBUTTON = 0x0002;
 
         // Window Stil Sabitleri
         public const int GWL_EXSTYLE = -20;
@@ -46,6 +53,7 @@ namespace Aether.Native
         public const uint VK_CONTROL = 0x11;
         public const uint VK_F = 0x46;
         public const uint VK_G = 0x47;
+        public const uint VK_I = 0x49;
         public const uint VK_K = 0x4B;
 
         // Window Capture (PrintWindow & Rect & GDI) Sabitleri
@@ -152,6 +160,17 @@ namespace Aether.Native
 
         [DllImport("user32.dll")]
         public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        public static IntPtr MakeLParam(int x, int y)
+        {
+            return (IntPtr)((y << 16) | (x & 0xFFFF));
+        }
 
         #endregion
 

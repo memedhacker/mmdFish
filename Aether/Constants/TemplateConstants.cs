@@ -149,7 +149,61 @@ namespace Aether.Constants
         }
 
         /// <summary>
-        /// Projedeki tüm şablonların listesi (48 adet).
+        /// Oyun pencere bileşenleri, menü başlıkları ve arayüz parçaları (Window Parts).
+        /// </summary>
+        public static class WindowParts
+        {
+            public const string EquipmentMenuTitle = "window_parts/EquipmentMenuTitle.png";
+            public const string EquipmentMenuExitButton = "window_parts/EquipmentMenuExitButton.png";
+
+            // Envanter Sayfaları (Kapalı & Açık/Aktif Şablonları)
+            public const string Page1 = "window_parts/page1.png";
+            public const string Page2 = "window_parts/page2.png";
+            public const string Page3 = "window_parts/page3.png";
+            public const string Page4 = "window_parts/page4.png";
+
+            public const string Page1Acik = "window_parts/page1_acik.png";
+            public const string Page2Acik = "window_parts/page2_acik.png";
+            public const string Page3Acik = "window_parts/page3_acik.png";
+            public const string Page4Acik = "window_parts/page4_acik.png";
+
+            public static readonly IReadOnlyList<string> All = new[]
+            {
+                EquipmentMenuTitle,
+                EquipmentMenuExitButton,
+                Page1,
+                Page2,
+                Page3,
+                Page4,
+                Page1Acik,
+                Page2Acik,
+                Page3Acik,
+                Page4Acik
+            };
+        }
+
+        /// <summary>
+        /// Envanter eşyaları ve slot şablonları (Inventory Items).
+        /// </summary>
+        public static class InventoryItems
+        {
+            public const string EmptySlot = "inventory_items/emptySlot.png";
+            public const string Yem = "inventory_items/yem.png";
+            public const string Yem200 = "inventory_items/yem200.png";
+            public const string Ates = "inventory_items/ates.png";
+
+
+            public static readonly IReadOnlyList<string> All = new[]
+            {
+                EmptySlot,
+                Yem,
+                Yem200,
+                Ates
+            };
+        }
+
+        /// <summary>
+        /// Projedeki tüm şablonların listesi.
         /// </summary>
         public static readonly IReadOnlyList<string> AllTemplates;
 
@@ -159,6 +213,8 @@ namespace Aether.Constants
             all.AddRange(AutoPass.All);
             all.AddRange(FishNames.All);
             all.AddRange(Waypoints.All);
+            all.AddRange(WindowParts.All);
+            all.AddRange(InventoryItems.All);
             AllTemplates = all.AsReadOnly();
         }
 
@@ -488,12 +544,134 @@ namespace Aether.Constants
         }
 
         /// <summary>
-        /// Verilen şablon listesindeki eşik değerini geçen TÜM eşleşmeleri liste olarak döndürür.
+        /// Kaynak görsel üzerinde aynı şablonun TÜM TEKRARLARINI (Multi-Instance) tespit eder (Örn: Envanterdeki 30 adet emptySlot veya yemler).
+        /// Iterative peak suppression (masking) algoritması ile çakışmaları engelleyerek eşik değerini geçen her örneği yakalar.
+        /// </summary>
+        public static List<TemplateMatchResult> MatchAll(
+            Mat sourceMat,
+            string templateRelativePath,
+            double threshold = 0.85,
+            int maxMatches = 150,
+            bool useGrayscale = true,
+            TemplateMatchModes mode = TemplateMatchModes.CCoeffNormed)
+        {
+            var results = new List<TemplateMatchResult>();
+            if (sourceMat == null || sourceMat.Empty()) return results;
+
+            Mat? templateMat = useGrayscale ? GetGrayMat(templateRelativePath) : GetMat(templateRelativePath);
+            if (templateMat == null || templateMat.Empty()) return results;
+
+            if (sourceMat.Width < templateMat.Width || sourceMat.Height < templateMat.Height)
+                return results;
+
+            Mat? srcToUse = null;
+            bool disposeSrc = false;
+
+            try
+            {
+                if (useGrayscale)
+                {
+                    if (sourceMat.Channels() > 1)
+                    {
+                        srcToUse = new Mat();
+                        Cv2.CvtColor(sourceMat, srcToUse, ColorConversionCodes.BGR2GRAY);
+                        disposeSrc = true;
+                    }
+                    else
+                    {
+                        srcToUse = sourceMat;
+                    }
+                }
+                else
+                {
+                    srcToUse = sourceMat;
+                }
+
+                using (Mat matchResult = new Mat())
+                {
+                    Cv2.MatchTemplate(srcToUse, templateMat, matchResult, mode);
+
+                    int tW = templateMat.Width;
+                    int tH = templateMat.Height;
+                    int suppressW = Math.Max(4, (int)(tW * 0.75));
+                    int suppressH = Math.Max(4, (int)(tH * 0.75));
+
+                    bool isNormalizedSqDiff = (mode == TemplateMatchModes.SqDiff || mode == TemplateMatchModes.SqDiffNormed);
+
+                    while (results.Count < maxMatches)
+                    {
+                        Cv2.MinMaxLoc(matchResult, out double minVal, out double maxVal, out Point minLoc, out Point maxLoc);
+
+                        double score = isNormalizedSqDiff ? (1.0 - minVal) : maxVal;
+                        Point bestLoc = isNormalizedSqDiff ? minLoc : maxLoc;
+                        bool isSuccess = isNormalizedSqDiff ? (minVal <= (1.0 - threshold)) : (maxVal >= threshold);
+
+                        if (!isSuccess) break;
+
+                        results.Add(new TemplateMatchResult
+                        {
+                            IsSuccess = true,
+                            TemplatePath = templateRelativePath,
+                            TemplateName = Path.GetFileNameWithoutExtension(templateRelativePath),
+                            Confidence = score,
+                            Location = new System.Drawing.Point(bestLoc.X, bestLoc.Y),
+                            Bounds = new Rectangle(bestLoc.X, bestLoc.Y, tW, tH)
+                        });
+
+                        // Bulunan noktanın çevresini maskele (Non-Maximum Suppression)
+                        int maskX = Math.Max(0, bestLoc.X - (suppressW / 4));
+                        int maskY = Math.Max(0, bestLoc.Y - (suppressH / 4));
+                        int maskW = Math.Min(suppressW, matchResult.Cols - maskX);
+                        int maskH = Math.Min(suppressH, matchResult.Rows - maskY);
+
+                        if (maskW > 0 && maskH > 0)
+                        {
+                            using (Mat roi = new Mat(matchResult, new Rect(maskX, maskY, maskW, maskH)))
+                            {
+                                roi.SetTo(isNormalizedSqDiff ? new Scalar(1.0) : new Scalar(0.0));
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeSrc && srcToUse != null)
+                {
+                    srcToUse.Dispose();
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Bitmap formatındaki kaynak görsel üzerinde şablonun tüm kopyalarını (Multi-Instance) bulur.
+        /// </summary>
+        public static List<TemplateMatchResult> MatchAll(
+            Bitmap sourceBitmap,
+            string templateRelativePath,
+            double threshold = 0.85,
+            int maxMatches = 150,
+            bool useGrayscale = true,
+            TemplateMatchModes mode = TemplateMatchModes.CCoeffNormed)
+        {
+            if (sourceBitmap == null) return new List<TemplateMatchResult>();
+
+            using (Mat srcMat = BitmapToMat(sourceBitmap))
+            {
+                return MatchAll(srcMat, templateRelativePath, threshold, maxMatches, useGrayscale, mode);
+            }
+        }
+
+        /// <summary>
+        /// Verilen şablon listesindeki TÜM şablonların ve her şablonun TÜM TEKRARLARININ eşleşmelerini liste olarak döndürür.
         /// </summary>
         public static List<TemplateMatchResult> FindAllMatches(
             Mat sourceMat,
             IEnumerable<string> candidateTemplatePaths,
             double threshold = 0.85,
+            int maxMatchesPerTemplate = 100,
             bool useGrayscale = true)
         {
             var results = new List<TemplateMatchResult>();
@@ -502,30 +680,28 @@ namespace Aether.Constants
 
             foreach (var templatePath in candidateTemplatePaths)
             {
-                var result = Match(sourceMat, templatePath, threshold, useGrayscale);
-                if (result.IsSuccess)
-                {
-                    results.Add(result);
-                }
+                var matches = MatchAll(sourceMat, templatePath, threshold, maxMatchesPerTemplate, useGrayscale);
+                results.AddRange(matches);
             }
 
             return results;
         }
 
         /// <summary>
-        /// Bitmap formatındaki kaynak görselde eşik değerini geçen tüm eşleşmeleri döndürür.
+        /// Bitmap formatındaki kaynak görselde aday şablonların tüm kopyalarını bulup döndürür.
         /// </summary>
         public static List<TemplateMatchResult> FindAllMatches(
             Bitmap sourceBitmap,
             IEnumerable<string> candidateTemplatePaths,
             double threshold = 0.85,
+            int maxMatchesPerTemplate = 100,
             bool useGrayscale = true)
         {
             if (sourceBitmap == null) return new List<TemplateMatchResult>();
 
             using (Mat srcMat = BitmapToMat(sourceBitmap))
             {
-                return FindAllMatches(srcMat, candidateTemplatePaths, threshold, useGrayscale);
+                return FindAllMatches(srcMat, candidateTemplatePaths, threshold, maxMatchesPerTemplate, useGrayscale);
             }
         }
 
@@ -634,6 +810,9 @@ namespace Aether.Constants
         public System.Drawing.Point CenterPoint => new(
             Location.X + (Bounds.Width / 2),
             Location.Y + (Bounds.Height / 2));
+
+        /// <summary> Görsel arayüzde ve log konsolunda kullanılacak özel vurgu rengi </summary>
+        public Color HighlightColor { get; set; } = Color.Lime;
 
         public static TemplateMatchResult Failed(string templatePath) => new()
         {

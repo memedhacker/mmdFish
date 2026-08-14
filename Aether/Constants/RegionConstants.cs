@@ -74,19 +74,22 @@ namespace Aether.Constants
         /// Balık tutulduğunda, misina koptuğunda veya sistem bildirimleri geldiğinde taranacak alan.
         /// </summary>
         /// 
-        public static readonly WindowRegion EquipmentMenuExitButtonPosition = new WindowRegion(762, 8, 793, 30);
+        public static readonly WindowRegion EquipmentMenuTitlePosition = new WindowRegion(625, 0, 799, 49);
+        public static readonly WindowRegion EquipmentMenuExitButtonPosition = new WindowRegion(764, 0, 799, 38);
         public static readonly WindowRegion ChatBoxPosition = new WindowRegion(97, 547, 532, 564);
-        public static readonly WindowRegion InventoryPagesPosition = new WindowRegion(634, 221, 792, 242);
+        public static readonly WindowRegion InventoryPagesPosition = new WindowRegion(627, 213, 799, 243);
         public static readonly WindowRegion InventoryPosition = new WindowRegion(623, 235, 798, 542);
         public static readonly WindowRegion NewDMPosition = new WindowRegion(706, 159, 799, 440);
         public static readonly WindowRegion MapPosition = new WindowRegion(644, 8, 799, 145);
+
         /// <summary>
         /// Test pencerelerinde ve arayüz ComboBox'larında hızlı seçim yapabilmek için tüm tanımlı sabit bölgelerin listesi.
         /// </summary>
         public static readonly (string Name, WindowRegion Region)[] AllRegions = new[]
         {
             ("💬 ChatBoxPosition (97, 547 -> 532, 564)", ChatBoxPosition),
-            ("💬 EquipmentMenuExitButton (762, 8 -> 793, 30)", EquipmentMenuExitButtonPosition),
+            ("💬 EquipmentMenuTitlePosition (625, 0 -> 799, 49)", EquipmentMenuTitlePosition),
+            ("💬 EquipmentMenuExitButtonPosition (762, 8 -> 793, 30)", EquipmentMenuExitButtonPosition),
             ("💬 InventoryPagesPosition (634, 221 -> 792, 242)", InventoryPagesPosition),
             ("💬 InventoryPosition (623, 235 -> 798, 542)", InventoryPosition),
             ("💬 NewDMPosition (706, 159 -> 799, 440)", NewDMPosition),

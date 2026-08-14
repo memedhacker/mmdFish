@@ -62,6 +62,23 @@ namespace Aether.Forms
         private Button _btnCopyImage = null!;
         private Panel _imageContainer = null!;
 
+        // Çoklu eşleşmeler için zengin ve ayrışabilir renk paleti
+        private static readonly Color[] MatchColorPalette = new[]
+        {
+            Color.FromArgb(0, 230, 118),   // Canlı Yeşil
+            Color.FromArgb(0, 229, 255),   // Canlı Camgöbeği (Cyan)
+            Color.FromArgb(255, 214, 0),   // Canlı Sarı (Amber)
+            Color.FromArgb(255, 64, 129),  // Canlı Pembe (Pink)
+            Color.FromArgb(224, 64, 251),  // Canlı Mor (Violet)
+            Color.FromArgb(255, 145, 0),   // Canlı Turuncu
+            Color.FromArgb(118, 255, 3),   // Canlı Lime
+            Color.FromArgb(0, 176, 255),   // Canlı Açık Mavi
+            Color.FromArgb(255, 23, 68),   // Canlı Kırmızı
+            Color.FromArgb(29, 233, 182),  // Canlı Turkuaz
+            Color.FromArgb(255, 171, 0),   // Altın Sarısı
+            Color.FromArgb(238, 255, 65)   // Sarı-Yeşil
+        };
+
         public CapturePreviewForm(
             Bitmap fullWindowImage,
             string title = "Pencere Seçim & Canlı Template Matching Test Aracı",
@@ -252,7 +269,15 @@ namespace Aether.Forms
                 Font = new Font("Segoe UI", 9f, FontStyle.Regular),
                 Margin = new Padding(0, 3, 6, 0)
             };
-            _cmbCategory.Items.AddRange(new object[] { "🐟 FishNames (40 Balık)", "📍 Waypoints (6 Şablon)", "🛡️ AutoPass (2 Şablon)", "⭐ Tümü (48 Şablon)" });
+            _cmbCategory.Items.AddRange(new object[]
+            {
+                $"🐟 FishNames ({TemplateConstants.FishNames.All.Count} Balık)",
+                $"📍 Waypoints ({TemplateConstants.Waypoints.All.Count} Şablon)",
+                $"🛡️ AutoPass ({TemplateConstants.AutoPass.All.Count} Şablon)",
+                $"🪟 WindowParts ({TemplateConstants.WindowParts.All.Count} Şablon)",
+                $"🎒 InventoryItems ({TemplateConstants.InventoryItems.All.Count} Eşya)",
+                $"⭐ Tümü ({TemplateConstants.AllTemplates.Count} Şablon)"
+            });
             _cmbCategory.SelectedIndex = 0;
 
             _numThreshold = new NumericUpDown
@@ -499,6 +524,8 @@ namespace Aether.Forms
                     0 => TemplateConstants.FishNames.All,
                     1 => TemplateConstants.Waypoints.All,
                     2 => TemplateConstants.AutoPass.All,
+                    3 => TemplateConstants.WindowParts.All,
+                    4 => TemplateConstants.InventoryItems.All,
                     _ => TemplateConstants.AllTemplates
                 };
 
@@ -525,8 +552,8 @@ namespace Aether.Forms
                     }
                 }
 
-                // 3. Template Matching çalıştır
-                var bestMatch = TemplateConstants.FindBestMatch(searchTarget, candidateTemplates, minThreshold: threshold);
+                // 3. Template Matching çalıştır (Eşik değerini geçen TÜM eşleşmeleri bul)
+                var allMatches = TemplateConstants.FindAllMatches(searchTarget, candidateTemplates, threshold: threshold);
                 _perfStopwatch.Stop();
                 long elapsedMs = _perfStopwatch.ElapsedMilliseconds;
 
@@ -536,26 +563,45 @@ namespace Aether.Forms
                 {
                     _lastLiveMatches.Clear();
 
-                    if (bestMatch != null && bestMatch.IsSuccess)
+                    if (allMatches != null && allMatches.Count > 0)
                     {
-                        // Koordinatları tam pencereye göre ayarla
-                        var adjustedMatch = new TemplateMatchResult
+                        // En yüksek benzerlik puanına göre sırala
+                        allMatches.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+
+                        var templateColors = new Dictionary<string, Color>(StringComparer.OrdinalIgnoreCase);
+                        int colorIdx = 0;
+
+                        for (int i = 0; i < allMatches.Count; i++)
                         {
-                            IsSuccess = true,
-                            TemplatePath = bestMatch.TemplatePath,
-                            TemplateName = bestMatch.TemplateName,
-                            Confidence = bestMatch.Confidence,
-                            Location = new Point(bestMatch.Location.X + searchOffset.X, bestMatch.Location.Y + searchOffset.Y),
-                            Bounds = new Rectangle(bestMatch.Location.X + searchOffset.X, bestMatch.Location.Y + searchOffset.Y, bestMatch.Bounds.Width, bestMatch.Bounds.Height)
-                        };
+                            var match = allMatches[i];
+                            if (!templateColors.TryGetValue(match.TemplateName, out Color distinctColor))
+                            {
+                                distinctColor = MatchColorPalette[colorIdx % MatchColorPalette.Length];
+                                templateColors[match.TemplateName] = distinctColor;
+                                colorIdx++;
+                            }
 
-                        _lastLiveMatches.Add(adjustedMatch);
+                            // Koordinatları tam pencereye göre ayarla ve rengini ata
+                            var adjustedMatch = new TemplateMatchResult
+                            {
+                                IsSuccess = true,
+                                TemplatePath = match.TemplatePath,
+                                TemplateName = match.TemplateName,
+                                Confidence = match.Confidence,
+                                HighlightColor = distinctColor,
+                                Location = new Point(match.Location.X + searchOffset.X, match.Location.Y + searchOffset.Y),
+                                Bounds = new Rectangle(match.Location.X + searchOffset.X, match.Location.Y + searchOffset.Y, match.Bounds.Width, match.Bounds.Height)
+                            };
 
-                        AppendLog($"[{DateTime.Now:HH:mm:ss.fff}] 🎯 EŞLEŞTİ! [{adjustedMatch.TemplateName}] → Benzerlik: %{adjustedMatch.Confidence * 100:F1} | Konum: ({adjustedMatch.Location.X}, {adjustedMatch.Location.Y}) | Süre: {elapsedMs}ms", Color.LimeGreen);
+                            _lastLiveMatches.Add(adjustedMatch);
+
+                            // Bulunan her bir nesneyi kendi özgün eşik puanı ve koordinatıyla tek tek logla
+                            AppendLog($"[{DateTime.Now:HH:mm:ss.fff}] 🎯 EŞLEŞTİ #{i + 1}! [{adjustedMatch.TemplateName}] → Benzerlik: %{adjustedMatch.Confidence * 100:F1} | Konum: ({adjustedMatch.Location.X}, {adjustedMatch.Location.Y}) | Boyut: {adjustedMatch.Bounds.Width}x{adjustedMatch.Bounds.Height}", distinctColor);
+                        }
                     }
                     else
                     {
-                        AppendLog($"[{DateTime.Now:HH:mm:ss.fff}] ⏳ Eşleşme yok (En yüksek benzerlik: %{(bestMatch?.Confidence ?? 0) * 100:F1}) | Süre: {elapsedMs}ms", Color.LightGray);
+                        AppendLog($"[{DateTime.Now:HH:mm:ss.fff}] ⏳ Eşleşme yok (Eşik: %{(threshold * 100):F0}) | Süre: {elapsedMs}ms", Color.LightGray);
                     }
                 }
 
@@ -671,18 +717,20 @@ namespace Aether.Forms
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // 1. Canlı Template Match Tespiti Varsa Çiz (Yeşil Vurgu Kutusu)
+            // 1. Canlı Template Match Tespiti Varsa Çiz (Her eşleşme kendi özel rengiyle)
             lock (_matchLock)
             {
                 foreach (var match in _lastLiveMatches)
                 {
                     if (match.IsSuccess && match.Bounds.Width > 0 && match.Bounds.Height > 0)
                     {
-                        using (var matchFill = new SolidBrush(Color.FromArgb(60, 50, 205, 50)))
+                        Color matchColor = match.HighlightColor;
+
+                        using (var matchFill = new SolidBrush(Color.FromArgb(45, matchColor.R, matchColor.G, matchColor.B)))
                         {
                             g.FillRectangle(matchFill, match.Bounds);
                         }
-                        using (var matchPen = new Pen(Color.Lime, 3))
+                        using (var matchPen = new Pen(matchColor, 2.5f))
                         {
                             g.DrawRectangle(matchPen, match.Bounds);
                         }
@@ -693,8 +741,19 @@ namespace Aether.Forms
                             SizeF size = g.MeasureString(matchTag, tagFont);
                             int bx = match.Bounds.Left;
                             int by = Math.Max(0, match.Bounds.Top - (int)size.Height - 4);
-                            g.FillRectangle(Brushes.DarkGreen, bx, by, size.Width + 6, size.Height + 2);
-                            g.DrawString(matchTag, tagFont, Brushes.White, bx + 3, by + 1);
+
+                            using (var tagBgBrush = new SolidBrush(Color.FromArgb(220, 20, 20, 25)))
+                            {
+                                g.FillRectangle(tagBgBrush, bx, by, size.Width + 6, size.Height + 2);
+                            }
+                            using (var tagBorderPen = new Pen(matchColor, 1.2f))
+                            {
+                                g.DrawRectangle(tagBorderPen, bx, by, size.Width + 6, size.Height + 2);
+                            }
+                            using (var tagTextBrush = new SolidBrush(matchColor))
+                            {
+                                g.DrawString(matchTag, tagFont, tagTextBrush, bx + 3, by + 1);
+                            }
                         }
                     }
                 }
@@ -757,6 +816,25 @@ namespace Aether.Forms
             }
         }
 
+        private string GetMatchingRegionName(int startX, int startY, int endX, int endY)
+        {
+            foreach (var (name, region) in RegionConstants.AllRegions)
+            {
+                if (region.StartX == startX && region.StartY == startY && region.EndX == endX && region.EndY == endY)
+                {
+                    string clean = name.Trim();
+                    int spaceIdx = clean.IndexOf(' ');
+                    int parenIdx = clean.IndexOf('(');
+                    if (spaceIdx >= 0 && parenIdx > spaceIdx)
+                    {
+                        return clean.Substring(spaceIdx + 1, parenIdx - spaceIdx - 1).Trim();
+                    }
+                    return clean;
+                }
+            }
+            return "newPosition";
+        }
+
         private void UpdateLabelsAndBoxes(int startX, int startY, int endX, int endY)
         {
             _txtStartX.Text = startX.ToString();
@@ -767,18 +845,8 @@ namespace Aether.Forms
             int w = Math.Abs(endX - startX);
             int h = Math.Abs(endY - startY);
 
-            // Eğer koordinatlar RegionConstants'taki hazır bir bölgeyle eşleşiyorsa sabit adını göster
-            if (startX == RegionConstants.ChatBoxPosition.StartX &&
-                startY == RegionConstants.ChatBoxPosition.StartY &&
-                endX == RegionConstants.ChatBoxPosition.EndX &&
-                endY == RegionConstants.ChatBoxPosition.EndY)
-            {
-                _lblCodeSnippet.Text = $"public static readonly WindowRegion ChatBoxPosition = new WindowRegion({startX}, {startY}, {endX}, {endY}); ({w}x{h} px)";
-            }
-            else
-            {
-                _lblCodeSnippet.Text = $"public static readonly WindowRegion newPosition = new WindowRegion({startX}, {startY}, {endX}, {endY}); ({w}x{h} px)";
-            }
+            string propName = GetMatchingRegionName(startX, startY, endX, endY);
+            _lblCodeSnippet.Text = $"public static readonly WindowRegion {propName} = new WindowRegion({startX}, {startY}, {endX}, {endY}); ({w}x{h} px)";
         }
 
         private void SyncCoordsFromTextBoxes()
@@ -873,15 +941,7 @@ namespace Aether.Forms
             int ex = _currentSelection.Right;
             int ey = _currentSelection.Bottom;
 
-            string propName = "newPosition";
-            if (sx == RegionConstants.ChatBoxPosition.StartX &&
-                sy == RegionConstants.ChatBoxPosition.StartY &&
-                ex == RegionConstants.ChatBoxPosition.EndX &&
-                ey == RegionConstants.ChatBoxPosition.EndY)
-            {
-                propName = "ChatBoxPosition";
-            }
-
+            string propName = GetMatchingRegionName(sx, sy, ex, ey);
             string code = $"public static readonly WindowRegion {propName} = new WindowRegion({sx}, {sy}, {ex}, {ey});";
 
             Clipboard.SetText(code);
