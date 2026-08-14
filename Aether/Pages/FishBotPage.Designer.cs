@@ -89,6 +89,7 @@ namespace Aether.Pages
             deleteBotSettingsButton = new Sunny.UI.UIButton();
             label9 = new Label();
             addBotSettingsButton = new Sunny.UI.UIButton();
+            logPanel = new Sunny.UI.UIPanel();
             panelHeader.SuspendLayout();
             clientPanel.SuspendLayout();
             uıPanel1.SuspendLayout();
@@ -244,7 +245,7 @@ namespace Aether.Pages
             clientPanel.FillColor = Color.FromArgb(30, 30, 35);
             clientPanel.FillColor2 = Color.FromArgb(30, 30, 35);
             clientPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            clientPanel.Location = new Point(15, 208);
+            clientPanel.Location = new Point(15, 360);
             clientPanel.Margin = new Padding(4, 5, 4, 5);
             clientPanel.MinimumSize = new Size(1, 1);
             clientPanel.Name = "clientPanel";
@@ -275,7 +276,7 @@ namespace Aether.Pages
             uıPanel1.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel1.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel1.Location = new Point(15, 351);
+            uıPanel1.Location = new Point(15, 503);
             uıPanel1.Margin = new Padding(4, 5, 4, 5);
             uıPanel1.MinimumSize = new Size(1, 1);
             uıPanel1.Name = "uıPanel1";
@@ -347,7 +348,7 @@ namespace Aether.Pages
             uıPanel2.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel2.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel2.Location = new Point(250, 351);
+            uıPanel2.Location = new Point(250, 503);
             uıPanel2.Margin = new Padding(4, 5, 4, 5);
             uıPanel2.MinimumSize = new Size(1, 1);
             uıPanel2.Name = "uıPanel2";
@@ -526,7 +527,7 @@ namespace Aether.Pages
             channelsLine.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             channelsLine.ForeColor = Color.FromArgb(99, 168, 71);
             channelsLine.LineColor = Color.FromArgb(99, 168, 71);
-            channelsLine.Location = new Point(15, 691);
+            channelsLine.Location = new Point(15, 843);
             channelsLine.MinimumSize = new Size(1, 1);
             channelsLine.Name = "channelsLine";
             channelsLine.Size = new Size(649, 29);
@@ -542,7 +543,7 @@ namespace Aether.Pages
             uıPanel3.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel3.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel3.Location = new Point(15, 466);
+            uıPanel3.Location = new Point(15, 618);
             uıPanel3.Margin = new Padding(4, 5, 4, 5);
             uıPanel3.MinimumSize = new Size(1, 1);
             uıPanel3.Name = "uıPanel3";
@@ -606,7 +607,7 @@ namespace Aether.Pages
             uıPanel4.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel4.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel4.Location = new Point(15, 585);
+            uıPanel4.Location = new Point(15, 737);
             uıPanel4.Margin = new Padding(4, 5, 4, 5);
             uıPanel4.MinimumSize = new Size(1, 1);
             uıPanel4.Name = "uıPanel4";
@@ -670,7 +671,7 @@ namespace Aether.Pages
             uıPanel5.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel5.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel5.Location = new Point(250, 585);
+            uıPanel5.Location = new Point(250, 737);
             uıPanel5.Margin = new Padding(4, 5, 4, 5);
             uıPanel5.MinimumSize = new Size(1, 1);
             uıPanel5.Name = "uıPanel5";
@@ -733,7 +734,7 @@ namespace Aether.Pages
             uıPanel6.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel6.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel6.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel6.Location = new Point(466, 585);
+            uıPanel6.Location = new Point(466, 737);
             uıPanel6.Margin = new Padding(4, 5, 4, 5);
             uıPanel6.MinimumSize = new Size(1, 1);
             uıPanel6.Name = "uıPanel6";
@@ -777,7 +778,7 @@ namespace Aether.Pages
             uıPanel7.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel7.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel7.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel7.Location = new Point(391, 297);
+            uıPanel7.Location = new Point(391, 449);
             uıPanel7.Margin = new Padding(4, 5, 4, 5);
             uıPanel7.MinimumSize = new Size(1, 1);
             uıPanel7.Name = "uıPanel7";
@@ -832,7 +833,7 @@ namespace Aether.Pages
             uıPanel8.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel8.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel8.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel8.Location = new Point(391, 205);
+            uıPanel8.Location = new Point(391, 357);
             uıPanel8.Margin = new Padding(4, 5, 4, 5);
             uıPanel8.MinimumSize = new Size(1, 1);
             uıPanel8.Name = "uıPanel8";
@@ -930,13 +931,13 @@ namespace Aether.Pages
             fishFilterPanel.FillColor = Color.FromArgb(24, 24, 27);
             fishFilterPanel.FillColor2 = Color.FromArgb(24, 24, 27);
             fishFilterPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            fishFilterPanel.Location = new Point(15, 723);
+            fishFilterPanel.Location = new Point(15, 888);
             fishFilterPanel.Margin = new Padding(0);
             fishFilterPanel.MinimumSize = new Size(1, 1);
             fishFilterPanel.Name = "fishFilterPanel";
             fishFilterPanel.Radius = 0;
             fishFilterPanel.RectColor = Color.Transparent;
-            fishFilterPanel.Size = new Size(649, 1085);
+            fishFilterPanel.Size = new Size(649, 920);
             fishFilterPanel.TabIndex = 5;
             fishFilterPanel.Text = null;
             fishFilterPanel.TextAlignment = ContentAlignment.MiddleCenter;
@@ -953,7 +954,7 @@ namespace Aether.Pages
             uıPanel9.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel9.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel9.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel9.Location = new Point(15, 72);
+            uıPanel9.Location = new Point(15, 224);
             uıPanel9.Margin = new Padding(4, 5, 4, 5);
             uıPanel9.MinimumSize = new Size(1, 1);
             uıPanel9.Name = "uıPanel9";
@@ -1062,6 +1063,23 @@ namespace Aether.Pages
             addBotSettingsButton.Text = "Ekle";
             addBotSettingsButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
+            // logPanel
+            // 
+            logPanel.BackColor = Color.FromArgb(30, 30, 35);
+            logPanel.FillColor = Color.FromArgb(30, 30, 35);
+            logPanel.FillColor2 = Color.FromArgb(30, 30, 35);
+            logPanel.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            logPanel.Location = new Point(15, 63);
+            logPanel.Margin = new Padding(4, 5, 4, 5);
+            logPanel.MinimumSize = new Size(1, 1);
+            logPanel.Name = "logPanel";
+            logPanel.Radius = 15;
+            logPanel.RectColor = Color.White;
+            logPanel.Size = new Size(649, 151);
+            logPanel.TabIndex = 4;
+            logPanel.Text = null;
+            logPanel.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
             // FishBotPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1074,6 +1092,7 @@ namespace Aether.Pages
             Controls.Add(uıPanel6);
             Controls.Add(uıPanel5);
             Controls.Add(uıPanel4);
+            Controls.Add(logPanel);
             Controls.Add(uıPanel9);
             Controls.Add(uıPanel3);
             Controls.Add(uıPanel1);
@@ -1170,5 +1189,6 @@ namespace Aether.Pages
         private Label label11;
         private Label label10;
         private Label label13;
+        private Sunny.UI.UIPanel logPanel;
     }
 }

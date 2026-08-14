@@ -1,6 +1,11 @@
+using Aether.Constants;
+using Aether.Functions;
 using Aether.Models;
+using Aether.Native;
+using Aether.States;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,92 +13,115 @@ namespace Aether.Helpers
 {
     /*
      * =========================================================================================
-     * 📘 BALIK BOTU ÇALIŞMA VE YÖNETİM REHBERİ (TUTORIAL & DOCUMENTATION)
+     * 📘 BALIK BOTU ÇALIŞMA VE GELİŞTİRME REHBERİ (TUTORIAL & DOCUMENTATION)
      * =========================================================================================
      * 
-     * 🔄 1. DÖNGÜNÜN NEREDE DÖNDÜĞÜ:
+     * 🔄 1. DÖNGÜ VE YAŞAM DÖNGÜSÜ (LIFECYCLE):
      * -----------------------------------------------------------------------------------------
-     * Bot döngüsü 'Services/FishBotService.cs' sınıfı içerisindeki 'FishBotLoopAsync' metodunda dönmektedir.
-     * 'while (!cancellationToken.IsCancellationRequested)' bloğu arka planda Task.Run ile
-     * kesintisiz dairesel bir görev yürütür ve her döngü turunda aşağıdaki 'ExecuteSingleCycleAsync' metodunu çağırır.
+     * - Ana bot döngüsü 'Services/FishBotService.cs' içerisindeki 'FishBotLoopAsync' metodunda döner.
+     * - Bot başlar başlamaz önce 'Functions/FishBotStartupFunction.cs' modülü 1 KEZ çalışır:
+     *     1. Seçili oyun penceresi en öne getirilir.
+     *     2. Pencerenin tam ortasına 1 kere sağ tıklanır (Right Click).
+     *     3. 'F' tuşuna 3 saniye kesintisiz basılı tutulup bırakılır.
+     *     4. 'G' tuşuna 3 saniye kesintisiz basılı tutulup bırakılır.
+     * - Ardından 'while (!cancellationToken.IsCancellationRequested)' bloğu dairesel olarak
+     *   aşağıdaki 'ExecuteSingleCycleAsync' metodunu çağırır.
      * 
-     * 🚨 2. ACİL DURUMDA NASIL KAPATILACAĞI:
+     * 🛡️ 2. GÜVENLİ EKRAN YAKALAMA (DXGI DESKTOP DUPLICATION & REGION CROP):
      * -----------------------------------------------------------------------------------------
-     * - Belirli bir istemciyi durdurmak için:
-     *     Services.FishBotService.Instance.StopFishBot(clientId);
-     * - Çalışan TÜM istemcileri anında kapatmak için (Acil Stop):
+     * - Anti-Cheat korumalarına takılmadan (siyah ekran sorunu olmadan) ekran okumak için:
+     *     using Bitmap? regionBmp = WindowRegionCaptureHelper.CaptureRegion(
+     *         clientInfo.Handle, startX: 100, startY: 150, endX: 300, endY: 350);
+     * - Tam pencere iç alanını GPU seviyesinde sessizce çekmek için:
+     *     using Bitmap? fullBmp = WindowCaptureHelper.CaptureWindow(clientInfo.Handle);
+     * 
+     * 🔍 3. ŞABLON ARAMA (OPENCV / TEMPLATE MATCHING):
+     * -----------------------------------------------------------------------------------------
+     * - Tekil şablon arama (Örn: "Bişey Takıldı" waypoint kontrolü):
+     *     var matchResult = TemplateConstants.Match(screenshot, TemplateConstants.Waypoints.BiseyTakildi, threshold: 0.85);
+     *     if (matchResult.IsSuccess) { ... }
+     * 
+     * - Çoklu balık listesi içinden en yüksek güvenilirlikli balığı bulma:
+     *     var bestFish = TemplateConstants.FindBestMatch(screenshot, TemplateConstants.FishNames.All, minThreshold: 0.80);
+     *     if (bestFish != null) { ... }
+     * 
+     * ⚙️ 4. İSTEMCİ AYARLARINA ERİŞİM (PER-CLIENT SETTINGS):
+     * -----------------------------------------------------------------------------------------
+     * - İlgili istemcinin balık botu filtre ve gecikme ayarlarına erişmek için:
+     *     var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
+     *     int minDelay = settings.FishingSpeedMinMs;
+     *     var sazanState = settings.GetOrCreateFilterItem("rare", "sazan");
+     * 
+     * 🔘 5. BOTU BUTONDAN VEYA KOD İÇİNDEN BAŞLATMA / DURDURMA:
+     * -----------------------------------------------------------------------------------------
+     * - Başlatmak için:
+     *     var (success, msg) = Services.FishBotService.Instance.StartFishBot(clientInfo);
+     * - Durdurmak için:
+     *     Services.FishBotService.Instance.StopFishBot(clientInfo.Id);
+     * - Durumu tersine çevirmek için (Toggle):
+     *     var (success, msg) = Services.FishBotService.Instance.ToggleFishBot(clientInfo);
+     * - Tüm çalışan botları anında kapatmak için (Acil Durdur):
      *     Services.FishBotService.Instance.StopAllBots();
-     * - İptal bayrağı (CancellationToken) sayesinde 'cancellationToken.ThrowIfCancellationRequested()'
-     *   çağrıldığı anda arka plan görevi UI thread'ini dondurmadan anında sonlanır.
-     * 
-     * 🔘 3. BAŞKA BİR BUTONA BASINCA NASIL TETİKLENECEĞİ:
-     * -----------------------------------------------------------------------------------------
-     * Herhangi bir Form, UserControl veya butonun Click olayından botu başlatmak için:
-     * 
-     * private void btnStartCustom_Click(object sender, EventArgs e)
-     * {
-     *     var clientInfo = ClientState.Instance.SelectedClient; // veya GetOrCreateClientInfo(id, name)
-     *     var (success, message) = Services.FishBotService.Instance.StartFishBot(clientInfo);
-     *     if (!success)
-     *     {
-     *         MessageBox.Show(message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-     *     }
-     * }
-     * 
-     * 🛑 4. FARKLI BİR BUTONUN CLICK EVENTİ İÇERİSİNDEN VEYA BAŞKA BİR YERDEN NASIL KAPATILACAĞI:
-     * -----------------------------------------------------------------------------------------
-     * Herhangi bir custom butonun (Örn: "Durdur" veya "Tümünü Durdur" butonu) Click olayından:
-     * 
-     * private void btnStopCustom_Click(object sender, EventArgs e)
-     * {
-     *     // Tekil bir client'ı durdurmak için:
-     *     int targetClientId = 1;
-     *     Services.FishBotService.Instance.StopFishBot(targetClientId);
-     * 
-     *     // Veya tüm çalışan botları tek seferde kapatmak için:
-     *     Services.FishBotService.Instance.StopAllBots();
-     * }
      * =========================================================================================
      */
     public static class FishBotEngineHelper
     {
         /// <summary>
+        /// Bot ilk başlatıldığında SADECE 1 KERE çalışan başlangıç hazırlık sekansını tetikler.
+        /// İş mantığı modüler olarak 'Aether.Functions.FishBotStartupFunction' sınıfında yürütülür.
+        /// </summary>
+        public static Task ExecuteInitialSequenceAsync(ClientInfo clientInfo, CancellationToken cancellationToken)
+        {
+            return FishBotStartupFunction.ExecuteAsync(clientInfo, cancellationToken);
+        }
+
+        /// <summary>
         /// Tek bir balık tutma döngü adımını çalıştırır.
         /// Timer ve Status göstergeleri haricindeki tüm örnek makro görevleri temizlenmiştir.
-        /// Gerçek bot mantığı / adımları bu metod içerisine eklenebilir.
+        /// Gerçek bot mantığı / adımları bu metod veya 'Functions' altındaki modüller içerisine eklenebilir.
         /// </summary>
+        /// <param name="clientInfo">İşlem yapılan aktif istemci bilgisi</param>
+        /// <param name="cancellationToken">İptal isteği bayrağı</param>
         public static async Task ExecuteSingleCycleAsync(ClientInfo clientInfo, CancellationToken cancellationToken)
         {
             if (clientInfo == null || cancellationToken.IsCancellationRequested) return;
 
-            // HWND Geçerlilik Kontrolü
-            if (clientInfo.Handle == IntPtr.Zero || !Native.Win32Native.IsWindow(clientInfo.Handle))
+            // 1. HWND Geçerlilik Kontrolü
+            if (clientInfo.Handle == IntPtr.Zero || !Win32Native.IsWindow(clientInfo.Handle))
             {
                 Debug.WriteLine($"[FishBotEngine] Client #{clientInfo.Id} ({clientInfo.Name}) için geçerli Oyun Penceresi bulunamadı.");
                 return;
             }
 
-            // 📍 [BURAYA YENİ BOT GÖREVLERİ / KODLARI EKLENEBİLİR]
-            // Örnek: Ekran resmi alma ve Template Matching:
-            // using var screenshot = WindowCaptureHelper.CaptureWindow(clientInfo.Handle);
-            // if (screenshot != null)
+            // 2. İstemcinin kayıtlı balık botu ayarlarını al
+            var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
+
+            // 📍 [BURAYA YENİ DÖNGÜ GÖREVLERİ / KODLARI EKLENEBİLİR]
+            //
+            // ÖRNEK: Belirli bir koordinat aralığından güvenli DXGI ekran görüntüsü alma:
+            // using Bitmap? regionBmp = WindowRegionCaptureHelper.CaptureRegion(
+            //     clientInfo.Handle, startX: 100, startY: 100, endX: 350, endY: 350);
+            //
+            // if (regionBmp != null)
             // {
-            //     // 1. Tekil şablon arama:
-            //     var matchResult = TemplateConstants.Match(screenshot, TemplateConstants.Waypoints.BiseyTakildi, threshold: 0.85);
-            //     if (matchResult.IsSuccess)
+            //     // 1.1 Tekil şablon arama (Örn: Balık tutuldu yazısı):
+            //     var match = TemplateConstants.Match(regionBmp, TemplateConstants.Waypoints.BiseyTakildi, threshold: 0.85);
+            //     if (match.IsSuccess)
             //     {
-            //         Debug.WriteLine($"Bişey takıldı! Konum: {matchResult.Location}, Güven: %{matchResult.Confidence * 100:F1}");
+            //         Debug.WriteLine($"[Client #{clientInfo.Id}] Bişey takıldı! Konum: {match.Location}, Güven: %{match.Confidence * 100:F1}");
             //     }
             //
-            //     // 2. En iyi eşleşen balığı bulma:
-            //     var bestFish = TemplateConstants.FindBestMatch(screenshot, TemplateConstants.FishNames.All, minThreshold: 0.80);
+            //     // 1.2 En iyi eşleşen balığı bulma:
+            //     var bestFish = TemplateConstants.FindBestMatch(regionBmp, TemplateConstants.FishNames.All, minThreshold: 0.80);
             //     if (bestFish != null)
             //     {
-            //         Debug.WriteLine($"Yakalanan balık: {bestFish.TemplateName} (Güven: %{bestFish.Confidence * 100:F1})");
+            //         Debug.WriteLine($"[Client #{clientInfo.Id}] Eşleşen Balık: {bestFish.TemplateName} (Güven: %{bestFish.Confidence * 100:F1})");
             //     }
             // }
-            // İptal isteğine duyarlı kısa bekleme (Timer ve Status güncellemeleri arka planda akmaya devam eder)
-            await Task.Delay(500, cancellationToken);
+
+            // İptal isteğine duyarlı bekleme (Timer ve Status güncellemeleri arka planda akmaya devam eder)
+            int delayMs = settings.FishingSpeedMinMs > 0 ? settings.FishingSpeedMinMs : 500;
+            await Task.Delay(delayMs, cancellationToken);
         }
     }
 }

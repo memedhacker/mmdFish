@@ -45,6 +45,7 @@ namespace Aether.Forms
         private TextBox _txtStartY = null!;
         private TextBox _txtEndX = null!;
         private TextBox _txtEndY = null!;
+        private ComboBox _cmbPresetRegions = null!;
 
         private Button _btnAutoTestToggle = null!;
         private NumericUpDown _numInterval = null!;
@@ -160,6 +161,26 @@ namespace Aether.Forms
             _txtEndX = CreateCoordTextBox(initEndX.ToString());
             _txtEndY = CreateCoordTextBox(initEndY.ToString());
 
+            // Hazır Sabit Bölgeler (RegionConstants) Seçim Kutusu
+            _cmbPresetRegions = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Width = 235,
+                Height = 28,
+                BackColor = Colors.ArkaPlanKoyu,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                Margin = new Padding(0, 3, 6, 0)
+            };
+            _cmbPresetRegions.Items.Add("-- 📍 Serbest Seçim --");
+            foreach (var r in RegionConstants.AllRegions)
+            {
+                _cmbPresetRegions.Items.Add(r.Name);
+            }
+            _cmbPresetRegions.SelectedIndex = 0;
+            _cmbPresetRegions.SelectedIndexChanged += CmbPresetRegions_SelectedIndexChanged;
+
             _btnApplyCoords = CreateStyledButton("📐 Çiz", Colors.ArkaPlanAcik, Color.White);
             _btnApplyCoords.Click += (s, e) => SyncCoordsFromTextBoxes();
 
@@ -168,13 +189,15 @@ namespace Aether.Forms
 
             _lblCodeSnippet = new Label
             {
-                Text = $"CaptureRegion({initStartX}, {initStartY}, {initEndX}, {initEndY});",
+                Text = $"public static readonly WindowRegion newPosition = new WindowRegion({initStartX}, {initStartY}, {initEndX}, {initEndY});",
                 Font = new Font("Consolas", 9.5f, FontStyle.Bold),
                 ForeColor = Colors.YesilAcik,
                 AutoSize = true,
                 Margin = new Padding(10, 7, 6, 0)
             };
 
+            topCoordFlow.Controls.Add(CreateCoordLabel("📍 Hazır Bölge:"));
+            topCoordFlow.Controls.Add(_cmbPresetRegions);
             topCoordFlow.Controls.Add(CreateCoordLabel("Başlangıç X:"));
             topCoordFlow.Controls.Add(_txtStartX);
             topCoordFlow.Controls.Add(CreateCoordLabel("Başlangıç Y:"));
@@ -722,6 +745,18 @@ namespace Aether.Forms
 
         #region Senkronizasyon ve Yardımcılar
 
+        private void CmbPresetRegions_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_cmbPresetRegions.SelectedIndex > 0 && _cmbPresetRegions.SelectedIndex - 1 < RegionConstants.AllRegions.Length)
+            {
+                var preset = RegionConstants.AllRegions[_cmbPresetRegions.SelectedIndex - 1];
+                _currentSelection = preset.Region.ToRectangle();
+                UpdateLabelsAndBoxes(preset.Region.StartX, preset.Region.StartY, preset.Region.EndX, preset.Region.EndY);
+                _picBox.Invalidate();
+                AppendLog($"📍 Sabit bölge seçimi uygulandı: {preset.Name}", Colors.MaviAcik);
+            }
+        }
+
         private void UpdateLabelsAndBoxes(int startX, int startY, int endX, int endY)
         {
             _txtStartX.Text = startX.ToString();
@@ -732,7 +767,18 @@ namespace Aether.Forms
             int w = Math.Abs(endX - startX);
             int h = Math.Abs(endY - startY);
 
-            _lblCodeSnippet.Text = $"CaptureRegion({startX}, {startY}, {endX}, {endY});  ({w}x{h} px)";
+            // Eğer koordinatlar RegionConstants'taki hazır bir bölgeyle eşleşiyorsa sabit adını göster
+            if (startX == RegionConstants.ChatBoxPosition.StartX &&
+                startY == RegionConstants.ChatBoxPosition.StartY &&
+                endX == RegionConstants.ChatBoxPosition.EndX &&
+                endY == RegionConstants.ChatBoxPosition.EndY)
+            {
+                _lblCodeSnippet.Text = $"public static readonly WindowRegion ChatBoxPosition = new WindowRegion({startX}, {startY}, {endX}, {endY}); ({w}x{h} px)";
+            }
+            else
+            {
+                _lblCodeSnippet.Text = $"public static readonly WindowRegion newPosition = new WindowRegion({startX}, {startY}, {endX}, {endY}); ({w}x{h} px)";
+            }
         }
 
         private void SyncCoordsFromTextBoxes()
@@ -827,10 +873,19 @@ namespace Aether.Forms
             int ex = _currentSelection.Right;
             int ey = _currentSelection.Bottom;
 
-            string code = $"Bitmap? bolgeResmi = Helpers.WindowRegionCaptureHelper.CaptureRegion(client.Handle, {sx}, {sy}, {ex}, {ey});";
-            Clipboard.SetText(code);
+            string propName = "newPosition";
+            if (sx == RegionConstants.ChatBoxPosition.StartX &&
+                sy == RegionConstants.ChatBoxPosition.StartY &&
+                ex == RegionConstants.ChatBoxPosition.EndX &&
+                ey == RegionConstants.ChatBoxPosition.EndY)
+            {
+                propName = "ChatBoxPosition";
+            }
 
-            AppendLog($"📋 C# Kodu panoya kopyalandı: {code}", Color.LightBlue);
+            string code = $"public static readonly WindowRegion {propName} = new WindowRegion({sx}, {sy}, {ex}, {ey});";
+
+            Clipboard.SetText(code);
+            AppendLog($"📋 WindowRegion kodu panoya kopyalandı:\n{code}", Color.LightBlue);
         }
 
         private void BtnSave_Click(object? sender, EventArgs e)

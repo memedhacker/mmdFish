@@ -1,3 +1,4 @@
+using Aether.Constants;
 using Aether.Forms;
 using Aether.Models;
 using Aether.Native;
@@ -278,9 +279,32 @@ namespace Aether.Helpers
         /// <summary>
         /// Belirtilen Rectangle bölgesi üzerinden yakalama yapar.
         /// </summary>
-        public static Bitmap? CaptureRegion(IntPtr hWnd, Rectangle region, bool restoreIfIconic = true, WindowCaptureMode captureMode = WindowCaptureMode.Auto)
+        public static Bitmap? CaptureRegion(IntPtr hWnd, Rectangle region, bool restoreIfIconic = false, WindowCaptureMode captureMode = WindowCaptureMode.Auto)
         {
             return CaptureRegion(hWnd, region.Left, region.Top, region.Right, region.Bottom, restoreIfIconic, captureMode);
+        }
+
+        /// <summary>
+        /// Tanımlı bir WindowRegion sabiti (Örn: RegionConstants.ChatBoxPosition) üzerinden HWND pencere bölgesini yakalar.
+        /// </summary>
+        /// <param name="hWnd">Hedef oyun penceresi HWND</param>
+        /// <param name="region">Kırpılacak WindowRegion koordinat sabiti</param>
+        /// <param name="restoreIfIconic">Pencere simge durumundaysa uyandırsın mı? (Varsayılan false)</param>
+        /// <param name="captureMode">Yakalama modu (Varsayılan: Auto / DXGI)</param>
+        /// <returns>Kırpılmış Bitmap görseli veya null</returns>
+        public static Bitmap? CaptureRegion(IntPtr hWnd, WindowRegion region, bool restoreIfIconic = false, WindowCaptureMode captureMode = WindowCaptureMode.Auto)
+        {
+            return CaptureRegion(hWnd, region.StartX, region.StartY, region.EndX, region.EndY, restoreIfIconic, captureMode);
+        }
+
+        /// <summary>
+        /// Aktif seçili istemci (SelectedClient) üzerinden tanımlı bir WindowRegion sabitini yakalar.
+        /// </summary>
+        /// <param name="region">Kırpılacak WindowRegion koordinat sabiti (Örn: RegionConstants.ChatBoxPosition)</param>
+        /// <returns>Kırpılmış Bitmap görseli veya null</returns>
+        public static Bitmap? CaptureRegion(WindowRegion region)
+        {
+            return CaptureRegion(region.StartX, region.StartY, region.EndX, region.EndY);
         }
 
         #endregion

@@ -29,6 +29,8 @@ namespace Aether.Native
         // Fare Eylem Sabitleri
         public const uint MOUSEEVENTF_LEFTDOWN = 0x02;
         public const uint MOUSEEVENTF_LEFTUP = 0x04;
+        public const uint MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const uint MOUSEEVENTF_RIGHTUP = 0x10;
 
         // Klavye Eylem Sabitleri
         public const uint KEYEVENTF_KEYUP = 0x0002;
@@ -42,7 +44,9 @@ namespace Aether.Native
         public const uint VK_4 = 0x34;
         public const uint VK_5 = 0x35;
         public const uint VK_CONTROL = 0x11;
+        public const uint VK_F = 0x46;
         public const uint VK_G = 0x47;
+        public const uint VK_K = 0x4B;
 
         // Window Capture (PrintWindow & Rect & GDI) Sabitleri
         public const uint PW_CLIENTONLY = 0x00000001;
@@ -86,6 +90,9 @@ namespace Aether.Native
 
         [DllImport("user32.dll")]
         public static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetCursorPos(int X, int Y);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);

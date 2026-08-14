@@ -149,6 +149,9 @@ namespace Aether.Services
         {
             try
             {
+                // 1. Bot başlar başlamaz seçili pencereyi en öne getir ve başlangıç sekansını (G 5sn basılı tut + F basıp bırak) 1 kez çalıştır
+                await Helpers.FishBotEngineHelper.ExecuteInitialSequenceAsync(clientInfo, cancellationToken);
+
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     // Modüler Helper sınıfından tekil balık tutma adımını çalıştır
