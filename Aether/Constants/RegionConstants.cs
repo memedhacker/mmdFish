@@ -84,6 +84,7 @@ namespace Aether.Constants
         public static readonly WindowRegion OpenMarketPosition = new WindowRegion(371, 213, 428, 233);
         public static readonly WindowRegion MarketBaitPosition = new WindowRegion(483, 83, 505, 102);
         public static readonly WindowRegion MarketFirePosition = new WindowRegion(453, 49, 471, 70);
+        public static readonly WindowRegion MarketExitButtonPosition = new WindowRegion(558, 20, 577, 36);
         public static readonly WindowRegion FisherManSearchArea = new WindowRegion(0, 4, 644, 555);
         public static readonly WindowRegion NewDMPosition = new WindowRegion(706, 159, 799, 440);
         public static readonly WindowRegion MapPosition = new WindowRegion(644, 8, 799, 145);
@@ -103,6 +104,7 @@ namespace Aether.Constants
             ("💬 OpenMarketPosition (354, 205 -> 448, 237)", OpenMarketPosition),
             ("💬 MarketBaitPosition (443, 182 -> 485, 216)", MarketBaitPosition),
             ("💬 MarketFirePosition (418, 149 -> 446, 184)", MarketFirePosition),
+            ("💬 MarketExitButtonPosition (558, 20 -> 577, 36)", MarketExitButtonPosition),
             ("💬 FisherManSearchArea (0, 4 -> 644, 555)", FisherManSearchArea),
             ("💬 NewDMPosition (706, 159 -> 799, 440)", NewDMPosition),
             ("💬 MapPosition (644, 8 -> 799, 145)", MapPosition)

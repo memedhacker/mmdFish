@@ -71,7 +71,6 @@ namespace Aether.Constants
             public const string Sazan = "fishnames/sazan.png";
             public const string SevimliBalik = "fishnames/sevimli_balik.png";
             public const string SiyahSacBoyasi = "fishnames/siyah_sac_boyasi.png";
-            public const string SolucanTaktin = "fishnames/solucan_taktin.png";
             public const string Som = "fishnames/som.png";
             public const string Sudak = "fishnames/sudak.png";
             public const string Tekir = "fishnames/tekir.png";
@@ -114,7 +113,6 @@ namespace Aether.Constants
                 Sazan,
                 SevimliBalik,
                 SiyahSacBoyasi,
-                SolucanTaktin,
                 Som,
                 Sudak,
                 Tekir,
@@ -136,9 +134,13 @@ namespace Aether.Constants
             public const string BiseyTakildi = "waypoints/bisey_takildi.png";
             public const string YakalananBalik = "waypoints/yakalanan_balik.png";
             public const string YemiKaybettin = "waypoints/yemi_kaybettin.png";
+            public const string SolucanTaktin = "waypoints/solucan_taktin.png";
+            public const string AnkiYemi = "waypoints/anki_yemi.png";
 
             public static readonly IReadOnlyList<string> All = new[]
             {
+                SolucanTaktin,
+                AnkiYemi,
                 AltinTonBaligi1,
                 AltinTonBaligi2,
                 AltinTonBaligi3,
@@ -191,7 +193,7 @@ namespace Aether.Constants
             public const string Yem = "inventory_items/yem.png";
             public const string Yem200 = "inventory_items/yem200.png";
             public const string Ates = "inventory_items/ates.png";
-
+            
 
             public static readonly IReadOnlyList<string> All = new[]
             {
@@ -211,8 +213,10 @@ namespace Aether.Constants
             public const string Balikci2 = "fisherman/balikci2.png";
             public const string MarketiAc = "fisherman/marketiAc.png";
 
+            public const string MarketTitle = "fisherman/marketTitle.png";
             public static readonly IReadOnlyList<string> All = new[]
             {
+                MarketTitle,
                 Balikci,
                 Balikci2,
                 MarketiAc

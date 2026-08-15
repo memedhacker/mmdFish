@@ -20,9 +20,8 @@ namespace Aether.Functions
     {
         /// <summary>
         /// Envanterdeki yemleri (yem.png) >= %60.0 benzerlik eşiği ile tarar ve birleştirir.
-        /// Her sürükle-bıraktan sonra sürüklenen yemin ve hedef slotun değişimini piksel seviyesinde kontrol eder.
-        /// Eğer sürükle-bıraktan sonra slot tıpatıp aynı kalmışsa, hedef slotun stack sınırına (200) ulaştığı anlaşılır
-        /// ve bir daha o slotun üzerine yem sürüklenmez.
+        /// Eğer iki yem birbiri üzerine sürüklendikten sonra sadece yer değiştiriyorsa (swap) veya değişmiyorsa,
+        /// bu yem çifti kara listeye (forbiddenPairs) alınır ve bir daha aynı yemler üst üste atılmaz.
         /// </summary>
         public static async Task StackInventoryBaitsAsync(ClientInfo clientInfo, CancellationToken cancellationToken)
         {
@@ -41,20 +40,33 @@ namespace Aether.Functions
                 return;
             }
 
-            var currentMatches = TemplateConstants.MatchAll(currentBmp, TemplateConstants.InventoryItems.Yem, threshold: 0.60);
+            var full200Slots = new HashSet<Point>();
 
-            // Eğer match sayısı en başta 1 veya daha az ise döngüye girme
+            // İlk taramada Yem200 (>= %91.0) şablonunu tara ve sınırda olanları ayıkla
+            var initial200Matches = TemplateConstants.MatchAll(currentBmp, TemplateConstants.InventoryItems.Yem200, threshold: 0.91);
+            foreach (var m200 in initial200Matches)
+            {
+                full200Slots.Add(m200.Location);
+                BotLogger.LogInfo(clientInfo.Id, $"Slot ({m200.Location.X}, {m200.Location.Y}) %{m200.Confidence * 100:F1} benzerlikle 'Yem200' tespit edildi. Stack sınırında (200) olduğu için işlemlere dahil edilmeyecek.");
+            }
+
+            var allInitialMatches = TemplateConstants.MatchAll(currentBmp, TemplateConstants.InventoryItems.Yem, threshold: 0.60);
+            var currentMatches = allInitialMatches
+                .Where(m => !full200Slots.Any(f => Math.Abs(f.X - m.Location.X) < 14 && Math.Abs(f.Y - m.Location.Y) < 14))
+                .ToList();
+
+            // Eğer birleştirilebilir match sayısı en başta 1 veya daha az ise döngüye girme
             if (currentMatches.Count <= 1)
             {
-                BotLogger.LogInfo(clientInfo.Id, $"Envanterde {currentMatches.Count} adet yem bulundu. Birleştirme döngüsüne gerek yok.");
+                BotLogger.LogInfo(clientInfo.Id, $"Envanterde birleştirilecek yem slotu sayısı: {currentMatches.Count}. Birleştirme döngüsüne gerek yok.");
                 currentBmp.Dispose();
                 return;
             }
 
-            BotLogger.LogInfo(clientInfo.Id, $"Başlangıçta {currentMatches.Count} adet ayrı yem slotu bulundu. Birleştirme başlatılıyor...");
+            BotLogger.LogInfo(clientInfo.Id, $"Başlangıçta {currentMatches.Count} adet birleştirilebilir yem slotu bulundu. Birleştirme başlatılıyor...");
 
-            // Stack sınırına (200) ulaşmış slotların koordinatlarını tutan liste
-            var fullStackSlots = new HashSet<Point>();
+            // Birleşmeyen veya sadece yer değiştiren yem çiftlerinin listesi
+            var forbiddenPairs = new HashSet<(Point, Point)>();
             int maxOperations = 25;
             int opCount = 0;
 
@@ -62,27 +74,37 @@ namespace Aether.Functions
             {
                 opCount++;
 
-                // Sınırına ulaşmamış (henüz yem kabul edebilecek) hedef slotları filtrele
-                var availableTargets = currentMatches
-                    .Where(m => !fullStackSlots.Any(f => Math.Abs(f.X - m.Location.X) < 16 && Math.Abs(f.Y - m.Location.Y) < 16))
-                    .ToList();
+                // Birleştirilebilecek geçerli (yasaklı olmayan ve 200 olmayan) bir çift ara
+                TemplateMatchResult? sourceMatch = null;
+                TemplateMatchResult? targetMatch = null;
 
-                // Eğer birleştirilebilecek hedef slot kalmadıysa veya toplam yem slotu <= 1 ise bitir
-                if (availableTargets.Count == 0 || currentMatches.Count <= 1)
+                for (int i = 0; i < currentMatches.Count; i++)
                 {
-                    BotLogger.LogSuccess(clientInfo.Id, $"Yem stackleme tamamlandı. Birleştirilebilecek başka slot kalmadı (Mevcut slot: {currentMatches.Count}).");
-                    break;
+                    for (int j = currentMatches.Count - 1; j > i; j--)
+                    {
+                        var t = currentMatches[i]; // Hedef
+                        var s = currentMatches[j]; // Kaynak (en sondaki)
+
+                        bool isForbidden = forbiddenPairs.Any(p =>
+                            (Math.Abs(p.Item1.X - s.Location.X) < 14 && Math.Abs(p.Item1.Y - s.Location.Y) < 14 &&
+                             Math.Abs(p.Item2.X - t.Location.X) < 14 && Math.Abs(p.Item2.Y - t.Location.Y) < 14) ||
+                            (Math.Abs(p.Item1.X - t.Location.X) < 14 && Math.Abs(p.Item1.Y - t.Location.Y) < 14 &&
+                             Math.Abs(p.Item2.X - s.Location.X) < 14 && Math.Abs(p.Item2.Y - s.Location.Y) < 14));
+
+                        if (!isForbidden)
+                        {
+                            targetMatch = t;
+                            sourceMatch = s;
+                            break;
+                        }
+                    }
+                    if (sourceMatch != null && targetMatch != null) break;
                 }
 
-                // Hedef: mevcut en baştaki uygun yem slotu
-                var targetMatch = availableTargets[0];
-
-                // Kaynak: Hedef slottan farklı olan en sondaki yem slotu
-                var sourceMatch = currentMatches.LastOrDefault(m => Math.Abs(m.Location.X - targetMatch.Location.X) >= 16 || Math.Abs(m.Location.Y - targetMatch.Location.Y) >= 16);
-
-                if (sourceMatch == null)
+                // Eğer birleştirilebilecek uyumlu yem çifti kalmadıysa veya toplam yem <= 1 ise bitir
+                if (sourceMatch == null || targetMatch == null || currentMatches.Count <= 1)
                 {
-                    BotLogger.LogInfo(clientInfo.Id, "Birleştirilecek kaynak yem slotu kalmadı.");
+                    BotLogger.LogSuccess(clientInfo.Id, $"Yem stackleme tamamlandı. Birleştirilebilecek uyumlu yem çifti kalmadı (Mevcut slot: {currentMatches.Count}).");
                     break;
                 }
 
@@ -114,23 +136,51 @@ namespace Aether.Functions
                 Bitmap? stepBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryPosition);
                 if (stepBmp == null) break;
 
-                var newMatches = TemplateConstants.MatchAll(stepBmp, TemplateConstants.InventoryItems.Yem, threshold: 0.60);
-
-                // Sürüklenen yemin ve hedef slotun değişimini kontrol et
-                bool sourceSlotUnchanged = IsSlotIdentical(currentBmp, stepBmp, sourceMatch.Bounds);
-                bool targetSlotUnchanged = IsSlotIdentical(currentBmp, stepBmp, targetMatch.Bounds);
-                bool countDecreased = newMatches.Count < currentMatches.Count;
-
-                if (countDecreased || !sourceSlotUnchanged)
+                // Her sürükle bıraktan sonra Yem200 (>= %91.0) şablonu ile tara
+                var step200Matches = TemplateConstants.MatchAll(stepBmp, TemplateConstants.InventoryItems.Yem200, threshold: 0.91);
+                foreach (var m200 in step200Matches)
                 {
-                    // Başarıyla birleşti veya kaynak slot boşaldı
-                    BotLogger.LogSuccess(clientInfo.Id, $"Yem birleştirildi ({newMatches.Count} yem slotu kaldı).");
+                    bool isNew = !full200Slots.Any(f => Math.Abs(f.X - m200.Location.X) < 14 && Math.Abs(f.Y - m200.Location.Y) < 14);
+                    if (isNew)
+                    {
+                        full200Slots.Add(m200.Location);
+                        BotLogger.LogInfo(clientInfo.Id, $"Slot ({m200.Location.X}, {m200.Location.Y}) %{m200.Confidence * 100:F1} benzerlikle 'Yem200' tespit edildi. Stack sınırında (200) olduğu için işlemlere dahil edilmeyecek.");
+                    }
                 }
-                else if (sourceSlotUnchanged && targetSlotUnchanged)
+
+                var allNewMatches = TemplateConstants.MatchAll(stepBmp, TemplateConstants.InventoryItems.Yem, threshold: 0.60);
+                var newMatches = allNewMatches
+                    .Where(m => !full200Slots.Any(f => Math.Abs(f.X - m.Location.X) < 14 && Math.Abs(f.Y - m.Location.Y) < 14))
+                    .ToList();
+
+                // Kontroller:
+                bool countDecreased = allNewMatches.Count < allInitialMatches.Count;
+                bool sourceHasBait = allNewMatches.Any(m => Math.Abs(m.Location.X - sourceMatch.Location.X) < 12 && Math.Abs(m.Location.Y - sourceMatch.Location.Y) < 12);
+
+                // Sürükleme öncesi ve sonrası slot içerikleri yer değiştirdi mi?
+                bool sourceBecameTarget = IsSlotCrossMatching(currentBmp, targetMatch.Bounds, stepBmp, sourceMatch.Bounds);
+                bool targetBecameSource = IsSlotCrossMatching(currentBmp, sourceMatch.Bounds, stepBmp, targetMatch.Bounds);
+                bool isSwapped = sourceBecameTarget && targetBecameSource;
+
+                bool sourceSame = IsSlotIdentical(currentBmp, stepBmp, sourceMatch.Bounds);
+                bool targetSame = IsSlotIdentical(currentBmp, stepBmp, targetMatch.Bounds);
+
+                if (countDecreased || !sourceHasBait)
                 {
-                    // Sürükle-bıraktan sonra hala tıpatıp aynı -> Hedef slot stack sınırına (200) gelmiş!
-                    BotLogger.LogWarning(clientInfo.Id, $"Hedef slot stack sınırına (200) ulaştı. Bir daha bu slota yem sürüklenmeyecek.");
-                    fullStackSlots.Add(targetMatch.Location);
+                    // Başarıyla birleşti (kaynak slot boşaldı)
+                    BotLogger.LogSuccess(clientInfo.Id, $"Yemler başarıyla birleştirildi ({newMatches.Count} aktif yem slotu kaldı).");
+                }
+                else if (isSwapped || (sourceSame && targetSame))
+                {
+                    // Sadece yer değiştirdi veya hiçbir şey değişmedi -> Bu iki yemi bir daha asla birleştirme!
+                    BotLogger.LogWarning(clientInfo.Id, $"Yemler birleşmedi (sadece yer değiştirdi). Bu iki yem bir daha üst üste sürüklenmeyecek.");
+                    forbiddenPairs.Add((sourceMatch.Location, targetMatch.Location));
+                    forbiddenPairs.Add((targetMatch.Location, sourceMatch.Location));
+                }
+                else
+                {
+                    // Kısmi değişim
+                    BotLogger.LogInfo(clientInfo.Id, $"Yem birleştirme adımı işlendi ({newMatches.Count} aktif yem slotu).");
                 }
 
                 currentBmp.Dispose();
@@ -178,20 +228,62 @@ namespace Aether.Functions
 
             if (totalChecked == 0) return false;
 
-            // Eğer piksellerin %95'inden fazlası birebir aynıysa slot tıpatıp aynıdır
             double matchRatio = 1.0 - ((double)diffCount / totalChecked);
             return matchRatio >= 0.95;
         }
 
         /// <summary>
+        /// bmp1 üzerindeki bounds1 bölgesi ile bmp2 üzerindeki bounds2 bölgesinin görsel olarak eşleşip eşleşmediğini kontrol eder (Yer değiştirme kontrolü).
+        /// </summary>
+        private static bool IsSlotCrossMatching(Bitmap bmp1, Rectangle bounds1, Bitmap bmp2, Rectangle bounds2)
+        {
+            if (bmp1 == null || bmp2 == null) return false;
+
+            int w = Math.Min(bounds1.Width, bounds2.Width);
+            int h = Math.Min(bounds1.Height, bounds2.Height);
+            if (w <= 0 || h <= 0) return false;
+
+            int diffCount = 0;
+            int totalChecked = 0;
+
+            for (int y = 0; y < h; y += 2)
+            {
+                for (int x = 0; x < w; x += 2)
+                {
+                    int x1 = bounds1.X + x;
+                    int y1 = bounds1.Y + y;
+                    int x2 = bounds2.X + x;
+                    int y2 = bounds2.Y + y;
+
+                    if (x1 >= bmp1.Width || y1 >= bmp1.Height || x2 >= bmp2.Width || y2 >= bmp2.Height) continue;
+
+                    totalChecked++;
+                    Color c1 = bmp1.GetPixel(x1, y1);
+                    Color c2 = bmp2.GetPixel(x2, y2);
+
+                    int diff = Math.Abs(c1.R - c2.R) + Math.Abs(c1.G - c2.G) + Math.Abs(c1.B - c2.B);
+                    if (diff > 35)
+                    {
+                        diffCount++;
+                    }
+                }
+            }
+
+            if (totalChecked == 0) return false;
+            double matchRatio = 1.0 - ((double)diffCount / totalChecked);
+            return matchRatio >= 0.90;
+        }
+
+        /// <summary>
         /// Tüm envanterde (InventoryPosition) Ates (ates.png) şablonunu arar ve bulunan tüm ateşleri
-        /// InventoryBaitArea'nın ilk 3 slotuna (Slot 1, 2, 3) taşır. 3'ten fazla ateş varsa üst üste stackler.
+        /// InventoryBaitArea'nın ilk 3 slotuna (Slot 1, 2, 3) taşır ve gerekirse stackler.
+        /// Boş slot kontrolünü EmptySlot template'i ile yapar; slotta başka bir nesne varsa üzerine sürükleme yapmaz.
         /// </summary>
         public static async Task OrganizeCampfiresToFirstThreeSlotsAsync(ClientInfo clientInfo, CancellationToken cancellationToken)
         {
             if (clientInfo == null || clientInfo.Handle == IntPtr.Zero || cancellationToken.IsCancellationRequested) return;
 
-            Debug.WriteLine($"[StartupBaitOrganizer] Client #{clientInfo.Id} -> Kamp Ateşleri (ates.png) taranıyor ve ilk 3 slota yerleştiriliyor...");
+            BotLogger.LogInfo(clientInfo.Id, "Kamp Ateşleri (ates.png) taranıyor ve ilk 3 slota yerleştiriliyor...");
 
             // 1. Tarama öncesi fareyi envanter dışına çek
             await MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
@@ -212,15 +304,17 @@ namespace Aether.Functions
                 using Bitmap? invBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryPosition);
                 if (invBmp == null)
                 {
-                    Debug.WriteLine("[StartupBaitOrganizer] Envanter ekran görüntüsü alınamadı.");
+                    BotLogger.LogError(clientInfo.Id, "Envanter ekran görüntüsü alınamadı.");
                     break;
                 }
 
-                // Tüm envanterdeki ateşleri tespit et
-                var atesMatches = TemplateConstants.MatchAll(invBmp, TemplateConstants.InventoryItems.Ates, threshold: 0.80);
+                // Tüm envanterdeki ateşleri ve boş slotları tespit et
+                var atesMatches = TemplateConstants.MatchAll(invBmp, TemplateConstants.InventoryItems.Ates, threshold: 0.70);
+                var emptyMatches = TemplateConstants.MatchAll(invBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+
                 if (atesMatches.Count == 0)
                 {
-                    Debug.WriteLine("[StartupBaitOrganizer] Envanterde taşınacak Kamp Ateşi (ates.png) bulunamadı.");
+                    BotLogger.LogInfo(clientInfo.Id, "Envanterde taşınacak Kamp Ateşi (ates.png) bulunamadı.");
                     break;
                 }
 
@@ -229,46 +323,77 @@ namespace Aether.Functions
                     .Where(a => !IsFirstThreeSlotsOfBaitArea(a.Location.X + (a.Bounds.Width / 2), a.Location.Y + (a.Bounds.Height / 2)))
                     .ToList();
 
-                // Eğer dışarıda hiç ateş kalmadıysa tüm ateşler zaten ilk 3 slotta demektir!
+                // İlk 3 slotun her birinin durumunu EmptySlot ve Ates şablonlarıyla incele
+                bool[] slotIsEmpty = new bool[3];
+                bool[] slotHasAtes = new bool[3];
+
+                for (int i = 0; i < 3; i++)
+                {
+                    int slotRelX = firstThreeSlots[i].X - RegionConstants.InventoryPosition.StartX;
+                    int slotRelY = firstThreeSlots[i].Y - RegionConstants.InventoryPosition.StartY;
+
+                    slotIsEmpty[i] = emptyMatches.Any(e =>
+                        Math.Abs((e.Location.X + (e.Bounds.Width / 2)) - slotRelX) < 16 &&
+                        Math.Abs((e.Location.Y + (e.Bounds.Height / 2)) - slotRelY) < 16);
+
+                    slotHasAtes[i] = atesMatches.Any(a =>
+                        Math.Abs((a.Location.X + (a.Bounds.Width / 2)) - slotRelX) < 16 &&
+                        Math.Abs((a.Location.Y + (a.Bounds.Height / 2)) - slotRelY) < 16);
+                }
+
+                // Eğer dışarıda hiç ateş kalmadıysa:
                 if (outsideAtes.Count == 0)
                 {
-                    Debug.WriteLine($"[StartupBaitOrganizer] Tüm Kamp Ateşleri ({atesMatches.Count} adet) başarıyla ilk 3 slota yerleştirildi.");
+                    BotLogger.LogSuccess(clientInfo.Id, $"✅ Tüm Kamp Ateşleri ({atesMatches.Count} adet) ilk 3 slotta düzenli konumda.");
                     break;
                 }
 
-                // İlk 3 slotun hangilerinde şu an ateş var kontrol et
-                bool[] slotHasAtes = new bool[3];
-                foreach (var ates in atesMatches)
-                {
-                    int centerX = ates.Location.X + (ates.Bounds.Width / 2);
-                    int centerY = ates.Location.Y + (ates.Bounds.Height / 2);
+                // Hedef slotu seç:
+                // 1. Öncelik: Tamamen boş olan (EmptySlot) ilk 3 slot içerisindeki slotlar
+                // 2. Öncelik: Boş slot kalmadıysa, zaten üzerinde Ates bulunan slot (stackleme için)
+                // ASLA başka bir nesnenin bulunduğu slotu seçme!
+                Point? targetSlot = null;
+                int chosenIndex = -1;
 
-                    if (IsFirstThreeSlotsOfBaitArea(centerX, centerY))
+                for (int i = 0; i < 3; i++)
+                {
+                    if (slotIsEmpty[i])
                     {
-                        // Hangi sütun (0, 1, 2)?
-                        int baitAreaRelStartX = RegionConstants.InventoryBaitArea.StartX - RegionConstants.InventoryPosition.StartX; // ~4
-                        int colWidth = RegionConstants.InventoryBaitArea.Width / 5; // ~34
-                        int colIndex = Math.Clamp((centerX - baitAreaRelStartX) / colWidth, 0, 2);
-                        slotHasAtes[colIndex] = true;
+                        targetSlot = firstThreeSlots[i];
+                        chosenIndex = i + 1;
+                        break;
                     }
                 }
 
-                // Hedef slotu seç: Önce boş olan slot 1..3'ü seç, hepsi doluysa sırayla üst üste koy
-                Point targetSlot;
-                if (!slotHasAtes[0]) targetSlot = firstThreeSlots[0];
-                else if (!slotHasAtes[1]) targetSlot = firstThreeSlots[1];
-                else if (!slotHasAtes[2]) targetSlot = firstThreeSlots[2];
-                else targetSlot = firstThreeSlots[moveCount % 3]; // 3'ten fazlaysa üst üste bırak
+                if (targetSlot == null)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (slotHasAtes[i])
+                        {
+                            targetSlot = firstThreeSlots[i];
+                            chosenIndex = i + 1;
+                            break;
+                        }
+                    }
+                }
+
+                // Eğer ilk 3 slotta boşluk veya ateş yoksa (hepsinde başka nesneler varsa) ASLA sürükleme yapma!
+                if (targetSlot == null)
+                {
+                    BotLogger.LogWarning(clientInfo.Id, "⚠️ İlk 3 slotta boş yer (EmptySlot) veya kamp ateşi bulunamadı (slotlar başka nesnelerle dolu). Ateş taşıma işlemi durduruldu.");
+                    break;
+                }
 
                 // Taşınacak ateşi seç
                 var sourceAtes = outsideAtes[0];
                 int fromLocalX = RegionConstants.InventoryPosition.StartX + sourceAtes.Location.X + (sourceAtes.Bounds.Width / 2);
                 int fromLocalY = RegionConstants.InventoryPosition.StartY + sourceAtes.Location.Y + (sourceAtes.Bounds.Height / 2);
 
-                int toLocalX = targetSlot.X;
-                int toLocalY = targetSlot.Y;
+                int toLocalX = targetSlot.Value.X;
+                int toLocalY = targetSlot.Value.Y;
 
-                Debug.WriteLine($"[StartupBaitOrganizer] Kamp Ateşi ilk 3 slota taşınıyor: ({fromLocalX}, {fromLocalY}) -> ({toLocalX}, {toLocalY})");
+                BotLogger.LogInfo(clientInfo.Id, $"Kamp Ateşi taşınıyor: ({fromLocalX}, {fromLocalY}) -> Slot #{chosenIndex} ({toLocalX}, {toLocalY})...");
 
                 // İnsansı kavisle taşı ve bırak
                 await HumanMouseService.Instance.DragAndDropLocalAsync(
