@@ -26,13 +26,11 @@
   },
 
   "buyCampfire": {
-    "enabled": false,
-    "count": 5
+    "enabled": false
   },
 
   "buyWorm": {
-    "enabled": false,
-    "count": 5
+    "enabled": false
   },
 
   "animationMode": "mount",

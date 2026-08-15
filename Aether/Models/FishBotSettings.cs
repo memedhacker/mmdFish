@@ -32,11 +32,9 @@ namespace Aether.Models
 
         // --- Kamp Ateşi ---
         public bool BuyCampfireEnabled { get; set; } = false;
-        public int CampfireCount { get; set; } = 5;
 
         // --- Solucan ---
         public bool BuyWormEnabled { get; set; } = false;
-        public int WormCount { get; set; } = 5;
 
         // --- Animasyon Modu ---
         /// <summary> "mount" = Binek Kullan | "armor" = Zırh Değiştir </summary>

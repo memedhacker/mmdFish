@@ -276,6 +276,7 @@ namespace Aether.Forms
                 $"🛡️ AutoPass ({TemplateConstants.AutoPass.All.Count} Şablon)",
                 $"🪟 WindowParts ({TemplateConstants.WindowParts.All.Count} Şablon)",
                 $"🎒 InventoryItems ({TemplateConstants.InventoryItems.All.Count} Eşya)",
+                $"🎣 Fisherman ({TemplateConstants.Fisherman.All.Count} Şablon)",
                 $"⭐ Tümü ({TemplateConstants.AllTemplates.Count} Şablon)"
             });
             _cmbCategory.SelectedIndex = 0;
@@ -526,6 +527,7 @@ namespace Aether.Forms
                     2 => TemplateConstants.AutoPass.All,
                     3 => TemplateConstants.WindowParts.All,
                     4 => TemplateConstants.InventoryItems.All,
+                    5 => TemplateConstants.Fisherman.All,
                     _ => TemplateConstants.AllTemplates
                 };
 

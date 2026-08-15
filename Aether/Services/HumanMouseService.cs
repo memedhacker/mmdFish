@@ -274,6 +274,129 @@ namespace Aether.Services
 
         #endregion
 
+        #region 5. Sürükle ve Bırak (Drag & Drop)
+
+        /// <summary>
+        /// Windows faresini başlangıç noktasına taşır, sol tuşu basılı tutarak insansı kavisle hedef noktaya sürükler ve bırakır (Drag & Drop).
+        /// </summary>
+        public async Task DragAndDropAsync(int startScreenX, int startScreenY, int targetScreenX, int targetScreenY, bool fastMove = false, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested) return;
+
+            // 1. Başlangıç noktasına git
+            if (fastMove)
+                await MoveMouseFastAsync(startScreenX, startScreenY, cancellationToken);
+            else
+                await MoveMouseAsync(startScreenX, startScreenY, cancellationToken);
+
+            await Task.Delay(_random.Next(40, 80), cancellationToken);
+
+            // 2. Sol tuşa bas (Mouse Down)
+            Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+            await Task.Delay(_random.Next(50, 90), cancellationToken);
+
+            // 3. Basılı tutarak hedef noktaya insansı kavisle sürükle
+            if (fastMove)
+                await MoveMouseFastAsync(targetScreenX, targetScreenY, cancellationToken);
+            else
+                await MoveMouseAsync(targetScreenX, targetScreenY, cancellationToken);
+
+            await Task.Delay(_random.Next(50, 90), cancellationToken);
+
+            // 4. Sol tuşu bırak (Mouse Up)
+            Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            await Task.Delay(_random.Next(60, 120), cancellationToken);
+        }
+
+        /// <summary>
+        /// Pencere içi yerel koordinatlarla insansı sürükle ve bırak (Drag & Drop) işlemi yapar.
+        /// </summary>
+        public Task DragAndDropLocalAsync(IntPtr hWnd, int startLocalX, int startLocalY, int targetLocalX, int targetLocalY, bool fastMove = false, CancellationToken cancellationToken = default)
+        {
+            Point startScreen = LocalToScreen(hWnd, startLocalX, startLocalY);
+            Point targetScreen = LocalToScreen(hWnd, targetLocalX, targetLocalY);
+            return DragAndDropAsync(startScreen.X, startScreen.Y, targetScreen.X, targetScreen.Y, fastMove, cancellationToken);
+        }
+
+        public Task DragAndDropLocalAsync(IntPtr hWnd, int startLocalX, int startLocalY, int targetLocalX, int targetLocalY, CancellationToken cancellationToken)
+            => DragAndDropLocalAsync(hWnd, startLocalX, startLocalY, targetLocalX, targetLocalY, false, cancellationToken);
+
+        /// <summary>
+        /// Windows faresini başlangıç noktasına taşır, orta tuşu (MouseWheel) basılı tutarak hedef noktaya sürükler ve bırakır.
+        /// Oyun içi kamera açısını çevirmek / döndürmek için göreceli hareket (MOUSEEVENTF_MOVE) sinyalleri üretir.
+        /// </summary>
+        public async Task MiddleDragAndDropAsync(int startScreenX, int startScreenY, int targetScreenX, int targetScreenY, bool fastMove = false, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested) return;
+
+            // 1. Başlangıç noktasına git
+            if (fastMove)
+                await MoveMouseFastAsync(startScreenX, startScreenY, cancellationToken);
+            else
+                await MoveMouseAsync(startScreenX, startScreenY, cancellationToken);
+
+            await Task.Delay(_random.Next(50, 90), cancellationToken);
+
+            // 2. Orta tuşa basılı tut (Middle Down)
+            Win32Native.mouse_event(Win32Native.MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, 0);
+            await Task.Delay(_random.Next(60, 100), cancellationToken);
+
+            // 3. Basılı tutarak hedef noktaya göreceli ve insansı adımlarla sürükle (DirectInput/DirectX uyumlu)
+            int totalDeltaX = targetScreenX - startScreenX;
+            int totalDeltaY = targetScreenY - startScreenY;
+            int steps = Math.Clamp((int)(Math.Sqrt(totalDeltaX * totalDeltaX + totalDeltaY * totalDeltaY) / 4.0), 12, 35);
+
+            int prevX = startScreenX;
+            int prevY = startScreenY;
+
+            for (int i = 1; i <= steps; i++)
+            {
+                if (cancellationToken.IsCancellationRequested) break;
+
+                double progress = (double)i / steps;
+                // EaseInOutCubic eğrisi
+                double eased = progress < 0.5
+                    ? 4 * progress * progress * progress
+                    : 1 - Math.Pow(-2 * progress + 2, 3) / 2;
+
+                int currX = (int)(startScreenX + totalDeltaX * eased);
+                int currY = (int)(startScreenY + totalDeltaY * eased);
+
+                int dx = currX - prevX;
+                int dy = currY - prevY;
+
+                prevX = currX;
+                prevY = currY;
+
+                // Hem DirectInput (göreceli) hem Windows Cursor (mutlak) pozisyonunu güncelle
+                Win32Native.mouse_event(Win32Native.MOUSEEVENTF_MOVE, (uint)dx, (uint)dy, 0, 0);
+                Win32Native.SetCursorPos(currX, currY);
+
+                await Task.Delay(_random.Next(12, 22), cancellationToken);
+            }
+
+            await Task.Delay(_random.Next(60, 100), cancellationToken);
+
+            // 4. Orta tuşu bırak (Middle Up)
+            Win32Native.mouse_event(Win32Native.MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);
+            await Task.Delay(_random.Next(60, 120), cancellationToken);
+        }
+
+        /// <summary>
+        /// Pencere içi yerel koordinatlarla orta tuş (MouseWheel) sürükle ve bırak işlemi yapar.
+        /// </summary>
+        public Task MiddleDragAndDropLocalAsync(IntPtr hWnd, int startLocalX, int startLocalY, int targetLocalX, int targetLocalY, bool fastMove = false, CancellationToken cancellationToken = default)
+        {
+            Point startScreen = LocalToScreen(hWnd, startLocalX, startLocalY);
+            Point targetScreen = LocalToScreen(hWnd, targetLocalX, targetLocalY);
+            return MiddleDragAndDropAsync(startScreen.X, startScreen.Y, targetScreen.X, targetScreen.Y, fastMove, cancellationToken);
+        }
+
+        public Task MiddleDragAndDropLocalAsync(IntPtr hWnd, int startLocalX, int startLocalY, int targetLocalX, int targetLocalY, CancellationToken cancellationToken)
+            => MiddleDragAndDropLocalAsync(hWnd, startLocalX, startLocalY, targetLocalX, targetLocalY, false, cancellationToken);
+
+        #endregion
+
         #region 5. Yardımcı Fonksiyonlar
 
         /// <summary>

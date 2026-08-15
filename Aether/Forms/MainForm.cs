@@ -223,5 +223,43 @@ namespace Aether.Forms
                     MessageBoxIcon.Error);
             }
         }
+
+        #region F1 Acil Durdurma (Emergency Stop Hotkey)
+
+        private const int HOTKEY_EMERGENCY_STOP_F1 = 9001;
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            // Global F1 Acil Durdurma Kısayolunu Kaydet (Modifier tuşu olmadan: 0, VK_F1: 0x70)
+            Native.Win32Native.RegisterHotKey(this.Handle, HOTKEY_EMERGENCY_STOP_F1, 0, Native.Win32Native.VK_F1);
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            // Global F1 Kısayolunu Temizle
+            Native.Win32Native.UnregisterHotKey(this.Handle, HOTKEY_EMERGENCY_STOP_F1);
+            base.OnHandleDestroyed(e);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == Native.Win32Native.WM_HOTKEY && m.WParam.ToInt32() == HOTKEY_EMERGENCY_STOP_F1)
+            {
+                // F1 Acil Durdurma Tetiklendi! Tüm çalışan botları anında durdur
+                Services.FishBotService.Instance.StopAllBots();
+                try
+                {
+                    System.Media.SystemSounds.Exclamation.Play();
+                }
+                catch { }
+
+                System.Diagnostics.Debug.WriteLine("[MainForm] 🚨 F1 Acil Durdurma tuşuna basıldı! Tüm çalışan botlar anında durduruldu.");
+            }
+
+            base.WndProc(ref m);
+        }
+
+        #endregion
     }
 }

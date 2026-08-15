@@ -25,9 +25,7 @@ namespace Aether.Pages
         internal Sunny.UI.UICheckBox CharacterScreenCheckBox => characterScreenCheckBox;
         internal Sunny.UI.UIUpDownTextBox CharacterScreenUpDown => characterScreenUpDown;
         internal Sunny.UI.UICheckBox BuyCampfireCheckBox => buyCampfireCheckBox;
-        internal Sunny.UI.UIUpDownTextBox CampFireCountUpDown => campFireCountUpDown;
         internal Sunny.UI.UICheckBox BuyWormCheckbox => buyWormCheckbox;
-        internal Sunny.UI.UIUpDownTextBox WormCountUpDown => wormCountUpDown;
         internal Sunny.UI.UISwitch AnimationModeSwitch => animationModeSwitch;
         internal Sunny.UI.UIUpDownTextBox InventoryPageSelectUpDown => inventoryPageSelectUpDown;
         internal Sunny.UI.UITextBox MinFishSpeedTextBox => minFishSpeedTextBox;
@@ -71,6 +69,9 @@ namespace Aether.Pages
                 _statusTimer.Interval = 500;
                 _statusTimer.Tick += (s, ev) => UpdateBotStatusAndTimerDisplay();
                 _statusTimer.Start();
+
+                // logPanel içerisine karanlık temalı RichTextBox log konsolunu yerleştir
+                InitializeLogPanel();
 
                 Services.FishBotService.Instance.OnFishBotStateChanged += FishBotService_OnFishBotStateChanged;
                 UpdateBotStatusAndTimerDisplay();
@@ -429,7 +430,67 @@ namespace Aether.Pages
                 _statusTimer = null;
             }
             Services.FishBotService.Instance.OnFishBotStateChanged -= FishBotService_OnFishBotStateChanged;
+            Services.BotLogger.OnLog -= BotLogger_OnLog;
             base.OnHandleDestroyed(e);
         }
+
+        #region LogPanel Yönetimi (Bot Logger UI)
+
+        private RichTextBox? _rtbLogs;
+
+        private void InitializeLogPanel()
+        {
+            _rtbLogs = new RichTextBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.FromArgb(30, 30, 35),
+                ForeColor = Color.FromArgb(220, 220, 225),
+                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                BorderStyle = BorderStyle.None,
+                ReadOnly = true,
+                ScrollBars = RichTextBoxScrollBars.Vertical
+            };
+
+            logPanel.Controls.Clear();
+            logPanel.Padding = new Padding(8);
+            logPanel.Controls.Add(_rtbLogs);
+
+            Services.BotLogger.OnLog += BotLogger_OnLog;
+        }
+
+        private void BotLogger_OnLog(int clientId, string message, Color color)
+        {
+            if (InvokeRequired)
+            {
+                try
+                {
+                    BeginInvoke(new Action(() => BotLogger_OnLog(clientId, message, color)));
+                }
+                catch { }
+                return;
+            }
+
+            if (_rtbLogs == null || _rtbLogs.IsDisposed) return;
+
+            string timeStamp = DateTime.Now.ToString("HH:mm:ss");
+            string line = $"[{timeStamp}] [Client #{clientId}] {message}\n";
+
+            _rtbLogs.SelectionStart = _rtbLogs.TextLength;
+            _rtbLogs.SelectionLength = 0;
+            _rtbLogs.SelectionColor = color;
+            _rtbLogs.AppendText(line);
+            _rtbLogs.SelectionColor = _rtbLogs.ForeColor;
+
+            // En fazla 500 satır sakla
+            if (_rtbLogs.Lines.Length > 500)
+            {
+                _rtbLogs.Select(0, _rtbLogs.GetFirstCharIndexFromLine(100));
+                _rtbLogs.SelectedText = "";
+            }
+
+            _rtbLogs.ScrollToCaret();
+        }
+
+        #endregion
     }
 }

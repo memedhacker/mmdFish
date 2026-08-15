@@ -79,6 +79,12 @@ namespace Aether.Constants
         public static readonly WindowRegion ChatBoxPosition = new WindowRegion(97, 547, 532, 564);
         public static readonly WindowRegion InventoryPagesPosition = new WindowRegion(627, 213, 799, 243);
         public static readonly WindowRegion InventoryPosition = new WindowRegion(623, 235, 798, 542);
+        public static readonly WindowRegion InventoryFishArea = new WindowRegion(627, 234, 799, 469);
+        public static readonly WindowRegion InventoryBaitArea = new WindowRegion(627, 464, 799, 539);
+        public static readonly WindowRegion OpenMarketPosition = new WindowRegion(371, 213, 428, 233);
+        public static readonly WindowRegion MarketBaitPosition = new WindowRegion(483, 83, 505, 102);
+        public static readonly WindowRegion MarketFirePosition = new WindowRegion(453, 49, 471, 70);
+        public static readonly WindowRegion FisherManSearchArea = new WindowRegion(0, 4, 644, 555);
         public static readonly WindowRegion NewDMPosition = new WindowRegion(706, 159, 799, 440);
         public static readonly WindowRegion MapPosition = new WindowRegion(644, 8, 799, 145);
 
@@ -92,6 +98,12 @@ namespace Aether.Constants
             ("💬 EquipmentMenuExitButtonPosition (762, 8 -> 793, 30)", EquipmentMenuExitButtonPosition),
             ("💬 InventoryPagesPosition (634, 221 -> 792, 242)", InventoryPagesPosition),
             ("💬 InventoryPosition (623, 235 -> 798, 542)", InventoryPosition),
+            ("💬 InventoryFishArea (627, 234 -> 799, 469)", InventoryFishArea),
+            ("💬 InventoryBaitArea (627, 464 -> 799, 539)", InventoryBaitArea),
+            ("💬 OpenMarketPosition (354, 205 -> 448, 237)", OpenMarketPosition),
+            ("💬 MarketBaitPosition (443, 182 -> 485, 216)", MarketBaitPosition),
+            ("💬 MarketFirePosition (418, 149 -> 446, 184)", MarketFirePosition),
+            ("💬 FisherManSearchArea (0, 4 -> 644, 555)", FisherManSearchArea),
             ("💬 NewDMPosition (706, 159 -> 799, 440)", NewDMPosition),
             ("💬 MapPosition (644, 8 -> 799, 145)", MapPosition)
         };

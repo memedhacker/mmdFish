@@ -203,6 +203,23 @@ namespace Aether.Constants
         }
 
         /// <summary>
+        /// Balıkçı NPC ve Market diyalog şablonları (Fisherman).
+        /// </summary>
+        public static class Fisherman
+        {
+            public const string Balikci = "fisherman/balikci.png";
+            public const string Balikci2 = "fisherman/balikci2.png";
+            public const string MarketiAc = "fisherman/marketiAc.png";
+
+            public static readonly IReadOnlyList<string> All = new[]
+            {
+                Balikci,
+                Balikci2,
+                MarketiAc
+            };
+        }
+
+        /// <summary>
         /// Projedeki tüm şablonların listesi.
         /// </summary>
         public static readonly IReadOnlyList<string> AllTemplates;
@@ -215,6 +232,7 @@ namespace Aether.Constants
             all.AddRange(Waypoints.All);
             all.AddRange(WindowParts.All);
             all.AddRange(InventoryItems.All);
+            all.AddRange(Fisherman.All);
             AllTemplates = all.AsReadOnly();
         }
 

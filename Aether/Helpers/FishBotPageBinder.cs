@@ -66,22 +66,6 @@ namespace Aether.Helpers
                 return false;
             }
 
-            // 4. Solucan Adedi Denetimi (1 - 22)
-            int wormCount = page.WormCountUpDown.IntValue;
-            if (wormCount < 1 || wormCount > 22)
-            {
-                ShowErrorAndRollback(page, settings, "Solucan adedi 1'den az, 22'den fazla olamaz.");
-                return false;
-            }
-
-            // 5. Kamp Ateşi Adedi Denetimi (1 - 5)
-            int campfireCount = page.CampFireCountUpDown.IntValue;
-            if (campfireCount < 1 || campfireCount > 5)
-            {
-                ShowErrorAndRollback(page, settings, "Kamp ateşi adedi 1'den az, 5'ten fazla olamaz.");
-                return false;
-            }
-
             // Doğrulama başarılı: değerleri kaydet
             SaveGeneralSettings(page, settings);
             SaveChannelSettings(page, settings);
@@ -145,12 +129,8 @@ namespace Aether.Helpers
             page.BuyCampfireCheckBox.Click += onControlChanged;
             page.BuyCampfireCheckBox.ValueChanged += (s, val) => onControlChanged(s, EventArgs.Empty);
 
-            bindUpDownEvents(page.CampFireCountUpDown);
-
             page.BuyWormCheckbox.Click += onControlChanged;
             page.BuyWormCheckbox.ValueChanged += (s, val) => onControlChanged(s, EventArgs.Empty);
-
-            bindUpDownEvents(page.WormCountUpDown);
 
             page.AnimationModeSwitch.Click += onControlChanged;
             page.AnimationModeSwitch.ActiveChanged += (s, val) => onControlChanged(s, EventArgs.Empty);
@@ -205,10 +185,7 @@ namespace Aether.Helpers
             settings.CharacterScreenAfterMinutes = page.CharacterScreenUpDown.IntValue;
 
             settings.BuyCampfireEnabled = page.BuyCampfireCheckBox.Checked;
-            settings.CampfireCount = page.CampFireCountUpDown.IntValue;
-
             settings.BuyWormEnabled = page.BuyWormCheckbox.Checked;
-            settings.WormCount = page.WormCountUpDown.IntValue;
 
             settings.AnimationMode = page.AnimationModeSwitch.Active ? "armor" : "mount";
 
@@ -287,10 +264,7 @@ namespace Aether.Helpers
             page.CharacterScreenUpDown.IntValue = settings.CharacterScreenAfterMinutes;
 
             page.BuyCampfireCheckBox.Checked = settings.BuyCampfireEnabled;
-            page.CampFireCountUpDown.IntValue = settings.CampfireCount;
-
             page.BuyWormCheckbox.Checked = settings.BuyWormEnabled;
-            page.WormCountUpDown.IntValue = settings.WormCount;
 
             page.AnimationModeSwitch.Active = settings.AnimationMode == "armor";
 

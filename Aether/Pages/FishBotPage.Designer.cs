@@ -61,13 +61,9 @@ namespace Aether.Pages
             characterScreenCheckBox = new Sunny.UI.UICheckBox();
             label4 = new Label();
             uıPanel4 = new Sunny.UI.UIPanel();
-            campFireCountUpDown = new Sunny.UI.UIUpDownTextBox();
             buyCampfireCheckBox = new Sunny.UI.UICheckBox();
-            label5 = new Label();
             uıPanel5 = new Sunny.UI.UIPanel();
-            wormCountUpDown = new Sunny.UI.UIUpDownTextBox();
             buyWormCheckbox = new Sunny.UI.UICheckBox();
-            label6 = new Label();
             uıPanel6 = new Sunny.UI.UIPanel();
             animationModeSwitch = new Sunny.UI.UISwitch();
             label7 = new Label();
@@ -527,7 +523,7 @@ namespace Aether.Pages
             channelsLine.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             channelsLine.ForeColor = Color.FromArgb(99, 168, 71);
             channelsLine.LineColor = Color.FromArgb(99, 168, 71);
-            channelsLine.Location = new Point(15, 843);
+            channelsLine.Location = new Point(15, 856);
             channelsLine.MinimumSize = new Size(1, 1);
             channelsLine.Name = "channelsLine";
             channelsLine.Size = new Size(649, 29);
@@ -601,9 +597,7 @@ namespace Aether.Pages
             // uıPanel4
             // 
             uıPanel4.BackColor = Color.FromArgb(30, 30, 35);
-            uıPanel4.Controls.Add(campFireCountUpDown);
             uıPanel4.Controls.Add(buyCampfireCheckBox);
-            uıPanel4.Controls.Add(label5);
             uıPanel4.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel4.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel4.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
@@ -613,30 +607,10 @@ namespace Aether.Pages
             uıPanel4.Name = "uıPanel4";
             uıPanel4.Radius = 15;
             uıPanel4.RectColor = Color.White;
-            uıPanel4.Size = new Size(208, 98);
+            uıPanel4.Size = new Size(208, 53);
             uıPanel4.TabIndex = 4;
             uıPanel4.Text = null;
             uıPanel4.TextAlignment = ContentAlignment.MiddleCenter;
-            // 
-            // campFireCountUpDown
-            // 
-            campFireCountUpDown.DoubleStep = 1D;
-            campFireCountUpDown.DoubleValue = 5D;
-            campFireCountUpDown.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            campFireCountUpDown.IntValue = 5;
-            campFireCountUpDown.Location = new Point(13, 52);
-            campFireCountUpDown.Margin = new Padding(4, 5, 4, 5);
-            campFireCountUpDown.Minimum = 0D;
-            campFireCountUpDown.MinimumSize = new Size(1, 16);
-            campFireCountUpDown.Name = "campFireCountUpDown";
-            campFireCountUpDown.Padding = new Padding(5);
-            campFireCountUpDown.ShowText = false;
-            campFireCountUpDown.Size = new Size(71, 29);
-            campFireCountUpDown.TabIndex = 2;
-            campFireCountUpDown.Text = "5";
-            campFireCountUpDown.TextAlignment = ContentAlignment.MiddleRight;
-            campFireCountUpDown.Type = Sunny.UI.UITextBox.UIEditType.Integer;
-            campFireCountUpDown.Watermark = "";
             // 
             // buyCampfireCheckBox
             // 
@@ -651,56 +625,23 @@ namespace Aether.Pages
             buyCampfireCheckBox.TabIndex = 0;
             buyCampfireCheckBox.Text = "Kamp Ateşi Satın Al";
             // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 12F);
-            label5.ForeColor = SystemColors.ControlLightLight;
-            label5.Location = new Point(91, 56);
-            label5.Name = "label5";
-            label5.Size = new Size(42, 21);
-            label5.TabIndex = 1;
-            label5.Text = "Adet";
-            // 
             // uıPanel5
             // 
             uıPanel5.BackColor = Color.FromArgb(30, 30, 35);
-            uıPanel5.Controls.Add(wormCountUpDown);
             uıPanel5.Controls.Add(buyWormCheckbox);
-            uıPanel5.Controls.Add(label6);
             uıPanel5.FillColor = Color.FromArgb(30, 30, 35);
             uıPanel5.FillColor2 = Color.FromArgb(30, 30, 35);
             uıPanel5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            uıPanel5.Location = new Point(250, 737);
+            uıPanel5.Location = new Point(15, 800);
             uıPanel5.Margin = new Padding(4, 5, 4, 5);
             uıPanel5.MinimumSize = new Size(1, 1);
             uıPanel5.Name = "uıPanel5";
             uıPanel5.Radius = 15;
             uıPanel5.RectColor = Color.White;
-            uıPanel5.Size = new Size(208, 98);
+            uıPanel5.Size = new Size(208, 53);
             uıPanel5.TabIndex = 4;
             uıPanel5.Text = null;
             uıPanel5.TextAlignment = ContentAlignment.MiddleCenter;
-            // 
-            // wormCountUpDown
-            // 
-            wormCountUpDown.DoubleStep = 1D;
-            wormCountUpDown.DoubleValue = 5D;
-            wormCountUpDown.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            wormCountUpDown.IntValue = 5;
-            wormCountUpDown.Location = new Point(13, 52);
-            wormCountUpDown.Margin = new Padding(4, 5, 4, 5);
-            wormCountUpDown.Minimum = 0D;
-            wormCountUpDown.MinimumSize = new Size(1, 16);
-            wormCountUpDown.Name = "wormCountUpDown";
-            wormCountUpDown.Padding = new Padding(5);
-            wormCountUpDown.ShowText = false;
-            wormCountUpDown.Size = new Size(71, 29);
-            wormCountUpDown.TabIndex = 2;
-            wormCountUpDown.Text = "5";
-            wormCountUpDown.TextAlignment = ContentAlignment.MiddleRight;
-            wormCountUpDown.Type = Sunny.UI.UITextBox.UIEditType.Integer;
-            wormCountUpDown.Watermark = "";
             // 
             // buyWormCheckbox
             // 
@@ -708,23 +649,12 @@ namespace Aether.Pages
             buyWormCheckbox.CheckBoxSize = 25;
             buyWormCheckbox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 162);
             buyWormCheckbox.ForeColor = SystemColors.ControlLightLight;
-            buyWormCheckbox.Location = new Point(13, 15);
+            buyWormCheckbox.Location = new Point(13, 14);
             buyWormCheckbox.MinimumSize = new Size(1, 1);
             buyWormCheckbox.Name = "buyWormCheckbox";
             buyWormCheckbox.Size = new Size(178, 29);
             buyWormCheckbox.TabIndex = 0;
             buyWormCheckbox.Text = "Solucan Satın Al";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 12F);
-            label6.ForeColor = SystemColors.ControlLightLight;
-            label6.Location = new Point(91, 56);
-            label6.Name = "label6";
-            label6.Size = new Size(109, 21);
-            label6.TabIndex = 1;
-            label6.Text = "Adet(50xAdet)";
             // 
             // uıPanel6
             // 
@@ -1112,9 +1042,7 @@ namespace Aether.Pages
             uıPanel3.ResumeLayout(false);
             uıPanel3.PerformLayout();
             uıPanel4.ResumeLayout(false);
-            uıPanel4.PerformLayout();
             uıPanel5.ResumeLayout(false);
-            uıPanel5.PerformLayout();
             uıPanel6.ResumeLayout(false);
             uıPanel6.PerformLayout();
             uıPanel7.ResumeLayout(false);
@@ -1157,13 +1085,9 @@ namespace Aether.Pages
         private Sunny.UI.UICheckBox characterScreenCheckBox;
         private Label label4;
         private Sunny.UI.UIPanel uıPanel4;
-        private Sunny.UI.UIUpDownTextBox campFireCountUpDown;
         private Sunny.UI.UICheckBox buyCampfireCheckBox;
-        private Label label5;
         private Sunny.UI.UIPanel uıPanel5;
-        private Sunny.UI.UIUpDownTextBox wormCountUpDown;
         private Sunny.UI.UICheckBox buyWormCheckbox;
-        private Label label6;
         private Sunny.UI.UIPanel uıPanel6;
         private Label label7;
         private Sunny.UI.UISwitch animationModeSwitch;
