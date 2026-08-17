@@ -458,6 +458,8 @@ namespace Aether.Pages
             Services.BotLogger.OnLog += BotLogger_OnLog;
         }
 
+        private int _logCounter = 0;
+
         private void BotLogger_OnLog(int clientId, string message, Color color)
         {
             if (InvokeRequired)
@@ -472,6 +474,14 @@ namespace Aether.Pages
 
             if (_rtbLogs == null || _rtbLogs.IsDisposed) return;
 
+            // Her 15 logda bir veya satır sayısı 15'e ulaştığında log penceresini temizle
+            _logCounter++;
+            if (_logCounter > 15 || _rtbLogs.Lines.Length >= 15)
+            {
+                _rtbLogs.Clear();
+                _logCounter = 1;
+            }
+
             string timeStamp = DateTime.Now.ToString("HH:mm:ss");
             string line = $"[{timeStamp}] [Client #{clientId}] {message}\n";
 
@@ -480,13 +490,6 @@ namespace Aether.Pages
             _rtbLogs.SelectionColor = color;
             _rtbLogs.AppendText(line);
             _rtbLogs.SelectionColor = _rtbLogs.ForeColor;
-
-            // En fazla 500 satır sakla
-            if (_rtbLogs.Lines.Length > 500)
-            {
-                _rtbLogs.Select(0, _rtbLogs.GetFirstCharIndexFromLine(100));
-                _rtbLogs.SelectedText = "";
-            }
 
             _rtbLogs.ScrollToCaret();
         }

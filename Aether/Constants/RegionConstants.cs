@@ -90,6 +90,11 @@ namespace Aether.Constants
         public static readonly WindowRegion MapPosition = new WindowRegion(644, 8, 799, 145);
         public static readonly WindowRegion FishingMenuExitButtonPosition = new WindowRegion(360, 57, 376, 75);
         public static readonly WindowRegion GoldenTonFishReleaseButtonPosition = new WindowRegion(362, 230, 436, 249);
+        public static readonly WindowRegion FishCircleArea = new WindowRegion(154, 111, 325, 261);
+        public static readonly WindowRegion CircleColorControlArea1= new WindowRegion(205, 246, 280, 257);
+        public static readonly WindowRegion CircleColorControlArea2= new WindowRegion(213, 119, 265, 133);
+        public static readonly WindowRegion CircleColorControlArea3= new WindowRegion(173, 143, 186, 210);
+        public static readonly WindowRegion CircleColorControlArea4= new WindowRegion(292, 199, 312, 221);
         /// <summary>
         /// Test pencerelerinde ve arayüz ComboBox'larında hızlı seçim yapabilmek için tüm tanımlı sabit bölgelerin listesi.
         /// </summary>
@@ -110,7 +115,13 @@ namespace Aether.Constants
             ("💬 NewDMPosition (706, 159 -> 799, 440)", NewDMPosition),
             ("💬 MapPosition (644, 8 -> 799, 145)", MapPosition),
             ("💬 FishingMenuExitButtonPosition (360, 57 -> 376, 75)", FishingMenuExitButtonPosition),
-            ("💬 GoldenTonFishReleaseButtonPosition (362, 230 -> 436, 249)", GoldenTonFishReleaseButtonPosition)
+            ("💬 GoldenTonFishReleaseButtonPosition (362, 230 -> 436, 249)", GoldenTonFishReleaseButtonPosition),
+            ("💬 FishCircleArea (168, 121 -> 308, 264)", FishCircleArea),
+            
+            ("💬 CircleColorControlArea1 (205, 246 -> 280, 257)", CircleColorControlArea1),
+            ("💬 CircleColorControlArea2 (213, 119 -> 265, 133)", CircleColorControlArea2),
+            ("💬 CircleColorControlArea3 (173, 143 -> 186, 210)", CircleColorControlArea3),
+            ("💬 CircleColorControlArea4 (292, 199 -> 312, 221)", CircleColorControlArea4)
         };
 
         // 📍 Gelecekte eklenecek yeni oyun bölgeleri buraya tanımlanabilir:
