@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Aether.Functions
 {
@@ -164,6 +165,7 @@ namespace Aether.Functions
             var candidateTemplates = new List<string>();
             candidateTemplates.AddRange(TemplateConstants.FishNames.All);
             candidateTemplates.AddRange(TemplateConstants.AutoPass.All);
+            candidateTemplates.Add(TemplateConstants.Waypoints.Tutamazsin);
 
             TemplateMatchResult? matchedResult = null;
 
@@ -173,7 +175,7 @@ namespace Aether.Functions
                 {
                     if (chatBmp != null)
                     {
-                        var leftmostMatch = TemplateConstants.FindLeftmostMatch(chatBmp, candidateTemplates, minThreshold: 0.80);
+                        var leftmostMatch = TemplateConstants.FindLeftmostMatch(chatBmp, candidateTemplates, minThreshold: 0.75);
                         if (leftmostMatch != null && leftmostMatch.IsSuccess)
                         {
                             matchedResult = leftmostMatch;
@@ -188,6 +190,16 @@ namespace Aether.Functions
 
             if (matchedResult == null || cancellationToken.IsCancellationRequested)
                 return;
+
+            // Tutamazsin Kontrolü (Chat'te burada balık tutamazsın uyarısı geldiyse)
+            if (matchedResult.TemplatePath == TemplateConstants.Waypoints.Tutamazsin || matchedResult.TemplateName.Equals("tutamazsin", StringComparison.OrdinalIgnoreCase))
+            {
+                BotLogger.LogError(clientInfo.Id, $"🚫 'Tutamazsin' waypoint'i tespit edildi! Client #{clientInfo.Id} balık tutabilecek bir alanda değil. Tüm Bot İşlevleri durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                BringMainFormToFront();
+                ShowTutamazsinWarning(clientInfo.Id);
+                return;
+            }
 
             // =========================================================================
             // 5. ADIM: Filtre & AutoPass Kontrolü ("Balığı Tut" / "Yakala" Durumu)
@@ -262,11 +274,15 @@ namespace Aether.Functions
 
             // Normal Balık Oyunu: Eşzamanlı Balık Oyunu ve ChatArea Waypoint Taraması
             using var phaseCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            TemplateMatchResult? matchedWaypoint = null;
 
             try
             {
                 var minigameTask = FishingMinigameFunction.ExecuteMinigameAsync(clientInfo, phaseCts.Token);
-                var waypointWatcherTask = WatchWaypointsAsync(clientInfo, phaseCts);
+                var waypointWatcherTask = Task.Run(async () =>
+                {
+                    matchedWaypoint = await WatchWaypointsAsync(clientInfo, phaseCts);
+                }, phaseCts.Token);
 
                 // Her iki görev eşzamanlı çalışır, waypoint eşleştiğinde phaseCts iptal edilerek sonlandırılır
                 await Task.WhenAll(minigameTask, waypointWatcherTask);
@@ -278,6 +294,68 @@ namespace Aether.Functions
 
             // Balık oyunu bittiğinde Animasyon İptali Yap
             await PerformAnimationCancelAsync(clientInfo, settings, cancellationToken);
+
+            // =========================================================================
+            // 8. ADIM: Tutamazsin & YakalananBalik Durumu ve Envanter Boş Slot (EmptySlot) Kontrolü
+            // =========================================================================
+            if (matchedWaypoint != null && (matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.Tutamazsin || matchedWaypoint.TemplateName.Equals("tutamazsin", StringComparison.OrdinalIgnoreCase)))
+            {
+                BotLogger.LogError(clientInfo.Id, $"🚫 'Tutamazsin' waypoint'i tespit edildi! Client #{clientInfo.Id} balık tutabilecek bir alanda değil. Tüm Bot İşlevleri durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                BringMainFormToFront();
+                ShowTutamazsinWarning(clientInfo.Id);
+                return;
+            }
+
+            if (matchedWaypoint != null && (matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.YakalananBalik || matchedWaypoint.TemplateName.Equals("yakalanan_balik", StringComparison.OrdinalIgnoreCase)))
+            {
+                BotLogger.LogInfo(clientInfo.Id, "🎣 'YakalananBalik' waypoint'i tespit edildi. 100ms bekleniyor ve InventoryFishArea boş slot sayısı kontrol ediliyor...");
+                await Task.Delay(100, cancellationToken);
+
+                using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+                {
+                    if (fishAreaBmp != null)
+                    {
+                        var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                        int emptyCount = emptySlots.Count;
+
+                        BotLogger.LogInfo(clientInfo.Id, $"InventoryFishArea boş slot sayısı: {emptyCount}");
+
+                        if (emptyCount == 0)
+                        {
+                            BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde boş slot kalmadı (EmptySlot: 0)!");
+
+                            // 1. Pişir seçeneği aktif balık var mı kontrol et ve kamp ateşinde pişir
+                            bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+
+                            // 2. Pişirme sonrası güncel boş slot sayısını tekrar kontrol et
+                            int finalEmptyCount = 0;
+                            using (Bitmap? recheckBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+                            {
+                                if (recheckBmp != null)
+                                {
+                                    var recheckSlots = TemplateConstants.MatchAll(recheckBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                                    finalEmptyCount = recheckSlots.Count;
+                                }
+                            }
+
+                            BotLogger.LogInfo(clientInfo.Id, $"Pişirme sonrası güncel boş slot sayısı: {finalEmptyCount}");
+
+                            if (finalEmptyCount == 0)
+                            {
+                                BotLogger.LogWarning(clientInfo.Id, "🛑 Boş slot açılamadı veya hiç boş slot kalmadı! Balık botu durduruluyor...");
+                                Services.FishBotService.Instance.StopFishBot(clientInfo.Id);
+                                BringMainFormToFront();
+                                return;
+                            }
+                            else
+                            {
+                                BotLogger.LogSuccess(clientInfo.Id, $"🎉 Pişirme işlemiyle {finalEmptyCount} adet boş slot açıldı. Balık tutma döngüsüne devam ediliyor.");
+                            }
+                        }
+                    }
+                }
+            }
 
             BotLogger.LogInfo(clientInfo.Id, "Balık tutma döngüsü tamamlandı, yeni olta atma adımına geçiliyor...");
         }
@@ -442,9 +520,9 @@ namespace Aether.Functions
 
         /// <summary>
         /// ChatArea bölgesini tarayarak TemplateConstants.Waypoints.All ve TemplateConstants.AutoPass.All şablonlarını arar.
-        /// Bir waypoint veya AutoPass eşleştiğinde log atar ve phaseCts'i iptal ederek balık oyununu sonlandırır.
+        /// Bir waypoint veya AutoPass eşleştiğinde log atar, eşleşen sonucu döner ve phaseCts'i iptal ederek balık oyununu sonlandırır.
         /// </summary>
-        private static async Task WatchWaypointsAsync(ClientInfo clientInfo, CancellationTokenSource phaseCts)
+        private static async Task<TemplateMatchResult?> WatchWaypointsAsync(ClientInfo clientInfo, CancellationTokenSource phaseCts)
         {
             BotLogger.LogInfo(clientInfo.Id, "ChatArea üzerinde Waypoint ve AutoPass şablonları taranıyor...");
 
@@ -460,7 +538,7 @@ namespace Aether.Functions
                     {
                         if (chatBmp != null)
                         {
-                            var leftmostMatch = TemplateConstants.FindLeftmostMatch(chatBmp, watchTemplates, minThreshold: 0.80);
+                            var leftmostMatch = TemplateConstants.FindLeftmostMatch(chatBmp, watchTemplates, minThreshold: 0.75);
                             if (leftmostMatch != null && leftmostMatch.IsSuccess)
                             {
                                 BotLogger.LogSuccess(clientInfo.Id, $"[CHAT / WAYPOINT TESPİTİ] '{leftmostMatch.TemplateName}' şablonu eşleşti! Benzerlik: %{leftmostMatch.Confidence * 100:F1}, Konum: ({leftmostMatch.Location.X}, {leftmostMatch.Location.Y})");
@@ -468,7 +546,7 @@ namespace Aether.Functions
 
                                 // Her iki eşzamanlı görevi iptal et ve çık
                                 phaseCts.Cancel();
-                                break;
+                                return leftmostMatch;
                             }
                         }
                     }
@@ -480,6 +558,76 @@ namespace Aether.Functions
             {
                 // Beklenen iptal
             }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Ana formu (MainForm) simge durumundan çıkarıp ekranın en önüne getirir.
+        /// </summary>
+        public static void BringMainFormToFront()
+        {
+            try
+            {
+                if (Application.OpenForms.Count > 0)
+                {
+                    var mainForm = Application.OpenForms[0];
+                    if (mainForm != null && !mainForm.IsDisposed)
+                    {
+                        Action restoreAction = () =>
+                        {
+                            if (mainForm.WindowState == FormWindowState.Minimized)
+                            {
+                                mainForm.WindowState = FormWindowState.Normal;
+                            }
+                            mainForm.Show();
+                            mainForm.Activate();
+                            Win32Native.SetForegroundWindow(mainForm.Handle);
+                        };
+
+                        if (mainForm.InvokeRequired)
+                        {
+                            mainForm.BeginInvoke(restoreAction);
+                        }
+                        else
+                        {
+                            restoreAction();
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 'Tutamazsin' uyarısını ekranda MessageBox olarak asenkron/ana iş parçacığında gösterir.
+        /// </summary>
+        public static void ShowTutamazsinWarning(int clientId)
+        {
+            try
+            {
+                string message = $"Client #{clientId} balık tutabilecek bir alanda değil. Tüm Bot İşlevleri durduruldu.";
+                string title = "Balık Tutma Alanı Uyarısı";
+
+                if (Application.OpenForms.Count > 0)
+                {
+                    var mainForm = Application.OpenForms[0];
+                    if (mainForm != null && !mainForm.IsDisposed)
+                    {
+                        mainForm.BeginInvoke(new Action(() =>
+                        {
+                            MessageBox.Show(mainForm, message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }));
+                        return;
+                    }
+                }
+
+                Task.Run(() =>
+                {
+                    MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                });
+            }
+            catch { }
         }
     }
 }

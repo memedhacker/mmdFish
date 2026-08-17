@@ -27,6 +27,11 @@ namespace Aether.States
         private readonly Dictionary<int, ClientInfo> _clientRegistry = new Dictionary<int, ClientInfo>();
 
         /// <summary>
+        /// Sistemde kayıtlı tüm istemcilerin (ClientInfo) koleksiyonunu döner.
+        /// </summary>
+        public IReadOnlyCollection<ClientInfo> AllClients => _clientRegistry.Values;
+
+        /// <summary>
         /// Verilen ID ve Name ile kalıcı kayıttaki ClientInfo nesnesini döner veya oluşturur.
         /// </summary>
         public ClientInfo GetOrCreateClientInfo(int id, string name)

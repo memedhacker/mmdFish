@@ -224,37 +224,73 @@ namespace Aether.Forms
             }
         }
 
-        #region F1 Acil Durdurma (Emergency Stop Hotkey)
+        #region Global Hotkeys (F1 Acil Durdurma & F2 Toplu Başlatma)
 
         private const int HOTKEY_EMERGENCY_STOP_F1 = 9001;
+        private const int HOTKEY_START_ALL_F2 = 9002;
 
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
             // Global F1 Acil Durdurma Kısayolunu Kaydet (Modifier tuşu olmadan: 0, VK_F1: 0x70)
             Native.Win32Native.RegisterHotKey(this.Handle, HOTKEY_EMERGENCY_STOP_F1, 0, Native.Win32Native.VK_F1);
+            // Global F2 Toplu Başlatma Kısayolunu Kaydet (Modifier tuşu olmadan: 0, VK_F2: 0x71)
+            Native.Win32Native.RegisterHotKey(this.Handle, HOTKEY_START_ALL_F2, 0, Native.Win32Native.VK_F2);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
         {
-            // Global F1 Kısayolunu Temizle
+            // Global Kısayolları Temizle
             Native.Win32Native.UnregisterHotKey(this.Handle, HOTKEY_EMERGENCY_STOP_F1);
+            Native.Win32Native.UnregisterHotKey(this.Handle, HOTKEY_START_ALL_F2);
             base.OnHandleDestroyed(e);
         }
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == Native.Win32Native.WM_HOTKEY && m.WParam.ToInt32() == HOTKEY_EMERGENCY_STOP_F1)
+            if (m.Msg == Native.Win32Native.WM_HOTKEY)
             {
-                // F1 Acil Durdurma Tetiklendi! Tüm çalışan botları anında durdur
-                Services.FishBotService.Instance.StopAllBots();
-                try
-                {
-                    System.Media.SystemSounds.Exclamation.Play();
-                }
-                catch { }
+                int hotkeyId = m.WParam.ToInt32();
 
-                System.Diagnostics.Debug.WriteLine("[MainForm] 🚨 F1 Acil Durdurma tuşuna basıldı! Tüm çalışan botlar anında durduruldu.");
+                if (hotkeyId == HOTKEY_EMERGENCY_STOP_F1)
+                {
+                    // F1 Acil Durdurma Tetiklendi! Tüm çalışan botları anında durdur
+                    Services.FishBotService.Instance.StopAllBots();
+                    try
+                    {
+                        System.Media.SystemSounds.Exclamation.Play();
+                    }
+                    catch { }
+
+                    // Uygulama simge durumundaysa veya arkadaysa öne getir ve odaklan
+                    if (WindowState == FormWindowState.Minimized)
+                    {
+                        WindowState = FormWindowState.Normal;
+                    }
+                    Show();
+                    Activate();
+                    Native.Win32Native.SetForegroundWindow(this.Handle);
+
+                    System.Diagnostics.Debug.WriteLine("[MainForm] 🚨 F1 Acil Durdurma tuşuna basıldı! Tüm çalışan botlar durduruldu ve uygulama yukarı çıkarıldı.");
+                }
+                else if (hotkeyId == HOTKEY_START_ALL_F2)
+                {
+                    // F2 Toplu Başlatma: HWND bağlı olan tüm istemcileri başlat ve uygulamayı küçült
+                    int startedCount = Services.FishBotService.Instance.StartAllBotsWithHwnd();
+                    if (startedCount > 0)
+                    {
+                        WindowState = FormWindowState.Minimized;
+                        System.Diagnostics.Debug.WriteLine($"[MainForm] 🚀 F2 tuşuna basıldı! HWND bağlı {startedCount} istemci başlatıldı ve uygulama küçültüldü.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            "Oyun penceresi (HWND) bağlanmış herhangi bir istemci bulunamadı.\nLütfen önce istemcilere HWND bağlayın.",
+                            "F2 Başlatma Uyarısı",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                }
             }
 
             base.WndProc(ref m);

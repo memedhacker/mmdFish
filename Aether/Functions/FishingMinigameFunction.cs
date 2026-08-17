@@ -74,8 +74,8 @@ namespace Aether.Functions
         /// Balık tutma mini oyun döngüsünü arka planda yüksek FPS ile çalıştırır.
         /// A: CircleColorControlArea1-4 içinde #FFADC7 ara -> bulunursa B'ye geç.
         /// B: FishCircleArea içinde balık renklerini (fishTargetColorValues) ara.
-        /// C: Hedef tespit edildiğinde fareyi 5-10ms çevik mikro hareketle götür ve tıkla.
-        /// D: CircleColorControlArea1-4 içinde #FFADC7 kaybolana kadar bekle -> kaybolunca tekrar tıklanabilir yap, A'ya dön.
+        /// C: Hedef tespit edildiğinde fareyi hedefe taşı, koordinata ulaştığından emin olup tıkla.
+        /// D: Çember pembe kaldığı sürece 100ms aralıkla tekrar tıklanabilir; pembeden çıktığı anda kilit sıfırlanıp A adımına dönülür.
         /// </summary>
         /// <param name="clientInfo">İlgili istemci bilgisi</param>
         /// <param name="cancellationToken">İptal isteği bayrağı</param>
@@ -86,6 +86,7 @@ namespace Aether.Functions
             BotLogger.LogInfo(clientInfo.Id, "🎮 Balık yakalama mini oyunu başlatıldı.");
 
             bool hasClickedCurrentPinkCycle = false;
+            var clickStopwatch = new System.Diagnostics.Stopwatch();
             int totalFishClicks = 0;
 
             try
@@ -106,28 +107,31 @@ namespace Aether.Functions
 
                         if (isPinkPresent)
                         {
-                            // B & C ADIMI: Çember pembe ve bu pembe döngüsünde henüz tıklanmadıysa
-                            if (!hasClickedCurrentPinkCycle)
+                            // B & C ADIMI: İlk kez pembeye döndüyse VEYA 100ms boyunca hala pembeyse tekrar tıklanabilir
+                            bool canClick = !hasClickedCurrentPinkCycle || (clickStopwatch.IsRunning && clickStopwatch.ElapsedMilliseconds >= 100);
+
+                            if (canClick)
                             {
                                 if (TryFindFishTarget(circleBmp, out int targetLocalX, out int targetLocalY))
                                 {
                                     totalFishClicks++;
                                     BotLogger.LogSuccess(clientInfo.Id, $"🎯 Balık yakalandı (#{totalFishClicks}, Konum: {targetLocalX}, {targetLocalY})! Tıklanıyor...");
 
-                                    // Çevik mikro yönlendirme ve tıklama (5-10ms)
+                                    // Hedefe tam oturduğundan emin olduktan sonra tıklama
                                     await QuickAimAndClickLocalAsync(clientInfo.Handle, targetLocalX, targetLocalY, cancellationToken);
 
-                                    // Halka her pembeye döndüğünde sadece 1 tıklama yapılabilir
                                     hasClickedCurrentPinkCycle = true;
+                                    clickStopwatch.Restart();
                                 }
                             }
                         }
                         else
                         {
-                            // D ADIMI: Halka artık pembe değil (#FFADC7 kayboldu). Kilidi aç, tekrar tıklanabilir hale getir (A adımına dön)
+                            // D ADIMI: Halka artık pembe değil (#FFADC7 kayboldu). Kilidi aç ve sıfırla (A adımına dön)
                             if (hasClickedCurrentPinkCycle)
                             {
                                 hasClickedCurrentPinkCycle = false;
+                                clickStopwatch.Reset();
                             }
                         }
                     }
@@ -272,34 +276,29 @@ namespace Aether.Functions
 
         #endregion
 
-        #region Çevik Mikro Fare Yönlendirme (5-10ms Quick Aim & Click)
+        #region Hızlı Fare Yönlendirme ve Tıklama (Direct Fast Click)
 
         /// <summary>
-        /// Fareyi hedef balık koordinatına aniden ışınlamadan, 5-10ms süren çevik ve yumuşak bir mikro hareketle götürüp sol tıklar.
+        /// Fareyi hedef balık koordinatına taşır, hedefe ulaştığını kesinleştirdikten sonra donanımsal sol tıklar.
         /// </summary>
         private static async Task QuickAimAndClickLocalAsync(IntPtr hWnd, int localX, int localY, CancellationToken cancellationToken)
         {
             Point targetScreen = HumanMouseService.LocalToScreen(hWnd, localX, localY);
-            Point startPos = Cursor.Position;
 
-            // 3 adımlık hızlı mikro geçiş (~5-8 ms)
-            int steps = 3;
-            for (int i = 1; i <= steps; i++)
+            // Doğrudan hedef koordinata git
+            Win32Native.SetCursorPos(targetScreen.X, targetScreen.Y);
+
+            // Fare imlecinin hedefe oturduğundan kesinlikle emin ol
+            await Task.Delay(8, cancellationToken);
+            if (Cursor.Position.X != targetScreen.X || Cursor.Position.Y != targetScreen.Y)
             {
-                if (cancellationToken.IsCancellationRequested) return;
-                double t = (double)i / steps;
-                int currX = (int)(startPos.X + (targetScreen.X - startPos.X) * t);
-                int currY = (int)(startPos.Y + (targetScreen.Y - startPos.Y) * t);
-                Win32Native.SetCursorPos(currX, currY);
+                Win32Native.SetCursorPos(targetScreen.X, targetScreen.Y);
                 await Task.Delay(2, cancellationToken);
             }
 
-            Win32Native.SetCursorPos(targetScreen.X, targetScreen.Y);
-            await Task.Delay(1, cancellationToken);
-
             // Donanımsal Sol Tıklama
             Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-            await Task.Delay(12, cancellationToken);
+            await Task.Delay(15, cancellationToken);
             Win32Native.mouse_event(Win32Native.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
 

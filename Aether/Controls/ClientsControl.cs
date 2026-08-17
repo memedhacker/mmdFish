@@ -80,6 +80,9 @@ namespace Aether.Controls
                 card.ClientName = clientModel.Name;
                 card.ClientNumber = clientModel.Id;
 
+                // State nesnesini erkenden oluşturalım/kaydedelim
+                var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);
+
                 // Kart tıklandığında tetiklenecek event aboneliği
                 card.OnCardSelected += ClientCard_OnCardSelected;
 
@@ -89,8 +92,8 @@ namespace Aether.Controls
                 // startClient (Başlat/Durdur) butonuna tıklandığında balık botunu toggle et
                 card.OnStartClientClicked += (sender, e) =>
                 {
-                    var clientInfo = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);
-                    var (success, message) = Services.FishBotService.Instance.ToggleFishBot(clientInfo);
+                    var targetClient = ClientState.Instance.GetOrCreateClientInfo(card.ClientNumber, card.ClientName);
+                    var (success, message) = Services.FishBotService.Instance.ToggleFishBot(targetClient);
 
                     if (!success)
                     {
@@ -100,6 +103,18 @@ namespace Aether.Controls
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning
                         );
+                    }
+                    else
+                    {
+                        // Bot başlatıldıysa (IsRunning ise) uygulamayı küçült
+                        if (Services.FishBotService.Instance.IsFishBotRunning(targetClient.Id))
+                        {
+                            var parentForm = this.FindForm();
+                            if (parentForm != null)
+                            {
+                                parentForm.WindowState = FormWindowState.Minimized;
+                            }
+                        }
                     }
                 };
 

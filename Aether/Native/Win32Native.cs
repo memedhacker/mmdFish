@@ -50,6 +50,7 @@ namespace Aether.Native
         public const uint VK_SPACE = 0x20;
         public const uint VK_ESCAPE = 0x1B;
         public const uint VK_F1 = 0x70;
+        public const uint VK_F2 = 0x71;
         public const uint VK_1 = 0x31;
         public const uint VK_2 = 0x32;
         public const uint VK_3 = 0x33;

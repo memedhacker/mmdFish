@@ -89,6 +89,12 @@ namespace Aether.Services
             {
                 _startTimes[clientInfo.Id] = DateTime.Now;
 
+                // Aktif HWND oyun penceresini en öne getir
+                if (clientInfo.Handle != IntPtr.Zero && Win32Native.IsWindow(clientInfo.Handle))
+                {
+                    Helpers.GameWindowProcessHelper.BringWindowToFront(clientInfo.Handle);
+                }
+
                 // State katmanına balık botunun çalıştığını duyur
                 ClientState.Instance.IsFishBotRunning = true;
                 OnFishBotStateChanged?.Invoke(this, (clientInfo.Id, true));
@@ -139,6 +145,27 @@ namespace Aether.Services
             {
                 StopFishBot(clientId);
             }
+        }
+
+        /// <summary>
+        /// HWND bağlı (geçerli oyun penceresine sahip) olan tüm istemcileri tek seferde başlatır.
+        /// Başarıyla başlatılan veya halihazırda çalışan istemci sayısını döndürür.
+        /// </summary>
+        public int StartAllBotsWithHwnd()
+        {
+            int startedCount = 0;
+            foreach (var client in ClientState.Instance.AllClients)
+            {
+                if (client.Handle != IntPtr.Zero && Win32Native.IsWindow(client.Handle))
+                {
+                    var (success, _) = StartFishBot(client);
+                    if (success)
+                    {
+                        startedCount++;
+                    }
+                }
+            }
+            return startedCount;
         }
 
         /// <summary>

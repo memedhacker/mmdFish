@@ -1,9 +1,12 @@
+using Aether.Constants;
 using Aether.Helpers;
 using Aether.Models;
 using Aether.Native;
 using Aether.Services;
+using Aether.States;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +26,10 @@ namespace Aether.Functions
     /// 7. InventoryPagesPosition taranarak hangi envanter sayfasının açık olduğu kontrol edilir.
     ///    Client ayarlarındaki sayfa numarası (InventoryPage) seçili değilse insansı kavisle o sayfaya tıklanır.
     /// 8. Envanterdeki yemler (%99.0 eşik) taranıp birbiri üstüne sürüklenerek birleştirilir (Stacklenir).
-    /// 9. Yemler/solucanlar envanterin en altındaki boş slotlara taşınır.
+    /// 9. Kamp ateşlerini (ates.png) bul ve ilk 3 slota yerleştir.
+    /// 10. Yemler/solucanlar envanterin en altındaki boş slotlara taşınır.
+    /// 11. BuyWorm aktifse balıkçıdan yem satın alınır.
+    /// 12. InventoryFishArea boşluk kontrolü yapılır; boş slot yoksa pişirme süreci işletilir, açılamazsa bot durdurulur.
     /// </summary>
     public static class FishBotStartupFunction
     {
@@ -87,6 +93,56 @@ namespace Aether.Functions
             // 11. Eğer BuyWorm aktif ve 4. slot sonrasında boş yer varsa: Balıkçıyı bul ve marketi aç
             await StartupFishermanFunction.ExecuteAsync(clientInfo, cancellationToken);
             await Task.Delay(300, cancellationToken);
+
+            // 12. Envanter balık slotları (InventoryFishArea) boşluk kontrolü
+            BotLogger.LogInfo(clientInfo.Id, "[Başlangıç] InventoryFishArea boş slot sayısı kontrol ediliyor...");
+            await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
+
+            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+            {
+                if (fishAreaBmp != null)
+                {
+                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                    int emptyCount = emptySlots.Count;
+
+                    BotLogger.LogInfo(clientInfo.Id, $"[Başlangıç] InventoryFishArea boş slot sayısı: {emptyCount}");
+
+                    if (emptyCount == 0)
+                    {
+                        BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] InventoryFishArea içerisinde hiç boş slot kalmadı (EmptySlot: 0)!");
+
+                        var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
+
+                        // 1. Pişir seçeneği aktif balık var mı kontrol et ve pişir
+                        bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+
+                        // 2. Pişirme sonrası tekrar boş slot sayısını kontrol et
+                        int finalEmptyCount = 0;
+                        using (Bitmap? recheckBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+                        {
+                            if (recheckBmp != null)
+                            {
+                                var recheckSlots = TemplateConstants.MatchAll(recheckBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                                finalEmptyCount = recheckSlots.Count;
+                            }
+                        }
+
+                        BotLogger.LogInfo(clientInfo.Id, $"[Başlangıç] Pişirme sonrası güncel boş slot sayısı: {finalEmptyCount}");
+
+                        if (finalEmptyCount == 0)
+                        {
+                            BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] Boş slot açılamadı veya hiç boş slot kalmadı! Balık botu durduruluyor...");
+                            FishBotService.Instance.StopFishBot(clientInfo.Id);
+                            FishingExecutionFunction.BringMainFormToFront();
+                            return;
+                        }
+                        else
+                        {
+                            BotLogger.LogSuccess(clientInfo.Id, $"🎉 [Başlangıç] Pişirme işlemiyle {finalEmptyCount} adet boş slot açıldı.");
+                        }
+                    }
+                }
+            }
 
             BotLogger.LogSuccess(clientInfo.Id, $"Client #{clientInfo.Id} ({clientInfo.Name}) başlangıç sekansı başarıyla tamamlandı.");
         }

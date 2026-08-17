@@ -137,7 +137,7 @@ namespace Aether.Constants
             public const string YemiKaybettin = "waypoints/yemi_kaybettin.png";
             public const string SolucanTaktin = "waypoints/solucan_taktin.png";
             public const string AnkiYemi = "waypoints/anki_yemi.png";
-
+            public const string Tutamazsin = "waypoints/tutamazsin.png";
             public static readonly IReadOnlyList<string> All = new[]
             {
                 SolucanTaktin,
@@ -146,7 +146,8 @@ namespace Aether.Constants
                 AltinTonBaligi2,
                 AltinTonBaligi3,
                 YakalananBalik,
-                YemiKaybettin
+                YemiKaybettin,
+                Tutamazsin
             };
         }
 
@@ -214,6 +215,8 @@ namespace Aether.Constants
             public const string Balikci = "fisherman/balikci.png";
             public const string Balikci2 = "fisherman/balikci2.png";
             public const string MarketiAc = "fisherman/marketiAc.png";
+            public const string KampAtesiFloor = "fisherman/kampAtesiFloor.png";
+            public const string KampAtesiFloor2 = "fisherman/kampAtesiFloor2.png";
 
             public const string MarketTitle = "fisherman/marketTitle.png";
             public static readonly IReadOnlyList<string> All = new[]
@@ -221,7 +224,207 @@ namespace Aether.Constants
                 MarketTitle,
                 Balikci,
                 Balikci2,
-                MarketiAc
+                MarketiAc,
+                KampAtesiFloor,
+                KampAtesiFloor2
+            };
+        }
+
+        /// <summary>
+        /// Envanterdeki balık ve nesne simge şablonları (Fish Icon Templates).
+        /// </summary>
+        public static class FishIconTemplates
+        {
+            /// <summary>
+            /// Yaygın balık simgeleri (Common).
+            /// </summary>
+            public static class Common
+            {
+                public const string BuyukSudakBaligi = "fishIconTemplates/common/Büyük_Sudak_Balığı.png";
+                public const string DereAlabaligi = "fishIconTemplates/common/Dere_Alabalığı.png";
+                public const string GokkusagiAlabaligi = "fishIconTemplates/common/Gökkuşağı_Alabalığı.png";
+                public const string Hamsi = "fishIconTemplates/common/Hamsi.png";
+                public const string Levrek = "fishIconTemplates/common/Levrek.png";
+                public const string LuferBaligi = "fishIconTemplates/common/Lüfer_Balığı.png";
+                public const string NehirAlabaligi = "fishIconTemplates/common/Nehir_Alabalığı.png";
+                public const string OtSazani = "fishIconTemplates/common/Ot_Sazanı.png";
+                public const string RingaBaligi = "fishIconTemplates/common/Ringa_Balığı.png";
+                public const string Sazan = "fishIconTemplates/common/Sazan.png";
+                public const string SomBaligi = "fishIconTemplates/common/Som_Balığı.png";
+                public const string SudakBaligi = "fishIconTemplates/common/Sudak_Balığı.png";
+                public const string TekirBaligi = "fishIconTemplates/common/Tekir_Balığı.png";
+                public const string YayinBaligi = "fishIconTemplates/common/Yayın_Balığı.png";
+                public const string Zargana = "fishIconTemplates/common/Zargana.png";
+
+                public static readonly IReadOnlyList<string> All = new[]
+                {
+                    BuyukSudakBaligi,
+                    DereAlabaligi,
+                    GokkusagiAlabaligi,
+                    Hamsi,
+                    Levrek,
+                    LuferBaligi,
+                    NehirAlabaligi,
+                    OtSazani,
+                    RingaBaligi,
+                    Sazan,
+                    SomBaligi,
+                    SudakBaligi,
+                    TekirBaligi,
+                    YayinBaligi,
+                    Zargana
+                };
+            }
+
+            /// <summary>
+            /// Nadir balık simgeleri (Rare).
+            /// </summary>
+            public static class Rare
+            {
+                public const string AltinSudakBaligi = "fishIconTemplates/rare/Altın_Sudak_Balığı.png";
+                public const string AynaliSazan = "fishIconTemplates/rare/Aynalı_Sazan.png";
+                public const string KadifeBaligi = "fishIconTemplates/rare/Kadife_Balığı.png";
+                public const string KralYengeci = "fishIconTemplates/rare/Kral_Yengeci.png";
+                public const string KurbagaBaligi = "fishIconTemplates/rare/Kurbağa_Balığı.png";
+                public const string PalamutBaligi = "fishIconTemplates/rare/Palamut_Balığı.png";
+                public const string SevimliBalik = "fishIconTemplates/rare/Sevimli_Balık.png";
+                public const string YabbieYengeci = "fishIconTemplates/rare/Yabbie_Yengeci.png";
+                public const string YilanBasiBaligi = "fishIconTemplates/rare/Yılan_Başı_Balığı.png";
+
+                public static readonly IReadOnlyList<string> All = new[]
+                {
+                    AltinSudakBaligi,
+                    AynaliSazan,
+                    KadifeBaligi,
+                    KralYengeci,
+                    KurbagaBaligi,
+                    PalamutBaligi,
+                    SevimliBalik,
+                    YabbieYengeci,
+                    YilanBasiBaligi
+                };
+            }
+
+            /// <summary>
+            /// Diğer nesne ve eşya simgeleri (Others).
+            /// </summary>
+            public static class Others
+            {
+                public const string AltinAnahtar = "fishIconTemplates/others/Altın_Anahtar.png";
+                public const string AltinParcasi = "fishIconTemplates/others/Altın_Parçası.png";
+                public const string AltinYuzuk = "fishIconTemplates/others/Altın_Yüzük.png";
+                public const string BeyazSacBoyasi = "fishIconTemplates/others/Beyaz_Saç_Boyası.png";
+                public const string BilgeKralinEldiveni = "fishIconTemplates/others/Bilge_Kralın_Eldiveni.png";
+                public const string BilgeKralinSembolu = "fishIconTemplates/others/Bilge_Kralın_Sembolü.png";
+                public const string DenizKiziAnahtari = "fishIconTemplates/others/Deniz_Kızı_Anahtarı.png";
+                public const string GorunmezlikPelerini = "fishIconTemplates/others/Görünmezlik_Pelerini.png";
+                public const string GumusAnahtar = "fishIconTemplates/others/Gümüş_Anahtar.png";
+                public const string KahverengiSacBoyasi = "fishIconTemplates/others/Kahverengi_Saç_Boyası.png";
+                public const string KirmiziSacBoyasi = "fishIconTemplates/others/Kırmızı_Saç_Boyası.png";
+                public const string LucyninYuzugu = "fishIconTemplates/others/Lucy'nin_Yüzüğü.png";
+                public const string SacBoyasiTemizleyici = "fishIconTemplates/others/Saç_Boyası_Temizleyici.png";
+                public const string SariSacBoyasi = "fishIconTemplates/others/Sarı_Saç_Boyası.png";
+                public const string SiyahSacBoyasi = "fishIconTemplates/others/Siyah_Saç_Boyası.png";
+
+                /// <summary>
+                /// Ölü balıktan çıkan ganimet simgeleri (DeadFishLoot).
+                /// </summary>
+                public static class DeadFishLoot
+                {
+                    public const string BeyazInci = "fishIconTemplates/others/deadFishLoot/Beyaz_İnci.png";
+                    public const string Istiridye = "fishIconTemplates/others/deadFishLoot/İstiridye.png";
+                    public const string KankirmiziInci = "fishIconTemplates/others/deadFishLoot/Kankırmızı_İnci.png";
+                    public const string MaviInci = "fishIconTemplates/others/deadFishLoot/Mavi_İnci.png";
+                    public const string TasParcasi = "fishIconTemplates/others/deadFishLoot/Taş_Parçası.png";
+
+                    public static readonly IReadOnlyList<string> All = new[]
+                    {
+                        BeyazInci,
+                        Istiridye,
+                        KankirmiziInci,
+                        MaviInci,
+                        TasParcasi
+                    };
+                }
+
+                public static readonly IReadOnlyList<string> All = new[]
+                {
+                    AltinAnahtar,
+                    AltinParcasi,
+                    AltinYuzuk,
+                    BeyazSacBoyasi,
+                    BilgeKralinEldiveni,
+                    BilgeKralinSembolu,
+                    DenizKiziAnahtari,
+                    GorunmezlikPelerini,
+                    GumusAnahtar,
+                    KahverengiSacBoyasi,
+                    KirmiziSacBoyasi,
+                    LucyninYuzugu,
+                    SacBoyasiTemizleyici,
+                    SariSacBoyasi,
+                    SiyahSacBoyasi,
+                    DeadFishLoot.BeyazInci,
+                    DeadFishLoot.Istiridye,
+                    DeadFishLoot.KankirmiziInci,
+                    DeadFishLoot.MaviInci,
+                    DeadFishLoot.TasParcasi
+                };
+            }
+
+            public static readonly IReadOnlyList<string> All = new[]
+            {
+                // Common
+                Common.BuyukSudakBaligi,
+                Common.DereAlabaligi,
+                Common.GokkusagiAlabaligi,
+                Common.Hamsi,
+                Common.Levrek,
+                Common.LuferBaligi,
+                Common.NehirAlabaligi,
+                Common.OtSazani,
+                Common.RingaBaligi,
+                Common.Sazan,
+                Common.SomBaligi,
+                Common.SudakBaligi,
+                Common.TekirBaligi,
+                Common.YayinBaligi,
+                Common.Zargana,
+
+                // Rare
+                Rare.AltinSudakBaligi,
+                Rare.AynaliSazan,
+                Rare.KadifeBaligi,
+                Rare.KralYengeci,
+                Rare.KurbagaBaligi,
+                Rare.PalamutBaligi,
+                Rare.SevimliBalik,
+                Rare.YabbieYengeci,
+                Rare.YilanBasiBaligi,
+
+                // Others
+                Others.AltinAnahtar,
+                Others.AltinParcasi,
+                Others.AltinYuzuk,
+                Others.BeyazSacBoyasi,
+                Others.BilgeKralinEldiveni,
+                Others.BilgeKralinSembolu,
+                Others.DenizKiziAnahtari,
+                Others.GorunmezlikPelerini,
+                Others.GumusAnahtar,
+                Others.KahverengiSacBoyasi,
+                Others.KirmiziSacBoyasi,
+                Others.LucyninYuzugu,
+                Others.SacBoyasiTemizleyici,
+                Others.SariSacBoyasi,
+                Others.SiyahSacBoyasi,
+
+                // DeadFishLoot
+                Others.DeadFishLoot.BeyazInci,
+                Others.DeadFishLoot.Istiridye,
+                Others.DeadFishLoot.KankirmiziInci,
+                Others.DeadFishLoot.MaviInci,
+                Others.DeadFishLoot.TasParcasi
             };
         }
 
@@ -239,6 +442,7 @@ namespace Aether.Constants
             all.AddRange(WindowParts.All);
             all.AddRange(InventoryItems.All);
             all.AddRange(Fisherman.All);
+            all.AddRange(FishIconTemplates.All);
             AllTemplates = all.AsReadOnly();
         }
 
