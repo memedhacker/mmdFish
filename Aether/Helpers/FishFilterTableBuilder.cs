@@ -195,6 +195,7 @@ namespace Aether.Helpers
                 // Checkboxlar
                 Sunny.UI.UICheckBox? catchCheckBox = null;
                 Sunny.UI.UICheckBox? cookCheckBox = null;
+                Sunny.UI.UICheckBox? killCheckBox = null;
                 Sunny.UI.UICheckBox? dropCheckBox = null;
                 var otherCheckBoxes = new List<Sunny.UI.UICheckBox>();
 
@@ -227,6 +228,10 @@ namespace Aether.Helpers
                     if (col.HeaderText == "Pişir")
                     {
                         cookCheckBox = cb;
+                    }
+                    else if (col.HeaderText == "Öldür")
+                    {
+                        killCheckBox = cb;
                     }
                     else if (col.HeaderText == "Yere At")
                     {

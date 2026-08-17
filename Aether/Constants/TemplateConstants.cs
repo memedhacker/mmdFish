@@ -159,7 +159,10 @@ namespace Aether.Constants
             public const string EquipmentMenuTitle = "window_parts/EquipmentMenuTitle.png";
             public const string EquipmentMenuExitButton = "window_parts/EquipmentMenuExitButton.png";
             public const string FishingMenuTitle = "window_parts/FishingMenuTitle.png";
-
+            public const string SaleExitButton = "window_parts/SaleExitButton.png";
+            public const string DropItemQuestion = "window_parts/DropItemQuestion.png";
+            public const string DropItemQuestionYesButton = "window_parts/DropItemQuestionYesButton.png";
+            
             // Envanter Sayfaları (Kapalı & Açık/Aktif Şablonları)
             public const string Page1 = "window_parts/page1.png";
             public const string Page2 = "window_parts/page2.png";
@@ -183,7 +186,10 @@ namespace Aether.Constants
                 Page2Acik,
                 Page3Acik,
                 Page4Acik,
-                FishingMenuTitle
+                FishingMenuTitle,
+                SaleExitButton,
+                DropItemQuestion,
+                DropItemQuestionYesButton
             };
         }
 
@@ -372,6 +378,220 @@ namespace Aether.Constants
                 };
             }
 
+            /// <summary>
+            /// Ölü balık simgeleri (Dead Fishes).
+            /// </summary>
+            public static class DeadFishes
+            {
+                /// <summary>
+                /// Yaygın ölü balık simgeleri (Common Dead Fishes).
+                /// </summary>
+                public static class Common
+                {
+                    public const string OluBuyukSudakBaligi = "fishIconTemplates/common/Ölü_Büyük_Sudak_Balığı.png";
+                    public const string OluDereAlabaligi = "fishIconTemplates/common/Ölü_Dere_Alabalığı.png";
+                    public const string OluGokkusagiAlabaligi = "fishIconTemplates/common/Ölü_Gökkuşağı_Alabalığı.png";
+                    public const string OluHamsi = "fishIconTemplates/common/Ölü_Hamsi.png";
+                    public const string OluLevrek = "fishIconTemplates/common/Ölü_Levrek.png";
+                    public const string OluLuferBaligi = "fishIconTemplates/common/Ölü_Lüfer_Balığı.png";
+                    public const string OluNehirAlabaligi = "fishIconTemplates/common/Ölü_Nehir_Alabalığı.png";
+                    public const string OluOtSazani = "fishIconTemplates/common/Ölü_Ot_Sazanı.png";
+                    public const string OluRingaBaligi = "fishIconTemplates/common/Ölü_Ringa_Balığı.png";
+                    public const string OluSazan = "fishIconTemplates/common/Ölü_Sazan.png";
+                    public const string OluSomBaligi = "fishIconTemplates/common/Ölü_Som_Balığı.png";
+                    public const string OluSudakBaligi = "fishIconTemplates/common/Ölü_Sudak_Balığı.png";
+                    public const string OluTekirBaligi = "fishIconTemplates/common/Ölü_Tekir_Balığı.png";
+                    public const string OluYayinBaligi = "fishIconTemplates/common/Ölü_Yayın_Balığı.png";
+                    public const string OluZargana = "fishIconTemplates/common/Ölü_Zargana.png";
+
+                    public static readonly IReadOnlyList<string> All = new[]
+                    {
+                        OluBuyukSudakBaligi,
+                        OluDereAlabaligi,
+                        OluGokkusagiAlabaligi,
+                        OluHamsi,
+                        OluLevrek,
+                        OluLuferBaligi,
+                        OluNehirAlabaligi,
+                        OluOtSazani,
+                        OluRingaBaligi,
+                        OluSazan,
+                        OluSomBaligi,
+                        OluSudakBaligi,
+                        OluTekirBaligi,
+                        OluYayinBaligi,
+                        OluZargana
+                    };
+                }
+
+                /// <summary>
+                /// Nadir ölü balık simgeleri (Rare Dead Fishes).
+                /// </summary>
+                public static class Rare
+                {
+                    public const string OluAltinSudakBaligi = "fishIconTemplates/rare/Ölü_Altın_Sudak_Balığı.png";
+                    public const string OluAynaliSazan = "fishIconTemplates/rare/Ölü_Aynalı_Sazan.png";
+                    public const string OluKadifeBaligi = "fishIconTemplates/rare/Ölü_Kadife_Balığı.png";
+                    public const string OluKralYengeci = "fishIconTemplates/rare/Ölü_Kral_Yengeci.png";
+                    public const string OluKurbagaBaligi = "fishIconTemplates/rare/Ölü_Kurbağa_Balığı.png";
+                    public const string OluPalamutBaligi = "fishIconTemplates/rare/Ölü_Palamut_Balığı.png";
+                    public const string OluSevimliBalik = "fishIconTemplates/rare/Ölü_Sevimli_Balık.png";
+                    public const string OluYabbieYengeci = "fishIconTemplates/rare/Ölü_Yabbie_Yengeci.png";
+                    public const string OluYilanBasiBaligi = "fishIconTemplates/rare/Ölü_Yılan_Başı_Balığı.png";
+
+                    public static readonly IReadOnlyList<string> All = new[]
+                    {
+                        OluAltinSudakBaligi,
+                        OluAynaliSazan,
+                        OluKadifeBaligi,
+                        OluKralYengeci,
+                        OluKurbagaBaligi,
+                        OluPalamutBaligi,
+                        OluSevimliBalik,
+                        OluYabbieYengeci,
+                        OluYilanBasiBaligi
+                    };
+                }
+
+                public static readonly IReadOnlyList<string> All = new[]
+                {
+                    // Common
+                    Common.OluBuyukSudakBaligi,
+                    Common.OluDereAlabaligi,
+                    Common.OluGokkusagiAlabaligi,
+                    Common.OluHamsi,
+                    Common.OluLevrek,
+                    Common.OluLuferBaligi,
+                    Common.OluNehirAlabaligi,
+                    Common.OluOtSazani,
+                    Common.OluRingaBaligi,
+                    Common.OluSazan,
+                    Common.OluSomBaligi,
+                    Common.OluSudakBaligi,
+                    Common.OluTekirBaligi,
+                    Common.OluYayinBaligi,
+                    Common.OluZargana,
+
+                    // Rare
+                    Rare.OluAltinSudakBaligi,
+                    Rare.OluAynaliSazan,
+                    Rare.OluKadifeBaligi,
+                    Rare.OluKralYengeci,
+                    Rare.OluKurbagaBaligi,
+                    Rare.OluPalamutBaligi,
+                    Rare.OluSevimliBalik,
+                    Rare.OluYabbieYengeci,
+                    Rare.OluYilanBasiBaligi
+                };
+            }
+
+            /// <summary>
+            /// Izgara balık simgeleri (Grilled Fishes).
+            /// </summary>
+            public static class GrilledFishes
+            {
+                /// <summary>
+                /// Yaygın ızgara balık simgeleri (Common Grilled Fishes).
+                /// </summary>
+                public static class Common
+                {
+                    public const string IzgaraBuyukSudakBaligi = "fishIconTemplates/common/Izgara_Büyük_Sudak_Balığı.png";
+                    public const string IzgaraDereAlabaligi = "fishIconTemplates/common/Izgara_Dere_Alabalığı.png";
+                    public const string IzgaraGokkusagiAlabaligi = "fishIconTemplates/common/Izgara_Gökkuşağı_Alabalığı.png";
+                    public const string IzgaraHamsi = "fishIconTemplates/common/Izgara_Hamsi.png";
+                    public const string IzgaraLevrek = "fishIconTemplates/common/Izgara_Levrek.png";
+                    public const string IzgaraLuferBaligi = "fishIconTemplates/common/Izgara_Lüfer_Balığı.png";
+                    public const string IzgaraNehirAlabaligi = "fishIconTemplates/common/Izgara_Nehir_Alabalığı.png";
+                    public const string IzgaraOtSazani = "fishIconTemplates/common/Izgara_Ot_Sazanı.png";
+                    public const string IzgaraRingaBaligi = "fishIconTemplates/common/Izgara_Ringa_Balığı.png";
+                    public const string IzgaraSazan = "fishIconTemplates/common/Izgara_Sazan.png";
+                    public const string IzgaraSomBaligi = "fishIconTemplates/common/Izgara_Som_Balığı.png";
+                    public const string IzgaraSudakBaligi = "fishIconTemplates/common/Izgara_Sudak_Balığı.png";
+                    public const string IzgaraTekirBaligi = "fishIconTemplates/common/Izgara_Tekir_Balığı.png";
+                    public const string IzgaraYayinBaligi = "fishIconTemplates/common/Izgara_Yayın_Balığı.png";
+                    public const string IzgaraZargana = "fishIconTemplates/common/Izgara_Zargana.png";
+
+                    public static readonly IReadOnlyList<string> All = new[]
+                    {
+                        IzgaraBuyukSudakBaligi,
+                        IzgaraDereAlabaligi,
+                        IzgaraGokkusagiAlabaligi,
+                        IzgaraHamsi,
+                        IzgaraLevrek,
+                        IzgaraLuferBaligi,
+                        IzgaraNehirAlabaligi,
+                        IzgaraOtSazani,
+                        IzgaraRingaBaligi,
+                        IzgaraSazan,
+                        IzgaraSomBaligi,
+                        IzgaraSudakBaligi,
+                        IzgaraTekirBaligi,
+                        IzgaraYayinBaligi,
+                        IzgaraZargana
+                    };
+                }
+
+                /// <summary>
+                /// Nadir ızgara balık simgeleri (Rare Grilled Fishes).
+                /// </summary>
+                public static class Rare
+                {
+                    public const string IzgaraAltinSudakBaligi = "fishIconTemplates/rare/Izgara_Altın_Sudak_Balığı.png";
+                    public const string IzgaraAynaliSazan = "fishIconTemplates/rare/Izgara_Aynalı_Sazan.png";
+                    public const string IzgaraKadifeBaligi = "fishIconTemplates/rare/Izgara_Kadife_Balığı.png";
+                    public const string IzgaraKralYengeci = "fishIconTemplates/rare/Izgara_Kral_Yengeci.png";
+                    public const string IzgaraKurbagaBaligi = "fishIconTemplates/rare/Izgara_Kurbağa_Balığı.png";
+                    public const string IzgaraPalamutBaligi = "fishIconTemplates/rare/Izgara_Palamut_Balığı.png";
+                    public const string IzgaraSevimliBalik = "fishIconTemplates/rare/Izgara_Sevimli_Balık.png";
+                    public const string IzgaraYabbieYengeci = "fishIconTemplates/rare/Izgara_Yabbie_Yengeci.png";
+                    public const string IzgaraYilanBasiBaligi = "fishIconTemplates/rare/Izgara_Yılan_Başı_Balığı.png";
+
+                    public static readonly IReadOnlyList<string> All = new[]
+                    {
+                        IzgaraAltinSudakBaligi,
+                        IzgaraAynaliSazan,
+                        IzgaraKadifeBaligi,
+                        IzgaraKralYengeci,
+                        IzgaraKurbagaBaligi,
+                        IzgaraPalamutBaligi,
+                        IzgaraSevimliBalik,
+                        IzgaraYabbieYengeci,
+                        IzgaraYilanBasiBaligi
+                    };
+                }
+
+                public static readonly IReadOnlyList<string> All = new[]
+                {
+                    // Common
+                    Common.IzgaraBuyukSudakBaligi,
+                    Common.IzgaraDereAlabaligi,
+                    Common.IzgaraGokkusagiAlabaligi,
+                    Common.IzgaraHamsi,
+                    Common.IzgaraLevrek,
+                    Common.IzgaraLuferBaligi,
+                    Common.IzgaraNehirAlabaligi,
+                    Common.IzgaraOtSazani,
+                    Common.IzgaraRingaBaligi,
+                    Common.IzgaraSazan,
+                    Common.IzgaraSomBaligi,
+                    Common.IzgaraSudakBaligi,
+                    Common.IzgaraTekirBaligi,
+                    Common.IzgaraYayinBaligi,
+                    Common.IzgaraZargana,
+
+                    // Rare
+                    Rare.IzgaraAltinSudakBaligi,
+                    Rare.IzgaraAynaliSazan,
+                    Rare.IzgaraKadifeBaligi,
+                    Rare.IzgaraKralYengeci,
+                    Rare.IzgaraKurbagaBaligi,
+                    Rare.IzgaraPalamutBaligi,
+                    Rare.IzgaraSevimliBalik,
+                    Rare.IzgaraYabbieYengeci,
+                    Rare.IzgaraYilanBasiBaligi
+                };
+            }
+
             public static readonly IReadOnlyList<string> All = new[]
             {
                 // Common
@@ -402,6 +622,62 @@ namespace Aether.Constants
                 Rare.YabbieYengeci,
                 Rare.YilanBasiBaligi,
 
+                // DeadFishes (Common)
+                DeadFishes.Common.OluBuyukSudakBaligi,
+                DeadFishes.Common.OluDereAlabaligi,
+                DeadFishes.Common.OluGokkusagiAlabaligi,
+                DeadFishes.Common.OluHamsi,
+                DeadFishes.Common.OluLevrek,
+                DeadFishes.Common.OluLuferBaligi,
+                DeadFishes.Common.OluNehirAlabaligi,
+                DeadFishes.Common.OluOtSazani,
+                DeadFishes.Common.OluRingaBaligi,
+                DeadFishes.Common.OluSazan,
+                DeadFishes.Common.OluSomBaligi,
+                DeadFishes.Common.OluSudakBaligi,
+                DeadFishes.Common.OluTekirBaligi,
+                DeadFishes.Common.OluYayinBaligi,
+                DeadFishes.Common.OluZargana,
+
+                // DeadFishes (Rare)
+                DeadFishes.Rare.OluAltinSudakBaligi,
+                DeadFishes.Rare.OluAynaliSazan,
+                DeadFishes.Rare.OluKadifeBaligi,
+                DeadFishes.Rare.OluKralYengeci,
+                DeadFishes.Rare.OluKurbagaBaligi,
+                DeadFishes.Rare.OluPalamutBaligi,
+                DeadFishes.Rare.OluSevimliBalik,
+                DeadFishes.Rare.OluYabbieYengeci,
+                DeadFishes.Rare.OluYilanBasiBaligi,
+
+                // GrilledFishes (Common)
+                GrilledFishes.Common.IzgaraBuyukSudakBaligi,
+                GrilledFishes.Common.IzgaraDereAlabaligi,
+                GrilledFishes.Common.IzgaraGokkusagiAlabaligi,
+                GrilledFishes.Common.IzgaraHamsi,
+                GrilledFishes.Common.IzgaraLevrek,
+                GrilledFishes.Common.IzgaraLuferBaligi,
+                GrilledFishes.Common.IzgaraNehirAlabaligi,
+                GrilledFishes.Common.IzgaraOtSazani,
+                GrilledFishes.Common.IzgaraRingaBaligi,
+                GrilledFishes.Common.IzgaraSazan,
+                GrilledFishes.Common.IzgaraSomBaligi,
+                GrilledFishes.Common.IzgaraSudakBaligi,
+                GrilledFishes.Common.IzgaraTekirBaligi,
+                GrilledFishes.Common.IzgaraYayinBaligi,
+                GrilledFishes.Common.IzgaraZargana,
+
+                // GrilledFishes (Rare)
+                GrilledFishes.Rare.IzgaraAltinSudakBaligi,
+                GrilledFishes.Rare.IzgaraAynaliSazan,
+                GrilledFishes.Rare.IzgaraKadifeBaligi,
+                GrilledFishes.Rare.IzgaraKralYengeci,
+                GrilledFishes.Rare.IzgaraKurbagaBaligi,
+                GrilledFishes.Rare.IzgaraPalamutBaligi,
+                GrilledFishes.Rare.IzgaraSevimliBalik,
+                GrilledFishes.Rare.IzgaraYabbieYengeci,
+                GrilledFishes.Rare.IzgaraYilanBasiBaligi,
+
                 // Others
                 Others.AltinAnahtar,
                 Others.AltinParcasi,
@@ -426,6 +702,22 @@ namespace Aether.Constants
                 Others.DeadFishLoot.MaviInci,
                 Others.DeadFishLoot.TasParcasi
             };
+        }
+
+        /// <summary>
+        /// Ölü balık şablonları üst düzey erişim (Dead Fishes).
+        /// </summary>
+        public static class DeadFishes
+        {
+            public static readonly IReadOnlyList<string> All = FishIconTemplates.DeadFishes.All;
+        }
+
+        /// <summary>
+        /// Izgara balık şablonları üst düzey erişim (Grilled Fishes).
+        /// </summary>
+        public static class GrilledFishes
+        {
+            public static readonly IReadOnlyList<string> All = FishIconTemplates.GrilledFishes.All;
         }
 
         /// <summary>

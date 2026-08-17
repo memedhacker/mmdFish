@@ -95,6 +95,9 @@ namespace Aether.Constants
         public static readonly WindowRegion CircleColorControlArea2= new WindowRegion(213, 119, 265, 133);
         public static readonly WindowRegion CircleColorControlArea3= new WindowRegion(173, 143, 186, 210);
         public static readonly WindowRegion CircleColorControlArea4= new WindowRegion(292, 199, 312, 221);
+        public static readonly WindowRegion HotSaleBox = new WindowRegion(103, 406, 216, 433);
+        public static readonly WindowRegion GoldenTonRanAwayOkButton = new WindowRegion(385, 241, 419, 257);
+        public static readonly WindowRegion DropItemQuestionArea = new WindowRegion(270, 256, 530, 342);
         /// <summary>
         /// Test pencerelerinde ve arayüz ComboBox'larında hızlı seçim yapabilmek için tüm tanımlı sabit bölgelerin listesi.
         /// </summary>
@@ -117,11 +120,14 @@ namespace Aether.Constants
             ("💬 FishingMenuExitButtonPosition (360, 57 -> 376, 75)", FishingMenuExitButtonPosition),
             ("💬 GoldenTonFishReleaseButtonPosition (362, 230 -> 436, 249)", GoldenTonFishReleaseButtonPosition),
             ("💬 FishCircleArea (168, 121 -> 308, 264)", FishCircleArea),
-            
+            ("💬 HotSaleBox (103, 406 -> 216, 433)", HotSaleBox),
             ("💬 CircleColorControlArea1 (205, 246 -> 280, 257)", CircleColorControlArea1),
             ("💬 CircleColorControlArea2 (213, 119 -> 265, 133)", CircleColorControlArea2),
             ("💬 CircleColorControlArea3 (173, 143 -> 186, 210)", CircleColorControlArea3),
-            ("💬 CircleColorControlArea4 (292, 199 -> 312, 221)", CircleColorControlArea4)
+            ("💬 CircleColorControlArea4 (292, 199 -> 312, 221)", CircleColorControlArea4) ,
+            ("💬 GoldenTonRanAwayOkButton (385, 241 -> 419, 257)", GoldenTonRanAwayOkButton) ,
+            ("💬 DropItemQuestionArea (270, 256 -> 530, 342)", DropItemQuestionArea) 
+        
         };
 
         // 📍 Gelecekte eklenecek yeni oyun bölgeleri buraya tanımlanabilir:

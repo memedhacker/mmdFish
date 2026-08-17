@@ -171,6 +171,9 @@ namespace Aether.Functions
 
             while (!cancellationToken.IsCancellationRequested)
             {
+                // ChatArea taraması yapmadan önce HotSaleBox kontrolü
+                await CloseHotSalePopupIfExistsAsync(clientInfo, cancellationToken);
+
                 using (Bitmap? chatBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.ChatBoxPosition))
                 {
                     if (chatBmp != null)
@@ -309,9 +312,10 @@ namespace Aether.Functions
 
             if (matchedWaypoint != null && (matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.YakalananBalik || matchedWaypoint.TemplateName.Equals("yakalanan_balik", StringComparison.OrdinalIgnoreCase)))
             {
-                BotLogger.LogInfo(clientInfo.Id, "🎣 'YakalananBalik' waypoint'i tespit edildi. 100ms bekleniyor ve InventoryFishArea boş slot sayısı kontrol ediliyor...");
+                BotLogger.LogInfo(clientInfo.Id, "🎣 'YakalananBalik' waypoint'i tespit edildi. 100ms bekleniyor...");
                 await Task.Delay(100, cancellationToken);
 
+                // InventoryFishArea boş slot sayısını kontrol et
                 using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
                 {
                     if (fishAreaBmp != null)
@@ -534,6 +538,9 @@ namespace Aether.Functions
             {
                 while (!phaseCts.Token.IsCancellationRequested)
                 {
+                    // ChatArea taraması yapmadan önce HotSaleBox kontrolü
+                    await CloseHotSalePopupIfExistsAsync(clientInfo, phaseCts.Token);
+
                     using (Bitmap? chatBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.ChatBoxPosition))
                     {
                         if (chatBmp != null)
@@ -560,6 +567,41 @@ namespace Aether.Functions
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// ChatArea taraması yapılmadan önce HotSaleBox alanında SaleExitButton şablonunu arar.
+        /// Eğer bulunursa pencereyi kapatmak için butonun üzerine hızlıca tıklar.
+        /// </summary>
+        public static async Task CloseHotSalePopupIfExistsAsync(ClientInfo clientInfo, CancellationToken cancellationToken)
+        {
+            if (clientInfo == null || clientInfo.Handle == IntPtr.Zero || cancellationToken.IsCancellationRequested)
+                return;
+
+            try
+            {
+                using (Bitmap? hotSaleBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.HotSaleBox))
+                {
+                    if (hotSaleBmp != null)
+                    {
+                        var match = TemplateConstants.Match(hotSaleBmp, TemplateConstants.WindowParts.SaleExitButton, threshold: 0.70);
+                        if (match.IsSuccess)
+                        {
+                            int targetLocalX = RegionConstants.HotSaleBox.StartX + match.Location.X + (match.Bounds.Width / 2);
+                            int targetLocalY = RegionConstants.HotSaleBox.StartY + match.Location.Y + (match.Bounds.Height / 2);
+
+                            BotLogger.LogInfo(clientInfo.Id, $"🔥 HotSaleBox içinde 'SaleExitButton' tespit edildi ({targetLocalX}, {targetLocalY}). Kapatmak için hızlıca tıklanıyor...");
+
+                            await HumanMouseService.Instance.LeftClickLocalAsync(clientInfo.Handle, targetLocalX, targetLocalY, fastMove: true, cancellationToken: cancellationToken);
+                            await Task.Delay(Random.Shared.Next(80, 150), cancellationToken);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BotLogger.LogWarning(clientInfo.Id, $"HotSaleBox kontrolünde hata: {ex.Message}");
+            }
         }
 
         /// <summary>

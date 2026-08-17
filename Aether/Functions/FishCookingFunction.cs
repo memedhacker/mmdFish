@@ -223,7 +223,8 @@ namespace Aether.Functions
             {
                 if (fishAreaBmp == null) return matches;
 
-                var allFound = TemplateConstants.FindAllMatches(fishAreaBmp, cookableTemplates, threshold: 0.80);
+                // Canlı ve ölü balıkların renk farkını koruyarak sadece doğru balıkları pişirmek için useGrayscale: false kullanılır
+                var allFound = TemplateConstants.FindAllMatches(fishAreaBmp, cookableTemplates, threshold: 0.80, useGrayscale: false);
 
                 // Çakışan mükerrer tespitleri ayıkla
                 foreach (var m in allFound)
