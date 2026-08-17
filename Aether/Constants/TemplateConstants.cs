@@ -26,11 +26,13 @@ namespace Aether.Constants
         {
             public const string MinikBalik = "autopass/minik_balik.png";
             public const string TatliSuKaridesi = "autopass/tatli_su_karidesi.png";
+            public const string BiseyTakildi = "autopass/bisey_takildi.png";
 
             public static readonly IReadOnlyList<string> All = new[]
             {
                 MinikBalik,
-                TatliSuKaridesi
+                TatliSuKaridesi,
+                BiseyTakildi
             };
         }
 
@@ -131,7 +133,6 @@ namespace Aether.Constants
             public const string AltinTonBaligi1 = "waypoints/altin_ton_baligi1.png";
             public const string AltinTonBaligi2 = "waypoints/altin_ton_baligi2.png";
             public const string AltinTonBaligi3 = "waypoints/altin_ton_baligi3.png";
-            public const string BiseyTakildi = "waypoints/bisey_takildi.png";
             public const string YakalananBalik = "waypoints/yakalanan_balik.png";
             public const string YemiKaybettin = "waypoints/yemi_kaybettin.png";
             public const string SolucanTaktin = "waypoints/solucan_taktin.png";
@@ -144,7 +145,6 @@ namespace Aether.Constants
                 AltinTonBaligi1,
                 AltinTonBaligi2,
                 AltinTonBaligi3,
-                BiseyTakildi,
                 YakalananBalik,
                 YemiKaybettin
             };
@@ -157,6 +157,7 @@ namespace Aether.Constants
         {
             public const string EquipmentMenuTitle = "window_parts/EquipmentMenuTitle.png";
             public const string EquipmentMenuExitButton = "window_parts/EquipmentMenuExitButton.png";
+            public const string FishingMenuTitle = "window_parts/FishingMenuTitle.png";
 
             // Envanter Sayfaları (Kapalı & Açık/Aktif Şablonları)
             public const string Page1 = "window_parts/page1.png";
@@ -180,7 +181,8 @@ namespace Aether.Constants
                 Page1Acik,
                 Page2Acik,
                 Page3Acik,
-                Page4Acik
+                Page4Acik,
+                FishingMenuTitle
             };
         }
 
@@ -562,6 +564,57 @@ namespace Aether.Constants
             using (Mat srcMat = BitmapToMat(sourceBitmap))
             {
                 return FindBestMatch(srcMat, candidateTemplatePaths, minThreshold, useGrayscale);
+            }
+        }
+
+        /// <summary>
+        /// Verilen şablon listesi arasında kaynak görselde eşleşen (threshold'u geçen) tüm sonuçlar arasından
+        /// yatay eksende EN SOLDA (X koordinatı en küçük olan) eşleşmeyi döndürür.
+        /// ChatBox üzerindeki metin okuma ve birden fazla şablonun aynı anda eşleştiği durumlarda birincil (en soldaki) eşleşmeyi seçmek için kullanılır.
+        /// </summary>
+        public static TemplateMatchResult? FindLeftmostMatch(
+            Mat sourceMat,
+            IEnumerable<string> candidateTemplatePaths,
+            double minThreshold = 0.80,
+            bool useGrayscale = true)
+        {
+            if (sourceMat == null || sourceMat.Empty() || candidateTemplatePaths == null)
+                return null;
+
+            var matches = new List<TemplateMatchResult>();
+
+            foreach (var templatePath in candidateTemplatePaths)
+            {
+                var result = Match(sourceMat, templatePath, minThreshold, useGrayscale);
+                if (result.IsSuccess)
+                {
+                    matches.Add(result);
+                }
+            }
+
+            if (matches.Count == 0) return null;
+
+            // En soldaki (X koordinatı en küçük) eşleşmeyi seç; X eşitse en yüksek benzerlik puanına sahip olanı seç
+            return matches
+                .OrderBy(m => m.Location.X)
+                .ThenByDescending(m => m.Confidence)
+                .First();
+        }
+
+        /// <summary>
+        /// Verilen şablon listesi arasında kaynak Bitmap üzerinde yatay eksende en soldaki eşleşmeyi bulur.
+        /// </summary>
+        public static TemplateMatchResult? FindLeftmostMatch(
+            Bitmap sourceBitmap,
+            IEnumerable<string> candidateTemplatePaths,
+            double minThreshold = 0.80,
+            bool useGrayscale = true)
+        {
+            if (sourceBitmap == null) return null;
+
+            using (Mat srcMat = BitmapToMat(sourceBitmap))
+            {
+                return FindLeftmostMatch(srcMat, candidateTemplatePaths, minThreshold, useGrayscale);
             }
         }
 

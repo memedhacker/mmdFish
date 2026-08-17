@@ -88,7 +88,8 @@ namespace Aether.Constants
         public static readonly WindowRegion FisherManSearchArea = new WindowRegion(0, 4, 644, 555);
         public static readonly WindowRegion NewDMPosition = new WindowRegion(706, 159, 799, 440);
         public static readonly WindowRegion MapPosition = new WindowRegion(644, 8, 799, 145);
-
+        public static readonly WindowRegion FishingMenuExitButtonPosition = new WindowRegion(360, 57, 376, 75);
+        public static readonly WindowRegion GoldenTonFishReleaseButtonPosition = new WindowRegion(362, 230, 436, 249);
         /// <summary>
         /// Test pencerelerinde ve arayüz ComboBox'larında hızlı seçim yapabilmek için tüm tanımlı sabit bölgelerin listesi.
         /// </summary>
@@ -107,7 +108,9 @@ namespace Aether.Constants
             ("💬 MarketExitButtonPosition (558, 20 -> 577, 36)", MarketExitButtonPosition),
             ("💬 FisherManSearchArea (0, 4 -> 644, 555)", FisherManSearchArea),
             ("💬 NewDMPosition (706, 159 -> 799, 440)", NewDMPosition),
-            ("💬 MapPosition (644, 8 -> 799, 145)", MapPosition)
+            ("💬 MapPosition (644, 8 -> 799, 145)", MapPosition),
+            ("💬 FishingMenuExitButtonPosition (360, 57 -> 376, 75)", FishingMenuExitButtonPosition),
+            ("💬 GoldenTonFishReleaseButtonPosition (362, 230 -> 436, 249)", GoldenTonFishReleaseButtonPosition)
         };
 
         // 📍 Gelecekte eklenecek yeni oyun bölgeleri buraya tanımlanabilir:

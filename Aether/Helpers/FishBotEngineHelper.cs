@@ -96,31 +96,13 @@ namespace Aether.Helpers
             // 2. İstemcinin kayıtlı balık botu ayarlarını al
             var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
 
-            // 📍 [BURAYA YENİ DÖNGÜ GÖREVLERİ / KODLARI EKLENEBİLİR]
-            //
-            // ÖRNEK: Belirli bir koordinat aralığından güvenli DXGI ekran görüntüsü alma:
-            // using Bitmap? regionBmp = WindowRegionCaptureHelper.CaptureRegion(
-            //     clientInfo.Handle, startX: 100, startY: 100, endX: 350, endY: 350);
-            //
-            // if (regionBmp != null)
-            // {
-            //     // 1.1 Tekil şablon arama (Örn: Balık tutuldu yazısı):
-            //     var match = TemplateConstants.Match(regionBmp, TemplateConstants.Waypoints.BiseyTakildi, threshold: 0.85);
-            //     if (match.IsSuccess)
-            //     {
-            //         Debug.WriteLine($"[Client #{clientInfo.Id}] Bişey takıldı! Konum: {match.Location}, Güven: %{match.Confidence * 100:F1}");
-            //     }
-            //
-            //     // 1.2 En iyi eşleşen balığı bulma:
-            //     var bestFish = TemplateConstants.FindBestMatch(regionBmp, TemplateConstants.FishNames.All, minThreshold: 0.80);
-            //     if (bestFish != null)
-            //     {
-            //         Debug.WriteLine($"[Client #{clientInfo.Id}] Eşleşen Balık: {bestFish.TemplateName} (Güven: %{bestFish.Confidence * 100:F1})");
-            //     }
-            // }
+            // 3. Asıl balık tutma döngü adımını çalıştır (Yem sağ tıkla -> Space bas -> ChatBox tara)
+            await FishingExecutionFunction.ExecuteFishingCycleAsync(clientInfo, cancellationToken);
 
-            // İptal isteğine duyarlı bekleme (Timer ve Status güncellemeleri arka planda akmaya devam eder)
-            int delayMs = settings.FishingSpeedMinMs > 0 ? settings.FishingSpeedMinMs : 500;
+            // Döngüler arası oltalama hızı aralığında dinamik rastgele bekleme
+            int minSpeed = Math.Max(30, settings.FishingSpeedMinMs);
+            int maxSpeed = Math.Max(minSpeed, settings.FishingSpeedMaxMs);
+            int delayMs = Random.Shared.Next(minSpeed, maxSpeed + 1);
             await Task.Delay(delayMs, cancellationToken);
         }
     }
