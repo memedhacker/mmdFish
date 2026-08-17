@@ -194,6 +194,8 @@ namespace Aether.Helpers
 
                 // Checkboxlar
                 Sunny.UI.UICheckBox? catchCheckBox = null;
+                Sunny.UI.UICheckBox? cookCheckBox = null;
+                Sunny.UI.UICheckBox? dropCheckBox = null;
                 var otherCheckBoxes = new List<Sunny.UI.UICheckBox>();
 
                 foreach (var col in cfg.Columns)
@@ -221,6 +223,35 @@ namespace Aether.Helpers
                     {
                         otherCheckBoxes.Add(cb);
                     }
+
+                    if (col.HeaderText == "Pişir")
+                    {
+                        cookCheckBox = cb;
+                    }
+                    else if (col.HeaderText == "Yere At")
+                    {
+                        dropCheckBox = cb;
+                    }
+                }
+
+                // Karşılıklı Dışlama: "Pişir" ve "Yere At" aynı anda seçilemez
+                if (cookCheckBox != null && dropCheckBox != null)
+                {
+                    cookCheckBox.ValueChanged += (s, value) =>
+                    {
+                        if (value && !FishBotPageBinder.IsBinding)
+                        {
+                            dropCheckBox.Checked = false;
+                        }
+                    };
+
+                    dropCheckBox.ValueChanged += (s, value) =>
+                    {
+                        if (value && !FishBotPageBinder.IsBinding)
+                        {
+                            cookCheckBox.Checked = false;
+                        }
+                    };
                 }
 
                 if (catchCheckBox != null && otherCheckBoxes.Count > 0)

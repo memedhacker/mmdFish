@@ -30,6 +30,18 @@ namespace Aether.Models
         public void SetCheck(string columnKey, bool value)
         {
             ColumnChecks[columnKey] = value;
+            if (value)
+            {
+                // Karşılıklı dışlama: Pişir seçiliyse Yere At kapatılır, Yere At seçiliyse Pişir kapatılır
+                if (columnKey == "Pişir")
+                {
+                    ColumnChecks["Yere At"] = false;
+                }
+                else if (columnKey == "Yere At")
+                {
+                    ColumnChecks["Pişir"] = false;
+                }
+            }
         }
     }
 }
