@@ -27,6 +27,7 @@ namespace Aether.Services
                 byte twoScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_2, 0);
 
                 // --- 1. KEZ CTRL + G ---
+                BotLogger.LogKey(0, "CTRL + G");
                 Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);
                 Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);
                 await Task.Delay(35);
@@ -36,6 +37,7 @@ namespace Aether.Services
                 await Task.Delay(_random.Next(300, 350));
 
                 // --- 2. KEZ CTRL + G ---
+                BotLogger.LogKey(0, "CTRL + G");
                 Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);
                 Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);
                 await Task.Delay(35);
@@ -45,6 +47,7 @@ namespace Aether.Services
                 await Task.Delay(_random.Next(150, 200));
 
                 // --- 1 TUŞU ---
+                BotLogger.LogKey(0, "1");
                 Win32Native.keybd_event((byte)Win32Native.VK_1, oneScan, 0, 0);
                 await Task.Delay(35);
                 Win32Native.keybd_event((byte)Win32Native.VK_1, oneScan, Win32Native.KEYEVENTF_KEYUP, 0);
@@ -52,6 +55,7 @@ namespace Aether.Services
                 await Task.Delay(_random.Next(150, 200));
 
                 // --- 2 TUŞU ---
+                BotLogger.LogKey(0, "2");
                 Win32Native.keybd_event((byte)Win32Native.VK_2, twoScan, 0, 0);
                 await Task.Delay(35);
                 Win32Native.keybd_event((byte)Win32Native.VK_2, twoScan, Win32Native.KEYEVENTF_KEYUP, 0);

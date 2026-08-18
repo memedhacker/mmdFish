@@ -155,13 +155,14 @@ namespace Aether.Functions
 
                     if (emptyCount == 0)
                     {
-                        BotLogger.LogWarning(clientInfo.Id, "🛑 Çanta tamamen dolmuş (InventoryFishArea boş slot: 0)! Slotlar üzerinde fare gezdiriliyor...");
+                        BotLogger.LogWarning(clientInfo.Id, "🛑 Çanta tamamen dolmuş (InventoryFishArea boş slot: 0)!");
 
-                        // Yatayda 5, dikeyde 7 slot (35 slot) üzerinde fareyi yukarı-aşağı gezdir
-                        await HoverAcrossInventoryFishAreaAsync(clientInfo.Handle, cancellationToken);
+                        // 1. Pişirme işleminden önce öldürülecek balıklar varsa öldür
+                        BotLogger.LogInfo(clientInfo.Id, "⚔️ Çanta dolduğu için önce balık öldürme süreci başlatılıyor...");
+                        await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
 
-                        // Fare gezdirildikten sonra pişirme fonksiyonunu çalıştır
-                        BotLogger.LogInfo(clientInfo.Id, "🔥 Çanta dolduğu için balık pişirme süreci başlatılıyor...");
+                        // 2. Ardından balık pişirme sürecini çalıştır
+                        BotLogger.LogInfo(clientInfo.Id, "🔥 Ardından balık pişirme süreci başlatılıyor...");
                         bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
 
                         if (!cookedAny)
@@ -360,13 +361,14 @@ namespace Aether.Functions
 
                         if (emptyCount == 0)
                         {
-                            BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde boş slot kalmadı (EmptySlot: 0)! Slotlar üzerinde fare gezdiriliyor...");
+                            BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde boş slot kalmadı (EmptySlot: 0)!");
 
-                            // Yatayda 5, dikeyde 7 slot (35 slot) üzerinde fareyi yukarı-aşağı gezdir
-                            await HoverAcrossInventoryFishAreaAsync(clientInfo.Handle, cancellationToken);
+                            // 1. Pişirme işleminden önce öldürülecek balıklar varsa öldür
+                            BotLogger.LogInfo(clientInfo.Id, "⚔️ Çanta dolduğu için önce balık öldürme süreci başlatılıyor...");
+                            await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
 
-                            // 1. Pişirme sürecini çalıştır
-                            BotLogger.LogInfo(clientInfo.Id, "🔥 Çanta dolduğu için balık pişirme süreci başlatılıyor...");
+                            // 2. Ardından pişirme sürecini çalıştır
+                            BotLogger.LogInfo(clientInfo.Id, "🔥 Ardından balık pişirme süreci başlatılıyor...");
                             bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
 
                             if (!cookedAny)
@@ -459,6 +461,7 @@ namespace Aether.Functions
             byte gScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_G, 0);
 
             // --- 1. KEZ CTRL + G ---
+            BotLogger.LogKey(0, "CTRL + G (Binek Animasyon İptali - 1/2)");
             Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);
             Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);
             await Task.Delay(35, cancellationToken);
@@ -469,6 +472,7 @@ namespace Aether.Functions
             await Task.Delay(intervalDelayMs, cancellationToken);
 
             // --- 2. KEZ CTRL + G ---
+            BotLogger.LogKey(0, "CTRL + G (Binek Animasyon İptali - 2/2)");
             Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);
             Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);
             await Task.Delay(35, cancellationToken);

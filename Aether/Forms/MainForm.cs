@@ -275,12 +275,11 @@ namespace Aether.Forms
                 }
                 else if (hotkeyId == HOTKEY_START_ALL_F2)
                 {
-                    // F2 Toplu Başlatma: HWND bağlı olan tüm istemcileri başlat ve uygulamayı küçült
+                    // F2 Toplu Başlatma: HWND bağlı olan tüm istemcileri başlat
                     int startedCount = Services.FishBotService.Instance.StartAllBotsWithHwnd();
                     if (startedCount > 0)
                     {
-                        WindowState = FormWindowState.Minimized;
-                        System.Diagnostics.Debug.WriteLine($"[MainForm] 🚀 F2 tuşuna basıldı! HWND bağlı {startedCount} istemci başlatıldı ve uygulama küçültüldü.");
+                        System.Diagnostics.Debug.WriteLine($"[MainForm] 🚀 F2 tuşuna basıldı! HWND bağlı {startedCount} istemci başlatıldı.");
                     }
                     else
                     {

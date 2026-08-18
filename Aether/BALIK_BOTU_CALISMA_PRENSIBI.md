@@ -80,17 +80,18 @@ Eğer `BuyWormEnabled` veya `BuyCampfireEnabled` ayarları açıksa:
 
 ## 4. Asıl Balık Tutma Döngüsü (`FishingExecutionFunction.cs`)
 
-Her bir balık tutma döngüsünde aşağıdaki 8 adım kesintisiz olarak yürütülür:
+Her bir balık tutma döngüsünde aşağıdaki adımlar kesintisiz olarak yürütülür:
 
 ```mermaid
 graph TD
     A[1. Envanterdeki Yemleri Tara] --> B[2. Rastgele Bir Yeme Sağ Tıkla]
     B --> B1{2.1 Envanter Boş Slot Kontrolü}
-    B1 -- EmptySlot == 0 --► B2[5x7 Slotlarda Fareyi Yukarı-Aşağı Gezdir]
-    B2 --► B3[🛑 Botu Durdur & MainForm Öne Getir]
-    B1 -- Boş Slot Var --► C[Oltalama Hızı Beklemesi Min-Max ms]
+    B1 -- EmptySlot == 0 --► B2[Öldürme ve Pişirme Süreçlerini Çalıştır]
+    B2 -- Boş Slot Açılamadı --► B3[🛑 Botu Durdur & MainForm Öne Getir]
+    B2 -- Boş Slot Açıldı --► C[Oltalama Hızı Beklemesi Min-Max ms]
+    B1 -- Boş Slot Var --► C
     C --> D[3. Space Tuşuna Basarak Olta At]
-    D --> E[4. ChatBox Taraması Balık Adı / AutoPass]
+    D --> E[4. ChatBox Taraması Balık Adı / AutoPass / Tutamazsin]
     E --> F{5. Filtre Kontrolü: Balığı Tut Aktif mi?}
     F -- Hayır / AutoPass --► G[FishingMenuExitButton Tıkla]
     G --> H[Animasyon İptali Yap]
@@ -98,12 +99,13 @@ graph TD
     F -- Evet --► I[6. FishingMenuTitle Başlığını Bekle]
     I --> J[7. Eşzamanlı: Mini-Oyun & Chat Waypoint Takibi]
     J --> K[Animasyon İptali Yap]
-    K --> L{8. Waypoint == YakalananBalik?}
-    L -- Hayır --► A
-    L -- Evet --► M[100ms Bekle & EmptySlot Sayısını Tara]
+    K --> L{8. Waypoint Kontrolü}
+    L -- Tutamazsin --► LQ[🛑 Botu Durdur & Alan Uyarısı Göster]
+    L -- Diğer / Kaçtı --► A
+    L -- YakalananBalik --► M[100ms Bekle & EmptySlot Sayısını Tara]
     M --> N{EmptySlot == 0?}
     N -- Hayır --► A
-    N -- Evet --► O[Balık Pişirme Sürecini Çalıştır]
+    N -- Evet --► O[Öldürme ve Pişirme Süreçlerini Çalıştır]
     O --> P{Boş Slot Açıldı mı?}
     P -- Evet --► A
     P -- Hayır --► Q[🛑 Botu Durdur & MainForm Öne Getir]
@@ -138,11 +140,25 @@ Balık tutma bittiğinde karakterin oltayı sudan çekme animasyonunu iptal eder
 
 ---
 
-## 7. Balık Pişirme ve Envanter Yönetimi (`FishCookingFunction.cs`)
+## 7. Balık Öldürme Süreci (`FishKillingFunction.cs`)
+
+Envanter balık alanı (`InventoryFishArea`) dolduğunda (veya başlangıçta çanta doluysa), pişirme işleminden hemen önce çalıştırılır:
+
+* **Başlangıç (5x7 Slot Gezme)**: İşlem başında fare 5x7 (35 slot) ızgara boyunca yukarı-aşağı gezdirilir (`HoverAcrossInventoryFishAreaAsync`).
+* **Adım A (Tüm Şablonlarla Tarama & Canlı Balık Ayrımı)**: `InventoryFishArea` alanı **TÜM balık şablonları** (Normal, Ölü, Izgara) ile taranır. Non-Maximum Suppression (NMS) ile her slotun en yüksek benzerlikteki şablonu belirlenir.
+  - Sadece en yüksek eşleşmesi `Izgara_` veya `Ölü_` **olmayan** (yani kesin olarak Normal Canlı) ve ayarlarında "Öldür" işaretli olan balıklar listeye alınır.
+* **Adım B (Sağ Tıklama ile Öldürme)**: Öldürülmeye uygun balıklara sırayla sağ tıklanır.
+* **Adım C (Uygun Balık Yoksa)**: Eğer envanterde öldürülecek canlı balık yoksa doğrudan pişirme adımına geçilir.
+* **Adım E (5x7 Slot Gezme ve Pişirmeye Geçiş)**: Tüm balıklar öldüğünde fare 5x7 (35 slot) ızgara boyunca tekrar yukarı-aşağı gezdirilir (`HoverAcrossInventoryFishAreaAsync`), fare sol dışarı çekilir ve ardından pişirme adımına geçilir.
+
+---
+
+## 8. Balık Pişirme ve Envanter Yönetimi (`FishCookingFunction.cs`)
 
 Envanter balık alanı (`InventoryFishArea`) dolduğunda veya pişirme tetiklendiğinde aşağıdaki adımlar sırayla yürütülür:
 
-* **Adım A (Filtre ve Balık Taraması)**: `InventoryFishArea` içerisinde "Pişir" seçeneği aktif olan balıklar taranır. (Yalnızca `FishIconTemplates` [Common, Rare] ve `DeadFishes` şablonları dahil edilir, `Izgara_*` şablonları hariç tutulur).
+* **Adım A (Tüm Şablonlarla Tarama & Pişirilebilir Balık Ayrımı)**: `InventoryFishArea` alanı **TÜM balık şablonları** (Normal, Ölü, Izgara) ile taranır. NMS ile her slotun en yüksek benzerlikteki şablonu belirlenir.
+  - En yüksek eşleşmesi `Izgara_` **olmayan** (yani `Ölü_` veya `Normal`) ve ayarlarında "Pişir" işaretli olan balıklar pişirme listesine eklenir.
 * **Adım B2 (Uygun Balık Yoksa)**: Eğer `InventoryFishArea` içerisinde pişirilecek uygun balık yoksa bot durdurulur ve ana form öne getirilir.
 * **Adım B (Kamp Ateşi Kurulumu)**: Pişirilmeye uygun balık(lar) varsa `InventoryBaitArea` içerisinden herhangi bir `ates.png` şablonuna sağ tıklanır, **100ms beklenir** ve fare envanter dışına çekilir.
 * **Adım C (Zemin Ateşi Tespiti)**: `FisherManSearchArea` bölgesinde `KampAtesiFloor` veya `KampAtesiFloor2` şablonları (**>= %60**) aranır ve konum koordinatları alınır.

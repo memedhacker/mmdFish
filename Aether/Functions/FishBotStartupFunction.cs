@@ -113,21 +113,15 @@ namespace Aether.Functions
 
                         var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
 
-                        // 1. Pişirilecek balık var mı kontrol et ve pişir
-                        BotLogger.LogInfo(clientInfo.Id, "[Başlangıç] Envanterde 'Pişir' olarak ayarlanmış pişirilebilir balık aranıyor...");
-                        bool hasCookable = FishCookingFunction.HasCookableFish(clientInfo.Handle, clientInfo.Id, settings);
+                        // 1. Pişirme işleminden önce öldürülecek balıklar varsa öldür
+                        BotLogger.LogInfo(clientInfo.Id, "[Başlangıç] ⚔️ Çanta dolu. Önce öldürülecek balıklar kontrol ediliyor...");
+                        await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
 
-                        if (hasCookable)
-                        {
-                            BotLogger.LogInfo(clientInfo.Id, "🔥 [Başlangıç] Pişirilecek balıklar tespit edildi. Pişirme fonksiyonu başlatılıyor...");
-                            bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
-                        }
-                        else
-                        {
-                            BotLogger.LogWarning(clientInfo.Id, "⚠️ [Başlangıç] Envanterde 'Pişir' olarak ayarlanmış ve pişirilebilecek canlı balık bulunamadı.");
-                        }
+                        // 2. Ardından pişirme fonksiyonunu çalıştır
+                        BotLogger.LogInfo(clientInfo.Id, "[Başlangıç] 🔥 Ardından balık pişirme süreci başlatılıyor...");
+                        bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
 
-                        // 2. Pişirme sonrası tekrar boş slot sayısını kontrol et
+                        // 3. Pişirme sonrası tekrar boş slot sayısını kontrol et
                         int finalEmptyCount = 0;
                         using (Bitmap? recheckBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
                         {
@@ -149,7 +143,7 @@ namespace Aether.Functions
                         }
                         else
                         {
-                            BotLogger.LogSuccess(clientInfo.Id, $"🎉 [Başlangıç] Pişirme işlemiyle {finalEmptyCount} adet boş slot açıldı.");
+                            BotLogger.LogSuccess(clientInfo.Id, $"🎉 [Başlangıç] {finalEmptyCount} adet boş slot açıldı.");
                         }
                     }
                 }

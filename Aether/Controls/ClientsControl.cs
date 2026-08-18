@@ -104,17 +104,9 @@ namespace Aether.Controls
                             MessageBoxIcon.Warning
                         );
                     }
+                    // Bot başlatma/durdurma sonucu başarılı ise pencere durumunu değiştirme
                     else
                     {
-                        // Bot başlatıldıysa (IsRunning ise) uygulamayı küçült
-                        if (Services.FishBotService.Instance.IsFishBotRunning(targetClient.Id))
-                        {
-                            var parentForm = this.FindForm();
-                            if (parentForm != null)
-                            {
-                                parentForm.WindowState = FormWindowState.Minimized;
-                            }
-                        }
                     }
                 };
 

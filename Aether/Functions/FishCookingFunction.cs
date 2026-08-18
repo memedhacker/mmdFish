@@ -16,13 +16,11 @@ namespace Aether.Functions
     /// Envanterdeki pişirilebilir balıkları kamp ateşinde pişiren modüler fonksiyon sınıfı.
     ///
     /// ALGORİTMA:
-    /// A: InventoryFishArea içerisinde pişirme seçeneği aktif olan bir balık var mı diye kontrol et.
-    ///    [Templateler içerisinde Izgara dışındaki balıkları dahil et sadece. FishIconTemplates ve DeadFishes içerisinden].
-    /// B: Pişirilmeye uygun balık(lar) varsa InventoryBaitArea içerisinden herhangi bir Ates e sağ tıkla.[ardından 100ms bekle]
-    /// B2: EĞER PİŞİRİLMEYE UYGUN BALIK YOKSA BOTU DURDUR
-    /// C: FisherManSearchArea içerisinde KampAtesiFloor ve KampAtesiFloor2 templatelerini ara.[Bulduğunda konumuyla beraber D adımına geç]
-    /// D: Pişirilmeye uygun balıkları sırayla FisherManSearchArea içerisinde bulduğun ateş konumuna sürükle.
-    /// E: Tüm balıklar piştiğinde tekrardan InventoryFishArea'da boş alan kontrolü adımına dön ve boş yer varsa balık tutmaya devam et.
+    /// - Tüm balık şablonları (Normal, Ölü, Izgara) ile InventoryFishArea taranır.
+    /// - Aynı pozisyondaki en yüksek benzerliğe sahip şablon seçilir (NMS).
+    /// - En yüksek eşleşmesi Izgara_ OLMAYAN (yani Ölü_ veya Normal) balıklar belirlenir.
+    /// - Bu balıklardan ayarlarında "Pişir" seçeneği aktif olanlar sırayla kamp ateşine sürüklenir.
+    /// - Tüm balıklar piştiğinde envanterde boş slot açılıp açılmadığı kontrol edilir.
     /// </summary>
     public static class FishCookingFunction
     {
@@ -35,18 +33,9 @@ namespace Aether.Functions
                 return false;
 
             // =========================================================================
-            // ADIM A: InventoryFishArea içerisinde pişirme seçeneği aktif olan balıkları belirle ve tara
+            // ADIM A: Tüm balık şablonlarını tara ve pişirilecek balıkları filtrele
             // =========================================================================
-            var cookableTemplates = GetCookableTemplates(settings);
-            if (cookableTemplates.Count == 0)
-            {
-                BotLogger.LogWarning(clientInfo.Id, "🛑 FishFilter ayarlarında 'Pişir' seçeneği aktif olan hiçbir balık bulunmuyor! Bot durduruluyor...");
-                FishBotService.Instance.StopFishBot(clientInfo.Id);
-                FishingExecutionFunction.BringMainFormToFront();
-                return false;
-            }
-
-            List<TemplateMatchResult> fishToCook = ScanCookableFishInFishArea(clientInfo.Handle, cookableTemplates);
+            List<TemplateMatchResult> fishToCook = ScanCookableFishInFishArea(clientInfo.Handle, settings);
 
             // =========================================================================
             // ADIM B2: EĞER PİŞİRİLMEYE UYGUN BALIK YOKSA BOTU DURDUR
@@ -121,7 +110,7 @@ namespace Aether.Functions
                 iteration++;
 
                 // Envanterdeki pişirilebilir balıkları tara
-                fishToCook = ScanCookableFishInFishArea(clientInfo.Handle, cookableTemplates);
+                fishToCook = ScanCookableFishInFishArea(clientInfo.Handle, settings);
                 if (fishToCook.Count == 0)
                 {
                     BotLogger.LogSuccess(clientInfo.Id, $"✅ Pişirilecek başka balık kalmadı. Toplam {totalCooked} adet balık pişirildi.");
@@ -198,109 +187,40 @@ namespace Aether.Functions
         /// </summary>
         public static bool HasCookableFish(IntPtr hWnd, int clientId, FishBotSettings settings)
         {
-            var cookableTemplates = GetCookableTemplates(settings);
-            if (cookableTemplates.Count == 0) return false;
-
-            var fish = ScanCookableFishInFishArea(hWnd, cookableTemplates);
+            var fish = ScanCookableFishInFishArea(hWnd, settings);
             return fish.Count > 0;
         }
 
         /// <summary>
-        /// FishFilter ayarlarında "Pişir" seçeneği işaretli olan şablon yollarını döndürür.
-        /// [Izgara DAHİL EDİLMEZ. Yalnızca Common, Rare ve DeadFishes içerisinden alınır].
+        /// InventoryFishArea bölgesinde TÜM balık şablonlarını (Normal, Ölü, Izgara) tarar.
+        /// Slot bazında en yüksek benzerliğe sahip şablonu belirler (NMS).
+        /// Sadece en yüksek eşleşmesi Izgara_ OLMAYAN (yani Ölü_ veya Normal) ve
+        /// ayarlarında "Pişir" seçeneği işaretli olan balıkları döndürür.
         /// </summary>
-        public static List<string> GetCookableTemplates(FishBotSettings settings)
+        public static List<TemplateMatchResult> ScanCookableFishInFishArea(IntPtr hWnd, FishBotSettings settings)
         {
-            var cookable = new List<string>();
-            if (settings == null || settings.FishFilter == null) return cookable;
+            var cookableMatches = new List<TemplateMatchResult>();
+            if (settings == null || settings.FishFilter == null) return cookableMatches;
 
-            // Izgara DAHİL EDİLMEZ. Yalnızca FishIconTemplates (Common, Rare) ve DeadFishes şablonları alınır.
-            var candidatePool = new List<string>();
-            candidatePool.AddRange(TemplateConstants.FishIconTemplates.Common.All);
-            candidatePool.AddRange(TemplateConstants.FishIconTemplates.Rare.All);
-            candidatePool.AddRange(TemplateConstants.FishIconTemplates.DeadFishes.All);
-
-            foreach (var templatePath in candidatePool)
-            {
-                string rawItemName = Path.GetFileNameWithoutExtension(templatePath);
-                // "Ölü_Levrek" -> "Levrek" fallback'i için temiz isim
-                string baseItemName = rawItemName.StartsWith("Ölü_", StringComparison.OrdinalIgnoreCase)
-                    ? rawItemName.Substring(4)
-                    : rawItemName;
-
-                bool isCook = false;
-
-                // 1. Doğrudan sözlük kontrolü
-                foreach (var category in settings.FishFilter.Values)
-                {
-                    if (category.TryGetValue(rawItemName, out var filterItem) ||
-                        category.TryGetValue(baseItemName, out filterItem))
-                    {
-                        if (filterItem.GetCheck("Pişir", false))
-                        {
-                            isCook = true;
-                            break;
-                        }
-                    }
-                }
-
-                // 2. Normalize edilmiş anahtarla kontrol (Fallback)
-                if (!isCook)
-                {
-                    string normRaw = NormalizeKey(rawItemName);
-                    string normBase = NormalizeKey(baseItemName);
-
-                    foreach (var category in settings.FishFilter.Values)
-                    {
-                        foreach (var kvp in category)
-                        {
-                            string normKey = NormalizeKey(kvp.Key);
-                            if (normKey == normRaw || normKey == normBase)
-                            {
-                                if (kvp.Value.GetCheck("Pişir", false))
-                                {
-                                    isCook = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (isCook) break;
-                    }
-                }
-
-                if (isCook)
-                {
-                    cookable.Add(templatePath);
-                }
-            }
-
-            return cookable;
-        }
-
-        /// <summary>
-        /// InventoryFishArea bölgesinde pişirilmesi gereken balıkları (Common, Rare, DeadFishes) tarar.
-        /// Aynı pozisyonda birden fazla şablon eşleşmesi varsa benzerlik skoru en yüksek olanı seçer ve çakışmaları eler.
-        /// </summary>
-        public static List<TemplateMatchResult> ScanCookableFishInFishArea(IntPtr hWnd, List<string> cookableTemplates)
-        {
-            var matches = new List<TemplateMatchResult>();
-            if (cookableTemplates == null || cookableTemplates.Count == 0) return matches;
+            var allFishTemplates = GetAllFishTemplates();
+            if (allFishTemplates.Count == 0) return cookableMatches;
 
             using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(hWnd, RegionConstants.InventoryFishArea))
             {
-                if (fishAreaBmp == null) return matches;
+                if (fishAreaBmp == null) return cookableMatches;
 
-                // useGrayscale: false ile renk korumalı şablon eşleştirme
-                var allFound = TemplateConstants.FindAllMatches(fishAreaBmp, cookableTemplates, threshold: 0.80, useGrayscale: false);
-                if (allFound == null || allFound.Count == 0) return matches;
+                // TÜM balık şablonları ile renk korumalı arama
+                var allFound = TemplateConstants.FindAllMatches(fishAreaBmp, allFishTemplates, threshold: 0.80, useGrayscale: false);
+                if (allFound == null || allFound.Count == 0) return cookableMatches;
 
                 // 1. En yüksek benzerlik puanına (Confidence) göre azalan sırada sırala
                 allFound.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
 
-                // 2. Aynı / çakışan pozisyondaki eşleşmelerden yalnızca en yüksek benzerliğe sahip olanı tut (NMS)
+                // 2. Slot bazında en iyi eşleşmeyi seç (Non-Maximum Suppression)
+                var bestSlotMatches = new List<TemplateMatchResult>();
                 foreach (var m in allFound)
                 {
-                    bool isOverlapping = matches.Any(existing =>
+                    bool isOverlapping = bestSlotMatches.Any(existing =>
                     {
                         int overlapThresholdX = Math.Max(10, Math.Min(existing.Bounds.Width, m.Bounds.Width) / 2);
                         int overlapThresholdY = Math.Max(10, Math.Min(existing.Bounds.Height, m.Bounds.Height) / 2);
@@ -310,12 +230,84 @@ namespace Aether.Functions
 
                     if (!isOverlapping)
                     {
-                        matches.Add(m);
+                        bestSlotMatches.Add(m);
+                    }
+                }
+
+                // 3. Filtreleme: Yalnızca en iyi eşleşmesi Izgara_ OLMAYAN (Ölü veya Normal) ve "Pişir" işaretli olanları seç
+                foreach (var slotMatch in bestSlotMatches)
+                {
+                    string rawName = Path.GetFileNameWithoutExtension(slotMatch.TemplatePath);
+
+                    bool isGrilled = rawName.StartsWith("Izgara_", StringComparison.OrdinalIgnoreCase) ||
+                                     slotMatch.TemplatePath.Contains("Izgara_", StringComparison.OrdinalIgnoreCase);
+
+                    // Izgara_ olanlar zaten pişmiştir, elenir
+                    if (isGrilled) continue;
+
+                    string baseFishName = rawName.StartsWith("Ölü_", StringComparison.OrdinalIgnoreCase)
+                        ? rawName.Substring(4)
+                        : rawName;
+
+                    if (IsFishCheckedInFilter(settings, baseFishName, "Pişir") || IsFishCheckedInFilter(settings, rawName, "Pişir"))
+                    {
+                        cookableMatches.Add(slotMatch);
                     }
                 }
             }
 
-            return matches;
+            return cookableMatches;
+        }
+
+        /// <summary>
+        /// Karşılaştırma ve doğru sınıflandırma için TÜM balık şablonlarını (Normal, Ölü, Izgara) döndürür.
+        /// </summary>
+        public static List<string> GetAllFishTemplates()
+        {
+            var list = new List<string>();
+            list.AddRange(TemplateConstants.FishIconTemplates.Common.All);
+            list.AddRange(TemplateConstants.FishIconTemplates.Rare.All);
+            list.AddRange(TemplateConstants.FishIconTemplates.DeadFishes.All);
+            list.AddRange(TemplateConstants.FishIconTemplates.GrilledFishes.All);
+            return list;
+        }
+
+        /// <summary>
+        /// Ayarlarda belirtilen balık adı için ilgili sütunun (Örn: "Pişir") seçili olup olmadığını kontrol eder.
+        /// </summary>
+        private static bool IsFishCheckedInFilter(FishBotSettings settings, string fishName, string checkColumnName)
+        {
+            if (settings == null || settings.FishFilter == null) return false;
+
+            // 1. Doğrudan sözlük kontrolü
+            foreach (var category in settings.FishFilter.Values)
+            {
+                if (category.TryGetValue(fishName, out var filterItem))
+                {
+                    if (filterItem.GetCheck(checkColumnName, false))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // 2. Normalize edilmiş anahtarla kontrol (Fallback)
+            string normBase = NormalizeKey(fishName);
+            foreach (var category in settings.FishFilter.Values)
+            {
+                foreach (var kvp in category)
+                {
+                    if (NormalizeKey(kvp.Key) == normBase)
+                    {
+                        if (kvp.Value.GetCheck(checkColumnName, false))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
