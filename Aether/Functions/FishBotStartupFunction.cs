@@ -98,22 +98,27 @@ namespace Aether.Functions
             BotLogger.LogInfo(clientInfo.Id, "[Başlangıç] InventoryFishArea boş slot sayısı kontrol ediliyor...");
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
 
-            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+            int emptyCount = FishingExecutionFunction.ScanEmptySlots(clientInfo.Handle);
+            BotLogger.LogInfo(clientInfo.Id, $"[Başlangıç] InventoryFishArea boş slot sayısı: {emptyCount}");
+
+            if (emptyCount == 0)
             {
-                if (fishAreaBmp != null)
+                BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] InventoryFishArea içerisinde hiç boş slot kalmadı (EmptySlot: 0)! Balık öldürme başlatılıyor...");
+
+                var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
+                await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
+
+                emptyCount = FishingExecutionFunction.ScanEmptySlots(clientInfo.Handle);
+                if (emptyCount == 0)
                 {
-                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
-                    int emptyCount = emptySlots.Count;
-
-                    BotLogger.LogInfo(clientInfo.Id, $"[Başlangıç] InventoryFishArea boş slot sayısı: {emptyCount}");
-
-                    if (emptyCount == 0)
-                    {
-                        BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] InventoryFishArea içerisinde hiç boş slot kalmadı (EmptySlot: 0)! Balık botu durduruluyor...");
-                        FishBotService.Instance.StopFishBot(clientInfo.Id);
-                        FishingExecutionFunction.BringMainFormToFront();
-                        return;
-                    }
+                    BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] Öldürme sonrası da boş yer açılamadı! Balık botu durduruluyor...");
+                    FishBotService.Instance.StopFishBot(clientInfo.Id);
+                    FishingExecutionFunction.BringMainFormToFront();
+                    return;
+                }
+                else
+                {
+                    BotLogger.LogSuccess(clientInfo.Id, $"🎉 [Başlangıç] Öldürme işlemiyle {emptyCount} adet boş slot açıldı. Bot devam ediyor.");
                 }
             }
 

@@ -100,35 +100,31 @@ namespace Aether.Functions
             BotLogger.LogInfo(clientInfo.Id, "[Adım 1] Envanterdeki boş slot sayısı taranıyor...");
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
 
-            int emptyCount = 0;
-            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
-            {
-                if (fishAreaBmp != null)
-                {
-                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
-                    emptySlots.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
-
-                    var uniqueEmpty = new List<TemplateMatchResult>();
-                    foreach (var slot in emptySlots)
-                    {
-                        if (!uniqueEmpty.Any(existing => Math.Abs(existing.Location.X - slot.Location.X) < 16 && Math.Abs(existing.Location.Y - slot.Location.Y) < 16))
-                        {
-                            uniqueEmpty.Add(slot);
-                        }
-                    }
-                    emptyCount = uniqueEmpty.Count;
-                }
-            }
-
+            int emptyCount = ScanEmptySlots(clientInfo.Handle);
             BotLogger.LogInfo(clientInfo.Id, $"[Adım 1] Envanter (InventoryFishArea) boş slot sayısı: {emptyCount}");
 
-            // Eğer boş slot yoksa (EmptySlot == 0): Botu durdur ve MainForm'u öne getir
+            // Eğer boş slot yoksa (EmptySlot == 0): Balık öldürme fonksiyonuna geç
             if (emptyCount == 0)
             {
-                BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çanta tamamen dolu (InventoryFishArea boş slot: 0)! Balık botu durduruluyor...");
-                FishBotService.Instance.StopFishBot(clientInfo.Id);
-                BringMainFormToFront();
-                return;
+                BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çanta tamamen dolu (InventoryFishArea boş slot: 0)! Balık öldürme fonksiyonuna geçiliyor...");
+
+                // Balık öldürme sürecini çalıştır
+                await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
+
+                // Öldürme sonrası boş slot kontrolü yap
+                emptyCount = ScanEmptySlots(clientInfo.Handle);
+                BotLogger.LogInfo(clientInfo.Id, $"[Adım 1] Öldürme işlemi sonrası güncel boş slot sayısı: {emptyCount}");
+
+                // Eğer hala boş yer açılamadıysa: Botu durdur ve MainForm'u öne getir
+                if (emptyCount == 0)
+                {
+                    BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çantada öldürülecek balık kalmadı ve boş yer yok! Bot durduruluyor...");
+                    FishBotService.Instance.StopFishBot(clientInfo.Id);
+                    BringMainFormToFront();
+                    return;
+                }
+
+                BotLogger.LogSuccess(clientInfo.Id, $"✅ [Adım 1] Boş slot açıldı ({emptyCount} adet). 2. adıma geçiliyor.");
             }
 
             // =========================================================================
@@ -715,6 +711,30 @@ namespace Aether.Functions
 
             // Gezme bittiğinde fareyi envanter dışına çek
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(hWnd, cancellationToken);
+        }
+
+        /// <summary>
+        /// InventoryFishArea bölgesindeki boş slot (EmptySlot) sayısını Non-Maximum Suppression ile sayar.
+        /// </summary>
+        public static int ScanEmptySlots(IntPtr hWnd)
+        {
+            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(hWnd, RegionConstants.InventoryFishArea))
+            {
+                if (fishAreaBmp == null) return 0;
+
+                var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                emptySlots.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+
+                var uniqueEmpty = new List<TemplateMatchResult>();
+                foreach (var slot in emptySlots)
+                {
+                    if (!uniqueEmpty.Any(existing => Math.Abs(existing.Location.X - slot.Location.X) < 16 && Math.Abs(existing.Location.Y - slot.Location.Y) < 16))
+                    {
+                        uniqueEmpty.Add(slot);
+                    }
+                }
+                return uniqueEmpty.Count;
+            }
         }
     }
 }
