@@ -13,102 +13,115 @@ using System.Threading.Tasks;
 namespace Aether.Functions
 {
     /// <summary>
-    /// Envanter balık alanı dolduğunda (boş slot kalmadığında) "Pişir" seçeneği aktif olan balıkları
-    /// kamp ateşi kurarak tek tek ateşe sürükleyip bırakan (Drag & Drop) modüler pişirme fonksiyon sınıfı.
+    /// Envanterdeki pişirilebilir balıkları kamp ateşinde pişiren modüler fonksiyon sınıfı.
+    ///
+    /// ALGORİTMA:
+    /// A: InventoryFishArea içerisinde pişirme seçeneği aktif olan bir balık var mı diye kontrol et.
+    ///    [Templateler içerisinde Izgara dışındaki balıkları dahil et sadece. FishIconTemplates ve DeadFishes içerisinden].
+    /// B: Pişirilmeye uygun balık(lar) varsa InventoryBaitArea içerisinden herhangi bir Ates e sağ tıkla.[ardından 100ms bekle]
+    /// B2: EĞER PİŞİRİLMEYE UYGUN BALIK YOKSA BOTU DURDUR
+    /// C: FisherManSearchArea içerisinde KampAtesiFloor ve KampAtesiFloor2 templatelerini ara.[Bulduğunda konumuyla beraber D adımına geç]
+    /// D: Pişirilmeye uygun balıkları sırayla FisherManSearchArea içerisinde bulduğun ateş konumuna sürükle.
+    /// E: Tüm balıklar piştiğinde tekrardan InventoryFishArea'da boş alan kontrolü adımına dön ve boş yer varsa balık tutmaya devam et.
     /// </summary>
     public static class FishCookingFunction
     {
         /// <summary>
         /// Pişirme sürecini baştan sona yönetir:
-        /// 1. FishFilter tablosunda "Pişir" seçeneği aktif olan balıkların listesini çıkarır.
-        /// 2. InventoryPosition bölgesindeki kamp ateşlerinden (ates.png) birine sağ tıklar.
-        /// 3. FisherManSearchArea bölgesinde KampAtesiFloor ve KampAtesiFloor2 şablonlarını (>= %60) arar ve konumunu alır.
-        /// 4. Pişir seçilmiş tüm balıkları tespit edip tek tek kamp ateşine sürükle-bırak (Drag & Drop) yapar.
-        ///    Her bırakma anında kamp ateşinin varlığı teyit edilir.
-        /// 5. Pişirme sonrası toplam pişirilen balık sayısını döner.
         /// </summary>
         public static async Task<bool> ExecuteCookingProcessAsync(ClientInfo clientInfo, FishBotSettings settings, CancellationToken cancellationToken)
         {
             if (clientInfo == null || clientInfo.Handle == IntPtr.Zero || cancellationToken.IsCancellationRequested)
                 return false;
 
-            // 1. ADIM: "Pişir" seçeneği aktif olan şablonları belirle
+            // =========================================================================
+            // ADIM A: InventoryFishArea içerisinde pişirme seçeneği aktif olan balıkları belirle ve tara
+            // =========================================================================
             var cookableTemplates = GetCookableTemplates(settings);
             if (cookableTemplates.Count == 0)
             {
-                BotLogger.LogInfo(clientInfo.Id, "FishFilter ayarlarında 'Pişir' seçeneği aktif olan hiçbir balık/öğe bulunmuyor.");
+                BotLogger.LogWarning(clientInfo.Id, "🛑 FishFilter ayarlarında 'Pişir' seçeneği aktif olan hiçbir balık bulunmuyor! Bot durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                FishingExecutionFunction.BringMainFormToFront();
                 return false;
             }
 
-            BotLogger.LogInfo(clientInfo.Id, $"🔥 Pişirme işlemi başlatılıyor. 'Pişir' işaretli {cookableTemplates.Count} şablon tespit edildi.");
+            List<TemplateMatchResult> fishToCook = ScanCookableFishInFishArea(clientInfo.Handle, cookableTemplates);
 
-            // 2. ADIM: Envanterde 'ates.png' ara
-            TemplateMatchResult? fireMatch = FindCampfireInInventory(clientInfo.Handle);
+            // =========================================================================
+            // ADIM B2: EĞER PİŞİRİLMEYE UYGUN BALIK YOKSA BOTU DURDUR
+            // =========================================================================
+            if (fishToCook.Count == 0)
+            {
+                BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde pişirilecek uygun balık bulunamadı! Bot durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                FishingExecutionFunction.BringMainFormToFront();
+                return false;
+            }
+
+            BotLogger.LogInfo(clientInfo.Id, $"🔥 Envanterde {fishToCook.Count} adet pişirilebilir balık tespit edildi.");
+
+            // =========================================================================
+            // ADIM B: InventoryBaitArea içerisinden herhangi bir Ates'e sağ tıkla [ardından 100ms bekle]
+            // =========================================================================
+            TemplateMatchResult? fireMatch = FindCampfireInBaitArea(clientInfo.Handle);
             if (fireMatch == null || !fireMatch.IsSuccess)
             {
-                BotLogger.LogWarning(clientInfo.Id, "⚠️ Envanterde kamp ateşi (ates.png) bulunamadı! Balıklar pişirilemiyor.");
+                BotLogger.LogWarning(clientInfo.Id, "⚠️ InventoryBaitArea içerisinde kamp ateşi (ates.png) bulunamadı! InventoryPosition genelinde aranıyor...");
+                fireMatch = FindCampfireInInventory(clientInfo.Handle);
+            }
+
+            if (fireMatch == null || !fireMatch.IsSuccess)
+            {
+                BotLogger.LogError(clientInfo.Id, "❌ Envanterde kamp ateşi (ates.png) bulunamadı! Pişirme yapılamıyor. Bot durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                FishingExecutionFunction.BringMainFormToFront();
                 return false;
             }
 
-            // Ateşin koordinatını hesapla ve sağ tıkla
-            int fireLocalX = RegionConstants.InventoryPosition.StartX + fireMatch.Location.X + (fireMatch.Bounds.Width / 2);
-            int fireLocalY = RegionConstants.InventoryPosition.StartY + fireMatch.Location.Y + (fireMatch.Bounds.Height / 2);
+            int fireLocalX = fireMatch.Location.X + (fireMatch.Bounds.Width / 2);
+            int fireLocalY = fireMatch.Location.Y + (fireMatch.Bounds.Height / 2);
 
             BotLogger.LogInfo(clientInfo.Id, $"Kamp ateşine ({fireLocalX}, {fireLocalY}) sağ tıklanarak yere kuruluyor...");
             await HumanMouseService.Instance.RightClickLocalAsync(clientInfo.Handle, fireLocalX, fireLocalY, fastMove: false, cancellationToken: cancellationToken);
-            await Task.Delay(Random.Shared.Next(600, 900), cancellationToken);
+
+            // Ardından 100ms bekle
+            await Task.Delay(100, cancellationToken);
 
             // Fareyi envanter dışına çek
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
 
-            // 3. ADIM: FisherManSearchArea içinde KampAtesiFloor / KampAtesiFloor2 ara (>= %60)
+            // =========================================================================
+            // ADIM C: FisherManSearchArea içerisinde KampAtesiFloor ve KampAtesiFloor2 templatelerini ara
+            // =========================================================================
+            BotLogger.LogInfo(clientInfo.Id, "FisherManSearchArea içerisinde yerdeki kamp ateşi (KampAtesiFloor / KampAtesiFloor2) aranıyor...");
             TemplateMatchResult? floorFireMatch = await WaitForFloorCampfireAsync(clientInfo.Handle, cancellationToken);
+
             if (floorFireMatch == null)
             {
-                BotLogger.LogError(clientInfo.Id, "❌ Yerdeki Kamp Ateşi (KampAtesiFloor / KampAtesiFloor2) tespit edilemedi! Pişirme iptal ediliyor.");
+                BotLogger.LogError(clientInfo.Id, "❌ Yerdeki Kamp Ateşi tespit edilemedi! Pişirme iptal ediliyor. Bot durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                FishingExecutionFunction.BringMainFormToFront();
                 return false;
             }
 
-            BotLogger.LogSuccess(clientInfo.Id, $"🔥 Yerdeki Kamp Ateşi tespit edildi! Konum: ({floorFireMatch.Location.X}, {floorFireMatch.Location.Y}), Benzerlik: %{floorFireMatch.Confidence * 100:F1}");
+            int fireTargetX = floorFireMatch.Location.X;
+            int fireTargetY = floorFireMatch.Location.Y;
+            BotLogger.LogSuccess(clientInfo.Id, $"🔥 Yerdeki Kamp Ateşi tespit edildi! Konum: ({fireTargetX}, {fireTargetY}), Benzerlik: %{floorFireMatch.Confidence * 100:F1}");
 
-            // 4. ADIM: Pişir seçili tüm balıkları tek tek ateşe sürükle ve bırak
+            // =========================================================================
+            // ADIM D: Pişirilmeye uygun balıkları sırayla bulduğun ateş konumuna sürükle
+            // =========================================================================
             int totalCooked = 0;
-            const int maxIterations = 40; // Güvenlik döngü limiti
+            const int maxIterations = 40;
             int iteration = 0;
 
             while (iteration < maxIterations && !cancellationToken.IsCancellationRequested)
             {
                 iteration++;
 
-                // HER BIRAKMA / DÖNGÜ ÖNCESİ ATEŞİN VARLIĞINI TEYİT ET
-                floorFireMatch = FindFloorCampfire(clientInfo.Handle);
-                if (floorFireMatch == null)
-                {
-                    BotLogger.LogWarning(clientInfo.Id, "⚠️ Yerdeki kamp ateşi söndü veya kayboldu!");
-
-                    // Envanterde başka ateş var mı kontrol et, varsa tekrar yak
-                    var nextFire = FindCampfireInInventory(clientInfo.Handle);
-                    if (nextFire != null && nextFire.IsSuccess)
-                    {
-                        int nfx = RegionConstants.InventoryPosition.StartX + nextFire.Location.X + (nextFire.Bounds.Width / 2);
-                        int nfy = RegionConstants.InventoryPosition.StartY + nextFire.Location.Y + (nextFire.Bounds.Height / 2);
-                        BotLogger.LogInfo(clientInfo.Id, "Envanterdeki diğer kamp ateşine sağ tıklanarak tekrar yakılıyor...");
-                        await HumanMouseService.Instance.RightClickLocalAsync(clientInfo.Handle, nfx, nfy, fastMove: false, cancellationToken: cancellationToken);
-                        await Task.Delay(Random.Shared.Next(600, 900), cancellationToken);
-                        await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
-
-                        floorFireMatch = await WaitForFloorCampfireAsync(clientInfo.Handle, cancellationToken);
-                    }
-
-                    if (floorFireMatch == null)
-                    {
-                        BotLogger.LogWarning(clientInfo.Id, "Yeni kamp ateşi kurulamadı. Pişirme döngüsü sonlandırılıyor.");
-                        break;
-                    }
-                }
-
-                // Envanter balık alanındaki pişirilebilir balıkları tara
-                List<TemplateMatchResult> fishToCook = ScanFishToCook(clientInfo.Handle, cookableTemplates);
+                // Envanterdeki pişirilebilir balıkları tara
+                fishToCook = ScanCookableFishInFishArea(clientInfo.Handle, cookableTemplates);
                 if (fishToCook.Count == 0)
                 {
                     BotLogger.LogSuccess(clientInfo.Id, $"✅ Pişirilecek başka balık kalmadı. Toplam {totalCooked} adet balık pişirildi.");
@@ -119,10 +132,7 @@ namespace Aether.Functions
                 int fishLocalX = RegionConstants.InventoryFishArea.StartX + currentFish.Location.X + (currentFish.Bounds.Width / 2);
                 int fishLocalY = RegionConstants.InventoryFishArea.StartY + currentFish.Location.Y + (currentFish.Bounds.Height / 2);
 
-                int fireTargetX = floorFireMatch.Location.X;
-                int fireTargetY = floorFireMatch.Location.Y;
-
-                BotLogger.LogInfo(clientInfo.Id, $"[{totalCooked + 1}] '{currentFish.TemplateName}' balığı ({fishLocalX}, {fishLocalY}) kamp ateşine ({fireTargetX}, {fireTargetY}) sürükleniyor...");
+                BotLogger.LogInfo(clientInfo.Id, $"[{totalCooked + 1}] '{currentFish.TemplateName}' ({fishLocalX}, {fishLocalY}) -> Kamp Ateşi ({fireTargetX}, {fireTargetY}) sürükleniyor...");
 
                 // Balığı kamp ateşine sürükle ve bırak (Drag & Drop)
                 await HumanMouseService.Instance.DragAndDropLocalAsync(
@@ -135,44 +145,96 @@ namespace Aether.Functions
                     cancellationToken: cancellationToken);
 
                 totalCooked++;
-                await Task.Delay(Random.Shared.Next(350, 500), cancellationToken);
-
-                // HER BIRAKMA ANINDA KampAtesiFloor ve KampAtesiFloor2 ŞABLONUNUN VARLIĞINI TEYİT ET
-                var verifyFire = FindFloorCampfire(clientInfo.Handle);
-                if (verifyFire == null)
-                {
-                    BotLogger.LogWarning(clientInfo.Id, "⚠️ Balık bırakıldıktan sonra kamp ateşi teyit edilemedi (ateş sönmüş olabilir).");
-                }
-                else
-                {
-                    BotLogger.LogInfo(clientInfo.Id, $"Kamp ateşi varlığı teyit edildi (Benzerlik: %{verifyFire.Confidence * 100:F1}).");
-                }
+                await Task.Delay(Random.Shared.Next(300, 450), cancellationToken);
             }
 
-            // Pişirme işlemi bittiğinde fareyi envanter dışına çek
+            // Fareyi envanter dışına çek
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
             await Task.Delay(200, cancellationToken);
 
-            return totalCooked > 0;
+            // =========================================================================
+            // ADIM E: Tüm balıklar piştiğinde InventoryFishArea'da boş alan kontrolü yap
+            // =========================================================================
+            BotLogger.LogInfo(clientInfo.Id, "[Adım E] Pişirme tamamlandı. InventoryFishArea boş slot sayısı kontrol ediliyor...");
+
+            int emptyCount = 0;
+            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+            {
+                if (fishAreaBmp != null)
+                {
+                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                    emptySlots.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+
+                    var uniqueEmpty = new List<TemplateMatchResult>();
+                    foreach (var slot in emptySlots)
+                    {
+                        if (!uniqueEmpty.Any(existing => Math.Abs(existing.Location.X - slot.Location.X) < 16 && Math.Abs(existing.Location.Y - slot.Location.Y) < 16))
+                        {
+                            uniqueEmpty.Add(slot);
+                        }
+                    }
+                    emptyCount = uniqueEmpty.Count;
+                }
+            }
+
+            BotLogger.LogInfo(clientInfo.Id, $"[Adım E] Güncel boş slot sayısı: {emptyCount}");
+
+            if (emptyCount > 0)
+            {
+                BotLogger.LogSuccess(clientInfo.Id, $"🎉 Pişirme işlemiyle {emptyCount} adet boş slot açıldı. Balık tutma döngüsüne devam ediliyor.");
+                return true;
+            }
+            else
+            {
+                BotLogger.LogWarning(clientInfo.Id, "🛑 Pişirme sonrası InventoryFishArea içerisinde boş yer açılamadı! Bot durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                FishingExecutionFunction.BringMainFormToFront();
+                return false;
+            }
         }
 
         /// <summary>
-        /// FishFilter ayarlarında "Pişir" seçeneği işaretli olan tüm şablon yollarını döndürür.
+        /// InventoryFishArea içerisinde ayarlar doğrultusunda pişirilebilecek balık olup olmadığını kontrol eder.
+        /// </summary>
+        public static bool HasCookableFish(IntPtr hWnd, int clientId, FishBotSettings settings)
+        {
+            var cookableTemplates = GetCookableTemplates(settings);
+            if (cookableTemplates.Count == 0) return false;
+
+            var fish = ScanCookableFishInFishArea(hWnd, cookableTemplates);
+            return fish.Count > 0;
+        }
+
+        /// <summary>
+        /// FishFilter ayarlarında "Pişir" seçeneği işaretli olan şablon yollarını döndürür.
+        /// [Izgara DAHİL EDİLMEZ. Yalnızca Common, Rare ve DeadFishes içerisinden alınır].
         /// </summary>
         public static List<string> GetCookableTemplates(FishBotSettings settings)
         {
             var cookable = new List<string>();
             if (settings == null || settings.FishFilter == null) return cookable;
 
-            foreach (var templatePath in TemplateConstants.FishIconTemplates.All)
+            // Izgara DAHİL EDİLMEZ. Yalnızca FishIconTemplates (Common, Rare) ve DeadFishes şablonları alınır.
+            var candidatePool = new List<string>();
+            candidatePool.AddRange(TemplateConstants.FishIconTemplates.Common.All);
+            candidatePool.AddRange(TemplateConstants.FishIconTemplates.Rare.All);
+            candidatePool.AddRange(TemplateConstants.FishIconTemplates.DeadFishes.All);
+
+            foreach (var templatePath in candidatePool)
             {
-                string itemName = Path.GetFileNameWithoutExtension(templatePath);
+                string rawItemName = Path.GetFileNameWithoutExtension(templatePath);
+                // "Ölü_Levrek" -> "Levrek" fallback'i için temiz isim
+                string baseItemName = rawItemName.StartsWith("Ölü_", StringComparison.OrdinalIgnoreCase)
+                    ? rawItemName.Substring(4)
+                    : rawItemName;
+
+                bool isCook = false;
 
                 // 1. Doğrudan sözlük kontrolü
-                bool isCook = false;
                 foreach (var category in settings.FishFilter.Values)
                 {
-                    if (category.TryGetValue(itemName, out var filterItem))
+                    if (category.TryGetValue(rawItemName, out var filterItem) ||
+                        category.TryGetValue(baseItemName, out filterItem))
                     {
                         if (filterItem.GetCheck("Pişir", false))
                         {
@@ -182,15 +244,18 @@ namespace Aether.Functions
                     }
                 }
 
-                // 2. Normalizasyon ile eşleştirme (Fallback)
+                // 2. Normalize edilmiş anahtarla kontrol (Fallback)
                 if (!isCook)
                 {
-                    string normItem = NormalizeKey(itemName);
+                    string normRaw = NormalizeKey(rawItemName);
+                    string normBase = NormalizeKey(baseItemName);
+
                     foreach (var category in settings.FishFilter.Values)
                     {
                         foreach (var kvp in category)
                         {
-                            if (NormalizeKey(kvp.Key) == normItem)
+                            string normKey = NormalizeKey(kvp.Key);
+                            if (normKey == normRaw || normKey == normBase)
                             {
                                 if (kvp.Value.GetCheck("Pişir", false))
                                 {
@@ -213,23 +278,37 @@ namespace Aether.Functions
         }
 
         /// <summary>
-        /// InventoryFishArea bölgesinde pişirilmesi gereken balıkları tarar ve çakışmaları ayıklayarak döndürür.
+        /// InventoryFishArea bölgesinde pişirilmesi gereken balıkları (Common, Rare, DeadFishes) tarar.
+        /// Aynı pozisyonda birden fazla şablon eşleşmesi varsa benzerlik skoru en yüksek olanı seçer ve çakışmaları eler.
         /// </summary>
-        private static List<TemplateMatchResult> ScanFishToCook(IntPtr hWnd, List<string> cookableTemplates)
+        public static List<TemplateMatchResult> ScanCookableFishInFishArea(IntPtr hWnd, List<string> cookableTemplates)
         {
             var matches = new List<TemplateMatchResult>();
+            if (cookableTemplates == null || cookableTemplates.Count == 0) return matches;
 
             using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(hWnd, RegionConstants.InventoryFishArea))
             {
                 if (fishAreaBmp == null) return matches;
 
-                // Canlı ve ölü balıkların renk farkını koruyarak sadece doğru balıkları pişirmek için useGrayscale: false kullanılır
+                // useGrayscale: false ile renk korumalı şablon eşleştirme
                 var allFound = TemplateConstants.FindAllMatches(fishAreaBmp, cookableTemplates, threshold: 0.80, useGrayscale: false);
+                if (allFound == null || allFound.Count == 0) return matches;
 
-                // Çakışan mükerrer tespitleri ayıkla
+                // 1. En yüksek benzerlik puanına (Confidence) göre azalan sırada sırala
+                allFound.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+
+                // 2. Aynı / çakışan pozisyondaki eşleşmelerden yalnızca en yüksek benzerliğe sahip olanı tut (NMS)
                 foreach (var m in allFound)
                 {
-                    if (!matches.Any(existing => Math.Abs(existing.Location.X - m.Location.X) < 14 && Math.Abs(existing.Location.Y - m.Location.Y) < 14))
+                    bool isOverlapping = matches.Any(existing =>
+                    {
+                        int overlapThresholdX = Math.Max(10, Math.Min(existing.Bounds.Width, m.Bounds.Width) / 2);
+                        int overlapThresholdY = Math.Max(10, Math.Min(existing.Bounds.Height, m.Bounds.Height) / 2);
+                        return Math.Abs(existing.Location.X - m.Location.X) < overlapThresholdX &&
+                               Math.Abs(existing.Location.Y - m.Location.Y) < overlapThresholdY;
+                    });
+
+                    if (!isOverlapping)
                     {
                         matches.Add(m);
                     }
@@ -240,18 +319,64 @@ namespace Aether.Functions
         }
 
         /// <summary>
-        /// InventoryPosition bölgesinde 'ates.png' şablonunu arar.
+        /// InventoryBaitArea bölgesinde 'ates.png' şablonunu arar ve en yüksek benzerlikteki eşleşmenin yerel koordinatıyla döner.
         /// </summary>
-        private static TemplateMatchResult? FindCampfireInInventory(IntPtr hWnd)
+        public static TemplateMatchResult? FindCampfireInBaitArea(IntPtr hWnd)
+        {
+            using (Bitmap? baitBmp = WindowRegionCaptureHelper.CaptureRegion(hWnd, RegionConstants.InventoryBaitArea))
+            {
+                if (baitBmp == null) return null;
+
+                var matches = TemplateConstants.MatchAll(baitBmp, TemplateConstants.InventoryItems.Ates, threshold: 0.70, useGrayscale: false);
+                if (matches.Count > 0)
+                {
+                    // En yüksek benzerlik puanına göre sırala
+                    matches.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+                    var m = matches[0];
+                    int localX = RegionConstants.InventoryBaitArea.StartX + m.Location.X;
+                    int localY = RegionConstants.InventoryBaitArea.StartY + m.Location.Y;
+
+                    return new TemplateMatchResult
+                    {
+                        IsSuccess = true,
+                        TemplatePath = m.TemplatePath,
+                        TemplateName = m.TemplateName,
+                        Confidence = m.Confidence,
+                        Location = new Point(localX, localY),
+                        Bounds = new Rectangle(localX, localY, m.Bounds.Width, m.Bounds.Height)
+                    };
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// InventoryPosition genel bölgesinde 'ates.png' şablonunu arar ve en yüksek benzerlikteki eşleşmeyi döner.
+        /// </summary>
+        public static TemplateMatchResult? FindCampfireInInventory(IntPtr hWnd)
         {
             using (Bitmap? invBmp = WindowRegionCaptureHelper.CaptureRegion(hWnd, RegionConstants.InventoryPosition))
             {
                 if (invBmp == null) return null;
 
-                var matches = TemplateConstants.MatchAll(invBmp, TemplateConstants.InventoryItems.Ates, threshold: 0.70);
+                var matches = TemplateConstants.MatchAll(invBmp, TemplateConstants.InventoryItems.Ates, threshold: 0.70, useGrayscale: false);
                 if (matches.Count > 0)
                 {
-                    return matches[0];
+                    // En yüksek benzerlik puanına göre sırala
+                    matches.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+                    var m = matches[0];
+                    int localX = RegionConstants.InventoryPosition.StartX + m.Location.X;
+                    int localY = RegionConstants.InventoryPosition.StartY + m.Location.Y;
+
+                    return new TemplateMatchResult
+                    {
+                        IsSuccess = true,
+                        TemplatePath = m.TemplatePath,
+                        TemplateName = m.TemplateName,
+                        Confidence = m.Confidence,
+                        Location = new Point(localX, localY),
+                        Bounds = new Rectangle(localX, localY, m.Bounds.Width, m.Bounds.Height)
+                    };
                 }
             }
             return null;
@@ -295,10 +420,10 @@ namespace Aether.Functions
         /// <summary>
         /// Yere kamp ateşi kurulduktan sonra görünmesini belirli bir süre bekler.
         /// </summary>
-        private static async Task<TemplateMatchResult?> WaitForFloorCampfireAsync(IntPtr hWnd, CancellationToken cancellationToken)
+        public static async Task<TemplateMatchResult?> WaitForFloorCampfireAsync(IntPtr hWnd, CancellationToken cancellationToken)
         {
-            const int maxAttempts = 10;
-            const int delayBetweenAttemptsMs = 250;
+            const int maxAttempts = 15;
+            const int delayBetweenAttemptsMs = 200;
 
             for (int i = 1; i <= maxAttempts; i++)
             {

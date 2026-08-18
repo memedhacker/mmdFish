@@ -142,6 +142,39 @@ namespace Aether.Functions
             // Fareyi envanter dışına çek
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
 
+            // =========================================================================
+            // 2.1 ADIM: Yeme tıklandığında çantadaki (InventoryFishArea) boş yerleri say
+            // =========================================================================
+            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+            {
+                if (fishAreaBmp != null)
+                {
+                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                    int emptyCount = emptySlots.Count;
+                    BotLogger.LogInfo(clientInfo.Id, $"Çantadaki (InventoryFishArea) boş slot sayısı: {emptyCount}");
+
+                    if (emptyCount == 0)
+                    {
+                        BotLogger.LogWarning(clientInfo.Id, "🛑 Çanta tamamen dolmuş (InventoryFishArea boş slot: 0)! Slotlar üzerinde fare gezdiriliyor...");
+
+                        // Yatayda 5, dikeyde 7 slot (35 slot) üzerinde fareyi yukarı-aşağı gezdir
+                        await HoverAcrossInventoryFishAreaAsync(clientInfo.Handle, cancellationToken);
+
+                        // Fare gezdirildikten sonra pişirme fonksiyonunu çalıştır
+                        BotLogger.LogInfo(clientInfo.Id, "🔥 Çanta dolduğu için balık pişirme süreci başlatılıyor...");
+                        bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+
+                        if (!cookedAny)
+                        {
+                            BotLogger.LogWarning(clientInfo.Id, "🛑 Pişirme işlemi yapılamadı veya boş slot açılamadı! Balık botu durduruluyor.");
+                            FishBotService.Instance.StopFishBot(clientInfo.Id);
+                            BringMainFormToFront();
+                            return;
+                        }
+                    }
+                }
+            }
+
             // Oltalama hızı (FishingSpeedMinMs - FishingSpeedMaxMs) aralığında dinamik rastgele bekleme
             int minSpeed = Math.Max(30, settings.FishingSpeedMinMs);
             int maxSpeed = Math.Max(minSpeed, settings.FishingSpeedMaxMs);
@@ -327,34 +360,21 @@ namespace Aether.Functions
 
                         if (emptyCount == 0)
                         {
-                            BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde boş slot kalmadı (EmptySlot: 0)!");
+                            BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde boş slot kalmadı (EmptySlot: 0)! Slotlar üzerinde fare gezdiriliyor...");
 
-                            // 1. Pişir seçeneği aktif balık var mı kontrol et ve kamp ateşinde pişir
+                            // Yatayda 5, dikeyde 7 slot (35 slot) üzerinde fareyi yukarı-aşağı gezdir
+                            await HoverAcrossInventoryFishAreaAsync(clientInfo.Handle, cancellationToken);
+
+                            // 1. Pişirme sürecini çalıştır
+                            BotLogger.LogInfo(clientInfo.Id, "🔥 Çanta dolduğu için balık pişirme süreci başlatılıyor...");
                             bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
 
-                            // 2. Pişirme sonrası güncel boş slot sayısını tekrar kontrol et
-                            int finalEmptyCount = 0;
-                            using (Bitmap? recheckBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+                            if (!cookedAny)
                             {
-                                if (recheckBmp != null)
-                                {
-                                    var recheckSlots = TemplateConstants.MatchAll(recheckBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
-                                    finalEmptyCount = recheckSlots.Count;
-                                }
-                            }
-
-                            BotLogger.LogInfo(clientInfo.Id, $"Pişirme sonrası güncel boş slot sayısı: {finalEmptyCount}");
-
-                            if (finalEmptyCount == 0)
-                            {
-                                BotLogger.LogWarning(clientInfo.Id, "🛑 Boş slot açılamadı veya hiç boş slot kalmadı! Balık botu durduruluyor...");
+                                BotLogger.LogWarning(clientInfo.Id, "🛑 Pişirme işlemi yapılamadı veya boş slot açılamadı! Balık botu durduruluyor.");
                                 Services.FishBotService.Instance.StopFishBot(clientInfo.Id);
                                 BringMainFormToFront();
                                 return;
-                            }
-                            else
-                            {
-                                BotLogger.LogSuccess(clientInfo.Id, $"🎉 Pişirme işlemiyle {finalEmptyCount} adet boş slot açıldı. Balık tutma döngüsüne devam ediliyor.");
                             }
                         }
                     }
@@ -670,6 +690,43 @@ namespace Aether.Functions
                 });
             }
             catch { }
+        }
+
+        /// <summary>
+        /// InventoryFishArea içerisindeki 5x7 (35 slot) ızgarada fareyi sütun sütun yukarı-aşağı gezdirir.
+        /// </summary>
+        public static async Task HoverAcrossInventoryFishAreaAsync(IntPtr hWnd, CancellationToken cancellationToken)
+        {
+            const int cols = 5;
+            const int rows = 7;
+
+            double slotW = (double)RegionConstants.InventoryFishArea.Width / cols;
+            double slotH = (double)RegionConstants.InventoryFishArea.Height / rows;
+
+            for (int col = 0; col < cols; col++)
+            {
+                if (cancellationToken.IsCancellationRequested) break;
+
+                // Çift sütunlarda yukarıdan aşağıya (0 -> 6), tek sütunlarda aşağıdan yukarıya (6 -> 0)
+                bool goDown = (col % 2 == 0);
+                int startRow = goDown ? 0 : rows - 1;
+                int endRow = goDown ? rows : -1;
+                int step = goDown ? 1 : -1;
+
+                for (int row = startRow; goDown ? row < endRow : row > endRow; row += step)
+                {
+                    if (cancellationToken.IsCancellationRequested) break;
+
+                    int targetX = RegionConstants.InventoryFishArea.StartX + (int)((col + 0.5) * slotW) + Random.Shared.Next(-2, 3);
+                    int targetY = RegionConstants.InventoryFishArea.StartY + (int)((row + 0.5) * slotH) + Random.Shared.Next(-2, 3);
+
+                    await HumanMouseService.Instance.MoveMouseToLocalAsync(hWnd, targetX, targetY, cancellationToken);
+                    await Task.Delay(Random.Shared.Next(40, 70), cancellationToken);
+                }
+            }
+
+            // Gezme bittiğinde fareyi envanter dışına çek
+            await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(hWnd, cancellationToken);
         }
     }
 }

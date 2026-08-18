@@ -113,8 +113,19 @@ namespace Aether.Functions
 
                         var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
 
-                        // 1. Pişir seçeneği aktif balık var mı kontrol et ve pişir
-                        bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+                        // 1. Pişirilecek balık var mı kontrol et ve pişir
+                        BotLogger.LogInfo(clientInfo.Id, "[Başlangıç] Envanterde 'Pişir' olarak ayarlanmış pişirilebilir balık aranıyor...");
+                        bool hasCookable = FishCookingFunction.HasCookableFish(clientInfo.Handle, clientInfo.Id, settings);
+
+                        if (hasCookable)
+                        {
+                            BotLogger.LogInfo(clientInfo.Id, "🔥 [Başlangıç] Pişirilecek balıklar tespit edildi. Pişirme fonksiyonu başlatılıyor...");
+                            bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+                        }
+                        else
+                        {
+                            BotLogger.LogWarning(clientInfo.Id, "⚠️ [Başlangıç] Envanterde 'Pişir' olarak ayarlanmış ve pişirilebilecek canlı balık bulunamadı.");
+                        }
 
                         // 2. Pişirme sonrası tekrar boş slot sayısını kontrol et
                         int finalEmptyCount = 0;

@@ -139,22 +139,33 @@ namespace Aether.Helpers
                 TextAlign = ContentAlignment.MiddleLeft
             });
 
-            // Sütun Başlıkları
+            // Sütun Başlıkları ve Tümünü Seç/Kaldır CheckBox'ları
             int headerSpacing = cfg.Columns.Count switch { 1 => 0, 2 => 240, _ => 105 };
-            int headerStartX = cfg.Columns.Count switch { 1 => 515, 2 => 275, _ => 210 };
+            int headerStartX = cfg.Columns.Count switch { 1 => 515, 2 => 275, _ => 205 };
+
+            var columnRowCheckBoxMap = new Dictionary<string, List<Sunny.UI.UICheckBox>>();
+            var headerCheckBoxMap = new Dictionary<string, Sunny.UI.UICheckBox>();
 
             for (int i = 0; i < cfg.Columns.Count; i++)
             {
                 var col = cfg.Columns[i];
-                container.Controls.Add(new Label
+                columnRowCheckBoxMap[col.HeaderText] = new List<Sunny.UI.UICheckBox>();
+
+                var headerCb = new Sunny.UI.UICheckBox
                 {
                     Text = col.HeaderText,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
                     ForeColor = ColorTranslator.FromHtml(col.HeaderColor),
-                    Location = new Point(headerStartX + (i * headerSpacing), tableTop + 8),
-                    Size = new Size(cfg.Columns.Count > 2 ? 95 : 110, 25),
-                    TextAlign = ContentAlignment.MiddleCenter
-                });
+                    CheckBoxColor = ColorTranslator.FromHtml(col.HeaderColor),
+                    CheckBoxSize = 18,
+                    Location = new Point(headerStartX + (i * headerSpacing), tableTop + 7),
+                    Size = new Size(cfg.Columns.Count > 2 ? 100 : 120, 26),
+                    Cursor = Cursors.Hand,
+                    Tag = $"HEADER|{cfg.Id}|{col.HeaderText}"
+                };
+
+                headerCheckBoxMap[col.HeaderText] = headerCb;
+                container.Controls.Add(headerCb);
             }
 
             // Header Alt Çizgisi
@@ -214,6 +225,7 @@ namespace Aether.Helpers
                     };
 
                     container.Controls.Add(cb);
+                    columnRowCheckBoxMap[col.HeaderText].Add(cb);
 
                     // İlk sütun (Balığı Tut veya Yakala) ilk kontrol olarak yakalanır
                     if (col.HeaderText == "Balığı Tut" || col.HeaderText == "Yakala")
@@ -283,6 +295,71 @@ namespace Aether.Helpers
                 }
 
                 yOffset += RowHeight;
+            }
+
+            // Sütun başlık checkbox'ları ile satır checkbox'ları arasında çift yönlü senkronizasyon
+            foreach (var col in cfg.Columns)
+            {
+                string colHeader = col.HeaderText;
+                if (!headerCheckBoxMap.TryGetValue(colHeader, out var headerCb)) continue;
+                if (!columnRowCheckBoxMap.TryGetValue(colHeader, out var rowList)) continue;
+
+                bool isUpdatingFromHeader = false;
+                bool isUpdatingHeader = false;
+
+                Action updateThisHeader = () =>
+                {
+                    if (isUpdatingFromHeader) return;
+                    isUpdatingHeader = true;
+                    try
+                    {
+                        bool allChecked = rowList.Count > 0 && rowList.All(cb => cb.Checked);
+                        headerCb.Checked = allChecked;
+                    }
+                    finally
+                    {
+                        isUpdatingHeader = false;
+                    }
+                };
+
+                // Header tıklandığında tüm satırları güncelle
+                headerCb.Click += (s, e) =>
+                {
+                    if (isUpdatingHeader) return;
+                    isUpdatingFromHeader = true;
+                    try
+                    {
+                        bool targetState = headerCb.Checked;
+                        foreach (var rowCb in rowList)
+                        {
+                            // Eğer satır etkinse veya Balığı Tut/Yakala ise durumu değiştir
+                            if (rowCb.Enabled || colHeader == "Balığı Tut" || colHeader == "Yakala")
+                            {
+                                rowCb.Checked = targetState;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        isUpdatingFromHeader = false;
+                    }
+                    updateThisHeader();
+                };
+
+                // Satır checkbox'ı değiştiğinde header durumunu güncelle
+                foreach (var rowCb in rowList)
+                {
+                    rowCb.ValueChanged += (s, val) =>
+                    {
+                        if (!isUpdatingFromHeader)
+                        {
+                            updateThisHeader();
+                        }
+                    };
+                }
+
+                // Başlangıç durumunu hesapla
+                updateThisHeader();
             }
 
             currentY += totalHeight;

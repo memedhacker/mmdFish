@@ -50,6 +50,7 @@ namespace Aether.Forms
         private Button _btnAutoTestToggle = null!;
         private NumericUpDown _numInterval = null!;
         private ComboBox _cmbCategory = null!;
+        private CheckBox _chkColorMode = null!;
         private NumericUpDown _numThreshold = null!;
         private ComboBox _cmbSearchScope = null!;
         private Button _btnManualTest = null!;
@@ -261,17 +262,24 @@ namespace Aether.Forms
             _cmbCategory = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 145,
+                Width = 210,
                 Height = 28,
                 BackColor = Colors.ArkaPlanKoyu,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9f, FontStyle.Regular),
-                Margin = new Padding(0, 3, 6, 0)
+                Margin = new Padding(0, 3, 4, 0)
             };
             _cmbCategory.Items.AddRange(new object[]
             {
-                $"🐟 FishNames ({TemplateConstants.FishNames.All.Count} Balık)",
+                $"🐟 FishNames (Chat İsimleri) ({TemplateConstants.FishNames.All.Count})",
+                $"🐟 Balık İkonları (Yaygın) ({TemplateConstants.FishIconTemplates.Common.All.Count})",
+                $"✨ Balık İkonları (Nadir) ({TemplateConstants.FishIconTemplates.Rare.All.Count})",
+                $"💀 Ölü Balık İkonları ({TemplateConstants.FishIconTemplates.DeadFishes.All.Count})",
+                $"🔥 Izgara Balık İkonları ({TemplateConstants.FishIconTemplates.GrilledFishes.All.Count})",
+                $"🎒 Diğer Eşya İkonları ({TemplateConstants.FishIconTemplates.Others.All.Count})",
+                $"💎 Ölü Balık Ganimetleri ({TemplateConstants.FishIconTemplates.Others.DeadFishLoot.All.Count})",
+                $"📦 Tüm Balık / Eşya İkonları ({TemplateConstants.FishIconTemplates.All.Count})",
                 $"📍 Waypoints ({TemplateConstants.Waypoints.All.Count} Şablon)",
                 $"🛡️ AutoPass ({TemplateConstants.AutoPass.All.Count} Şablon)",
                 $"🪟 WindowParts ({TemplateConstants.WindowParts.All.Count} Şablon)",
@@ -280,6 +288,26 @@ namespace Aether.Forms
                 $"⭐ Tümü ({TemplateConstants.AllTemplates.Count} Şablon)"
             });
             _cmbCategory.SelectedIndex = 0;
+
+            _chkColorMode = new CheckBox
+            {
+                Text = "🎨 Renkli",
+                Checked = false,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                AutoSize = true,
+                Margin = new Padding(2, 5, 4, 0),
+                Cursor = Cursors.Hand
+            };
+
+            _cmbCategory.SelectedIndexChanged += (s, e) =>
+            {
+                // Balık ikonu kategorilerinde renk ayrımı (Normal/Ölü/Izgara) kritik olduğu için otomatik Renkli aramayı aç
+                if (_cmbCategory.SelectedIndex >= 1 && _cmbCategory.SelectedIndex <= 7)
+                {
+                    _chkColorMode.Checked = true;
+                }
+            };
 
             _numThreshold = new NumericUpDown
             {
@@ -322,6 +350,7 @@ namespace Aether.Forms
             bottomTestFlow.Controls.Add(_numInterval);
             bottomTestFlow.Controls.Add(CreateCoordLabel("ms | Şablon:"));
             bottomTestFlow.Controls.Add(_cmbCategory);
+            bottomTestFlow.Controls.Add(_chkColorMode);
             bottomTestFlow.Controls.Add(CreateCoordLabel("Eşik: %"));
             bottomTestFlow.Controls.Add(_numThreshold);
             bottomTestFlow.Controls.Add(CreateCoordLabel("Kapsam:"));
@@ -523,16 +552,24 @@ namespace Aether.Forms
                 IReadOnlyList<string> candidateTemplates = _cmbCategory.SelectedIndex switch
                 {
                     0 => TemplateConstants.FishNames.All,
-                    1 => TemplateConstants.Waypoints.All,
-                    2 => TemplateConstants.AutoPass.All,
-                    3 => TemplateConstants.WindowParts.All,
-                    4 => TemplateConstants.InventoryItems.All,
-                    5 => TemplateConstants.Fisherman.All,
+                    1 => TemplateConstants.FishIconTemplates.Common.All,
+                    2 => TemplateConstants.FishIconTemplates.Rare.All,
+                    3 => TemplateConstants.FishIconTemplates.DeadFishes.All,
+                    4 => TemplateConstants.FishIconTemplates.GrilledFishes.All,
+                    5 => TemplateConstants.FishIconTemplates.Others.All,
+                    6 => TemplateConstants.FishIconTemplates.Others.DeadFishLoot.All,
+                    7 => TemplateConstants.FishIconTemplates.All,
+                    8 => TemplateConstants.Waypoints.All,
+                    9 => TemplateConstants.AutoPass.All,
+                    10 => TemplateConstants.WindowParts.All,
+                    11 => TemplateConstants.InventoryItems.All,
+                    12 => TemplateConstants.Fisherman.All,
                     _ => TemplateConstants.AllTemplates
                 };
 
                 double threshold = (double)_numThreshold.Value / 100.0;
                 bool searchInSelection = _cmbSearchScope.SelectedIndex == 0 && _currentSelection.Width > 5 && _currentSelection.Height > 5;
+                bool useGrayscale = !_chkColorMode.Checked;
 
                 Bitmap searchTarget = _fullImage;
                 Bitmap? croppedTarget = null;
@@ -555,7 +592,7 @@ namespace Aether.Forms
                 }
 
                 // 3. Template Matching çalıştır (Eşik değerini geçen TÜM eşleşmeleri bul)
-                var allMatches = TemplateConstants.FindAllMatches(searchTarget, candidateTemplates, threshold: threshold);
+                var allMatches = TemplateConstants.FindAllMatches(searchTarget, candidateTemplates, threshold: threshold, useGrayscale: useGrayscale);
                 _perfStopwatch.Stop();
                 long elapsedMs = _perfStopwatch.ElapsedMilliseconds;
 
@@ -570,12 +607,30 @@ namespace Aether.Forms
                         // En yüksek benzerlik puanına göre sırala
                         allMatches.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
 
+                        // Aynı / çakışan pozisyondaki eşleşmelerden yalnızca en yüksek benzerliğe (confidence) sahip olanı tut
+                        var uniqueMatches = new List<TemplateMatchResult>();
+                        foreach (var m in allMatches)
+                        {
+                            bool isOverlapping = uniqueMatches.Any(existing =>
+                            {
+                                int overlapThresholdX = Math.Max(8, Math.Min(existing.Bounds.Width, m.Bounds.Width) / 2);
+                                int overlapThresholdY = Math.Max(8, Math.Min(existing.Bounds.Height, m.Bounds.Height) / 2);
+                                return Math.Abs(existing.Location.X - m.Location.X) < overlapThresholdX &&
+                                       Math.Abs(existing.Location.Y - m.Location.Y) < overlapThresholdY;
+                            });
+
+                            if (!isOverlapping)
+                            {
+                                uniqueMatches.Add(m);
+                            }
+                        }
+
                         var templateColors = new Dictionary<string, Color>(StringComparer.OrdinalIgnoreCase);
                         int colorIdx = 0;
 
-                        for (int i = 0; i < allMatches.Count; i++)
+                        for (int i = 0; i < uniqueMatches.Count; i++)
                         {
-                            var match = allMatches[i];
+                            var match = uniqueMatches[i];
                             if (!templateColors.TryGetValue(match.TemplateName, out Color distinctColor))
                             {
                                 distinctColor = MatchColorPalette[colorIdx % MatchColorPalette.Length];

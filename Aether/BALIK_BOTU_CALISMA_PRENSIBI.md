@@ -85,7 +85,10 @@ Her bir balık tutma döngüsünde aşağıdaki 8 adım kesintisiz olarak yürü
 ```mermaid
 graph TD
     A[1. Envanterdeki Yemleri Tara] --> B[2. Rastgele Bir Yeme Sağ Tıkla]
-    B --> C[Oltalama Hızı Beklemesi Min-Max ms]
+    B --> B1{2.1 Envanter Boş Slot Kontrolü}
+    B1 -- EmptySlot == 0 --► B2[5x7 Slotlarda Fareyi Yukarı-Aşağı Gezdir]
+    B2 --► B3[🛑 Botu Durdur & MainForm Öne Getir]
+    B1 -- Boş Slot Var --► C[Oltalama Hızı Beklemesi Min-Max ms]
     C --> D[3. Space Tuşuna Basarak Olta At]
     D --> E[4. ChatBox Taraması Balık Adı / AutoPass]
     E --> F{5. Filtre Kontrolü: Balığı Tut Aktif mi?}
@@ -137,17 +140,14 @@ Balık tutma bittiğinde karakterin oltayı sudan çekme animasyonunu iptal eder
 
 ## 7. Balık Pişirme ve Envanter Yönetimi (`FishCookingFunction.cs`)
 
-Envanter balık alanı (`InventoryFishArea`) dolduğunda (`EmptySlot == 0`):
+Envanter balık alanı (`InventoryFishArea`) dolduğunda veya pişirme tetiklendiğinde aşağıdaki adımlar sırayla yürütülür:
 
-1. **Filtre Taraması**: `FishFilter` içerisinde "Pişir" sütunu işaretli olan balıklar tespit edilir.
-2. **Kamp Ateşi Kurulumu**: `InventoryPosition` içindeki `ates.png` bulunup bir kez sağ tıklanarak yere kurulur.
-3. **Zemin Ateşi Tespiti**: `FisherManSearchArea` bölgesinde `KampAtesiFloor` veya `KampAtesiFloor2` şablonu (**>= %60**) aranır ve merkez koordinatı alınır.
-4. **Sürükle ve Bırak (Drag & Drop)**:
-   - "Pişir" seçilmiş tüm balıklar tek tek yerdeki kamp ateşinin koordinatına sürüklenip bırakılır.
-   - **Her bırakma anında `KampAtesiFloor` / `KampAtesiFloor2` şablonunun yerdeki varlığı anlık olarak teyit edilir.** (Ateş sönerse envanterdeki diğer ateşler yakılır).
-5. **Döngü Kararı**:
-   - Pişirme sonrası `InventoryFishArea` tekrar taranır.
-   - Boş slot açılmışsa balık tutma döngüsüne devam edilir; açılamamışsa bot durdurulur ve ana form öne getirilir.
+* **Adım A (Filtre ve Balık Taraması)**: `InventoryFishArea` içerisinde "Pişir" seçeneği aktif olan balıklar taranır. (Yalnızca `FishIconTemplates` [Common, Rare] ve `DeadFishes` şablonları dahil edilir, `Izgara_*` şablonları hariç tutulur).
+* **Adım B2 (Uygun Balık Yoksa)**: Eğer `InventoryFishArea` içerisinde pişirilecek uygun balık yoksa bot durdurulur ve ana form öne getirilir.
+* **Adım B (Kamp Ateşi Kurulumu)**: Pişirilmeye uygun balık(lar) varsa `InventoryBaitArea` içerisinden herhangi bir `ates.png` şablonuna sağ tıklanır, **100ms beklenir** ve fare envanter dışına çekilir.
+* **Adım C (Zemin Ateşi Tespiti)**: `FisherManSearchArea` bölgesinde `KampAtesiFloor` veya `KampAtesiFloor2` şablonları (**>= %60**) aranır ve konum koordinatları alınır.
+* **Adım D (Ateşe Sürükle ve Bırak)**: Pişirilmeye uygun balıklar sırayla yerdeki kamp ateşinin koordinatına sürüklenip bırakılır (`Drag & Drop`).
+* **Adım E (Boş Alan Kontrolü ve Döngü Kararı)**: Tüm balıklar piştiğinde `InventoryFishArea` alanındaki boş slot sayısı tekrar taranır. Boş yer açılmışsa (`EmptySlot > 0`) balık tutma döngüsüne devam edilir; açılamamışsa bot durdurulur.
 
 ---
 

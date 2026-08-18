@@ -223,7 +223,7 @@ namespace Aether.Helpers
                     if (ctrl is UICheckBox cb && cb.Tag is string tag)
                     {
                         var parts = tag.Split('|');
-                        if (parts.Length == 3)
+                        if (parts.Length == 3 && parts[0] != "HEADER")
                         {
                             var item = settings.GetOrCreateFilterItem(parts[0], parts[1]);
                             item.SetCheck(parts[2], cb.Checked);
@@ -305,7 +305,7 @@ namespace Aether.Helpers
                     if (ctrl is UICheckBox cb && cb.Tag is string tag)
                     {
                         var parts = tag.Split('|');
-                        if (parts.Length == 3)
+                        if (parts.Length == 3 && parts[0] != "HEADER")
                         {
                             string categoryId = parts[0];
                             string itemKey = parts[1];
@@ -351,6 +351,54 @@ namespace Aether.Helpers
                             }
                             cb.Enabled = isCatchChecked;
                         }
+                    }
+                }
+            }
+
+            // Tüm tabloların başlık (header) checkbox'larını güncel satır durumlarına göre senkronize et
+            UpdateAllHeaderCheckBoxes(page);
+        }
+
+        /// <summary>
+        /// FishFilterPanel içerisindeki tüm tabloların başlık (HEADER) checkbox'larını
+        /// altlarındaki satırların Checked durumuna göre (hepsi seçiliyse checked, biri bile değilse unchecked) günceller.
+        /// </summary>
+        public static void UpdateAllHeaderCheckBoxes(FishBotPage page)
+        {
+            foreach (Control tablePanel in page.FishFilterPanel.Controls)
+            {
+                var headerMap = new System.Collections.Generic.Dictionary<string, UICheckBox>();
+                var rowMap = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<UICheckBox>>();
+
+                foreach (Control ctrl in tablePanel.Controls)
+                {
+                    if (ctrl is UICheckBox cb && cb.Tag is string tag)
+                    {
+                        var parts = tag.Split('|');
+                        if (parts.Length == 3)
+                        {
+                            string colHeader = parts[2];
+                            if (parts[0] == "HEADER")
+                            {
+                                headerMap[colHeader] = cb;
+                            }
+                            else
+                            {
+                                if (!rowMap.ContainsKey(colHeader))
+                                    rowMap[colHeader] = new System.Collections.Generic.List<UICheckBox>();
+                                rowMap[colHeader].Add(cb);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var kvp in headerMap)
+                {
+                    string colHeader = kvp.Key;
+                    var headerCb = kvp.Value;
+                    if (rowMap.TryGetValue(colHeader, out var rows) && rows.Count > 0)
+                    {
+                        headerCb.Checked = rows.TrueForAll(r => r.Checked);
                     }
                 }
             }
