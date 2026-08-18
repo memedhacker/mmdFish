@@ -431,83 +431,32 @@ namespace Aether.Pages
             }
             Services.FishBotService.Instance.OnFishBotStateChanged -= FishBotService_OnFishBotStateChanged;
             Services.BotLogger.OnLog -= BotLogger_OnLog;
-            Services.BotLogger.OnKeyLog -= BotLogger_OnKeyLog;
             base.OnHandleDestroyed(e);
         }
 
-        #region LogPanel Yönetimi (Bot Logger & Tuş Logger UI)
+        #region LogPanel Yönetimi (Bot Logger UI)
 
         private RichTextBox? _rtbLogs;
-        private RichTextBox? _rtbKeyLogs;
         private int _logCounter = 0;
-        private int _keyLogCounter = 0;
 
         private void InitializeLogPanel()
         {
-            logPanel.Controls.Clear();
-            logPanel.Padding = new Padding(6);
-
-            var splitLayout = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                RowCount = 3,
-                ColumnCount = 1,
-                BackColor = Color.Transparent,
-                Margin = new Padding(0),
-                Padding = new Padding(0)
-            };
-
-            // Üst kısım: %58 (Bot Logları), Orta ayraç başlık: 18px, Alt kısım: %42 (Tuş Logları)
-            splitLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 58F));
-            splitLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 18F));
-            splitLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 42F));
-
-            // 1. Genel Bot Logları RichTextBox (15 log temizlenme sıklığı)
             _rtbLogs = new RichTextBox
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.FromArgb(30, 30, 35),
                 ForeColor = Color.FromArgb(220, 220, 225),
-                Font = new Font("Segoe UI", 8.5F, FontStyle.Regular),
+                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
                 BorderStyle = BorderStyle.None,
                 ReadOnly = true,
-                ScrollBars = RichTextBoxScrollBars.Vertical,
-                Margin = new Padding(0)
+                ScrollBars = RichTextBoxScrollBars.Vertical
             };
 
-            // 2. Tuş Logları Ayraç / Başlık
-            var keyLogHeader = new Label
-            {
-                Dock = DockStyle.Fill,
-                Text = "⌨️ Tuş Basım Logları (Temizlenme Sıklığı: 500 log):",
-                Font = new Font("Segoe UI", 8F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(175, 175, 190),
-                BackColor = Color.FromArgb(22, 22, 26),
-                TextAlign = ContentAlignment.MiddleLeft,
-                Margin = new Padding(0)
-            };
-
-            // 3. Tuş Basım Logları RichTextBox (500 log temizlenme sıklığı)
-            _rtbKeyLogs = new RichTextBox
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.FromArgb(22, 22, 26),
-                ForeColor = Color.FromArgb(245, 190, 80),
-                Font = new Font("Consolas", 8.5F, FontStyle.Regular),
-                BorderStyle = BorderStyle.None,
-                ReadOnly = true,
-                ScrollBars = RichTextBoxScrollBars.Vertical,
-                Margin = new Padding(0)
-            };
-
-            splitLayout.Controls.Add(_rtbLogs, 0, 0);
-            splitLayout.Controls.Add(keyLogHeader, 0, 1);
-            splitLayout.Controls.Add(_rtbKeyLogs, 0, 2);
-
-            logPanel.Controls.Add(splitLayout);
+            logPanel.Controls.Clear();
+            logPanel.Padding = new Padding(8);
+            logPanel.Controls.Add(_rtbLogs);
 
             Services.BotLogger.OnLog += BotLogger_OnLog;
-            Services.BotLogger.OnKeyLog += BotLogger_OnKeyLog;
         }
 
         private void BotLogger_OnLog(int clientId, string message, Color color)
@@ -542,42 +491,6 @@ namespace Aether.Pages
             _rtbLogs.SelectionColor = _rtbLogs.ForeColor;
 
             _rtbLogs.ScrollToCaret();
-        }
-
-        private void BotLogger_OnKeyLog(int clientId, string keyName, Color color)
-        {
-            if (InvokeRequired)
-            {
-                try
-                {
-                    BeginInvoke(new Action(() => BotLogger_OnKeyLog(clientId, keyName, color)));
-                }
-                catch { }
-                return;
-            }
-
-            if (_rtbKeyLogs == null || _rtbKeyLogs.IsDisposed) return;
-
-            // Her 500 logda bir veya satır sayısı 500'e ulaştığında temizle
-            _keyLogCounter++;
-            if (_keyLogCounter > 500 || _rtbKeyLogs.Lines.Length >= 500)
-            {
-                _rtbKeyLogs.Clear();
-                _keyLogCounter = 1;
-            }
-
-            string timeStamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            string line = clientId > 0
-                ? $"[{timeStamp}] [Client #{clientId}] ⌨️ {keyName}\n"
-                : $"[{timeStamp}] ⌨️ {keyName}\n";
-
-            _rtbKeyLogs.SelectionStart = _rtbKeyLogs.TextLength;
-            _rtbKeyLogs.SelectionLength = 0;
-            _rtbKeyLogs.SelectionColor = color;
-            _rtbKeyLogs.AppendText(line);
-            _rtbKeyLogs.SelectionColor = _rtbKeyLogs.ForeColor;
-
-            _rtbKeyLogs.ScrollToCaret();
         }
 
         #endregion

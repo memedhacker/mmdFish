@@ -6,6 +6,7 @@ using Aether.Services;
 using Aether.States;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -77,15 +78,14 @@ namespace Aether.Functions
         #endregion
 
         /// <summary>
-        /// Tek bir balık tutma döngüsünü baştan sona çalıştırır:
-        /// 1. Envanter bölgesindeki yemleri tarar, sayar ve listeler (Yem bittiyse ve BuyWorm açıksa marketten yem alır).
-        /// 2. Bulunan yemler arasından rastgele bir tanesini seçip insansı fare hareketiyle sağ tıklar.
-        /// 3. Space tuşuna basarak oltayı atar.
-        /// 4. ChatBoxPosition alanını tarayarak balık adları ve AutoPass şablonlarını arar.
-        /// 5. Balık veya AutoPass bulunduğunda filtre kontrolü yapar ("Balığı Tut" / "Yakala").
-        /// 6. Eğer "Balığı Tut" kapalıysa veya AutoPass ise: FishingMenuTitle beklenir, FishingMenuExitButton'a tıklanır ve Animasyon İptali yapılır.
-        /// 7. Eğer "Balığı Tut" açıksa: FishingMenuTitle bulunduğunda eşzamanlı olarak FishingMinigameFunction ve Waypoint takibi başlatılır.
-        /// 8. ChatArea'da Waypoint şablonu eşleştiğinde fonksiyonlar durdurulur ve Animasyon İptali yapılarak döngü başarıyla tamamlanır.
+        /// <summary>
+        /// Tek bir balık tutma döngüsünü 6 adımda kesintisiz yürütür:
+        /// 1. Envanter ve Slot Kontrolü (Boş slot yoksa Öldürme ve Pişirme)
+        /// 2. Yem Kontrolü ve Hazırlık (Yem yoksa BuyWorm/Balıkçı kontrolü, Yem varsa sağ tık & oltalama hızı beklemesi)
+        /// 3. Oltayı Fırlatma ve İlk Kontroller (Space ile atış & ChatBox Tutamazsın kontrolü)
+        /// 4. Filtreleme ve Karar (Balığı Tut / AutoPass kontrolü, kapalıysa çıkış butonu & animasyon iptali)
+        /// 5. Balık Tutma (Mini-Oyun & Eşzamanlı Waypoint takibi & Animasyon iptali)
+        /// 6. Sonuç ve Döngü (Yakalandıysa 100ms bekle, kaçtıysa/diğer doğrudan 1. adıma dön)
         /// </summary>
         public static async Task ExecuteFishingCycleAsync(ClientInfo clientInfo, CancellationToken cancellationToken)
         {
@@ -95,39 +95,84 @@ namespace Aether.Functions
             var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
 
             // =========================================================================
-            // 1. ADIM: Envanter bölgesindeki yemleri tara ve listele
+            // 1. ADIM: Envanter ve Slot Kontrolü
             // =========================================================================
-            BotLogger.LogInfo(clientInfo.Id, "Envanterdeki yemler taranıyor...");
+            BotLogger.LogInfo(clientInfo.Id, "[Adım 1] Envanterdeki boş slot sayısı taranıyor...");
+            await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
+
+            int emptyCount = 0;
+            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
+            {
+                if (fishAreaBmp != null)
+                {
+                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
+                    emptySlots.Sort((a, b) => b.Confidence.CompareTo(a.Confidence));
+
+                    var uniqueEmpty = new List<TemplateMatchResult>();
+                    foreach (var slot in emptySlots)
+                    {
+                        if (!uniqueEmpty.Any(existing => Math.Abs(existing.Location.X - slot.Location.X) < 16 && Math.Abs(existing.Location.Y - slot.Location.Y) < 16))
+                        {
+                            uniqueEmpty.Add(slot);
+                        }
+                    }
+                    emptyCount = uniqueEmpty.Count;
+                }
+            }
+
+            BotLogger.LogInfo(clientInfo.Id, $"[Adım 1] Envanter (InventoryFishArea) boş slot sayısı: {emptyCount}");
+
+            // Eğer boş slot yoksa (EmptySlot == 0): Botu durdur ve MainForm'u öne getir
+            if (emptyCount == 0)
+            {
+                BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çanta tamamen dolu (InventoryFishArea boş slot: 0)! Balık botu durduruluyor...");
+                FishBotService.Instance.StopFishBot(clientInfo.Id);
+                BringMainFormToFront();
+                return;
+            }
+
+            // =========================================================================
+            // 2. ADIM: Yem Kontrolü ve Hazırlık
+            // =========================================================================
+            BotLogger.LogInfo(clientInfo.Id, "[Adım 2] Envanterdeki yemler taranıyor...");
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
 
             List<TemplateMatchResult> baitMatches = ScanBaits(clientInfo.Handle);
 
-            // Yem kontrolü (Yem bittiyse ve BuyWorm açıksa balıkçıdan yem satın al)
+            // Eğer yem yoksa:
             if (baitMatches.Count == 0)
             {
                 if (settings.BuyWormEnabled)
                 {
-                    BotLogger.LogWarning(clientInfo.Id, "Envanterde yem kalmadı! BuyWorm ayarı aktif, balıkçıdan yem satın alma başlatılıyor...");
+                    // yem satın al == true: balıkçı bulma ve yem alma işlemleri
+                    BotLogger.LogWarning(clientInfo.Id, "⚠️ [Adım 2] Envanterde yem kalmadı! BuyWorm ayarı aktif, balıkçıdan yem satın alma başlatılıyor...");
                     await StartupFishermanFunction.ExecuteAsync(clientInfo, cancellationToken);
                     await Task.Delay(300, cancellationToken);
 
                     // Satın alma sonrası tekrar yemleri tara
                     baitMatches = ScanBaits(clientInfo.Handle);
                 }
+                else
+                {
+                    // yem satın al == false: Botu durdur / Uyarı ver
+                    BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 2] Envanterde hiç yem kalmadı ve 'BuyWorm' pasif! Bot durduruluyor.");
+                    FishBotService.Instance.StopFishBot(clientInfo.Id);
+                    BringMainFormToFront();
+                    return;
+                }
 
                 if (baitMatches.Count == 0)
                 {
-                    BotLogger.LogWarning(clientInfo.Id, "Envanterde hiç yem (solucan/paket) bulunamadı! Bot durduruluyor.");
+                    BotLogger.LogError(clientInfo.Id, "❌ [Adım 2] Balıkçı işlemlerine rağmen envanterde yem bulunamadı! Bot durduruluyor.");
                     FishBotService.Instance.StopFishBot(clientInfo.Id);
+                    BringMainFormToFront();
                     return;
                 }
             }
 
-            BotLogger.LogInfo(clientInfo.Id, $"Envanterde toplam {baitMatches.Count} adet yem slotu tespit edildi.");
+            BotLogger.LogInfo(clientInfo.Id, $"[Adım 2] Envanterde toplam {baitMatches.Count} adet yem slotu tespit edildi.");
 
-            // =========================================================================
-            // 2. ADIM: Bulunan yemler arasında rastgele bir tanesini seç ve sağ tıkla
-            // =========================================================================
+            // Yem varsa: Rastgele bir yeme sağ tıkla
             int randomIndex = Random.Shared.Next(baitMatches.Count);
             var chosenBait = baitMatches[randomIndex];
 
@@ -142,41 +187,7 @@ namespace Aether.Functions
             // Fareyi envanter dışına çek
             await StartupBaitOrganizerFunction.MoveMouseOutsideInventoryAsync(clientInfo.Handle, cancellationToken);
 
-            // =========================================================================
-            // 2.1 ADIM: Yeme tıklandığında çantadaki (InventoryFishArea) boş yerleri say
-            // =========================================================================
-            using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
-            {
-                if (fishAreaBmp != null)
-                {
-                    var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
-                    int emptyCount = emptySlots.Count;
-                    BotLogger.LogInfo(clientInfo.Id, $"Çantadaki (InventoryFishArea) boş slot sayısı: {emptyCount}");
-
-                    if (emptyCount == 0)
-                    {
-                        BotLogger.LogWarning(clientInfo.Id, "🛑 Çanta tamamen dolmuş (InventoryFishArea boş slot: 0)!");
-
-                        // 1. Pişirme işleminden önce öldürülecek balıklar varsa öldür
-                        BotLogger.LogInfo(clientInfo.Id, "⚔️ Çanta dolduğu için önce balık öldürme süreci başlatılıyor...");
-                        await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
-
-                        // 2. Ardından balık pişirme sürecini çalıştır
-                        BotLogger.LogInfo(clientInfo.Id, "🔥 Ardından balık pişirme süreci başlatılıyor...");
-                        bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
-
-                        if (!cookedAny)
-                        {
-                            BotLogger.LogWarning(clientInfo.Id, "🛑 Pişirme işlemi yapılamadı veya boş slot açılamadı! Balık botu durduruluyor.");
-                            FishBotService.Instance.StopFishBot(clientInfo.Id);
-                            BringMainFormToFront();
-                            return;
-                        }
-                    }
-                }
-            }
-
-            // Oltalama hızı (FishingSpeedMinMs - FishingSpeedMaxMs) aralığında dinamik rastgele bekleme
+            // Oltalama hızı beklemesi yap (Min-Max ms)
             int minSpeed = Math.Max(30, settings.FishingSpeedMinMs);
             int maxSpeed = Math.Max(minSpeed, settings.FishingSpeedMaxMs);
             int castDelayMs = Random.Shared.Next(minSpeed, maxSpeed + 1);
@@ -185,16 +196,15 @@ namespace Aether.Functions
             await Task.Delay(castDelayMs, cancellationToken);
 
             // =========================================================================
-            // 3. ADIM: Space tuşuna basarak oltayı at
+            // 3. ADIM: Oltayı Fırlatma ve İlk Kontroller
             // =========================================================================
-            BotLogger.LogInfo(clientInfo.Id, "Space tuşuna basılarak olta atıldı (Balık tutma başlatıldı).");
+            // Space tuşuna basarak olta at
+            BotLogger.LogInfo(clientInfo.Id, "[Adım 3] Space tuşuna basılarak olta atıldı (Balık tutma başlatıldı).");
             await StartupCameraFunction.HoldKeyAsync(Win32Native.VK_SPACE, 80, cancellationToken);
             await Task.Delay(Random.Shared.Next(250, 400), cancellationToken);
 
-            // =========================================================================
-            // 4. ADIM: ChatBox alanını oku ve balık adları / AutoPass şablonlarını bekle
-            // =========================================================================
-            BotLogger.LogInfo(clientInfo.Id, "ChatBox alanı taranıyor (Balık adları ve AutoPass şablonları bekleniyor)...");
+            // ChatBox'ı tara (Balık Adı / AutoPass / Tutamazsın)
+            BotLogger.LogInfo(clientInfo.Id, "[Adım 3] ChatBox alanı taranıyor (Balık adları, AutoPass ve Tutamazsın bekleniyor)...");
 
             var candidateTemplates = new List<string>();
             candidateTemplates.AddRange(TemplateConstants.FishNames.All);
@@ -228,7 +238,7 @@ namespace Aether.Functions
             if (matchedResult == null || cancellationToken.IsCancellationRequested)
                 return;
 
-            // Tutamazsin Kontrolü (Chat'te burada balık tutamazsın uyarısı geldiyse)
+            // Eğer "Tutamazsın" mesajı geldiyse: Botu durdur ve alan uyarısı göster
             if (matchedResult.TemplatePath == TemplateConstants.Waypoints.Tutamazsin || matchedResult.TemplateName.Equals("tutamazsin", StringComparison.OrdinalIgnoreCase))
             {
                 BotLogger.LogError(clientInfo.Id, $"🚫 'Tutamazsin' waypoint'i tespit edildi! Client #{clientInfo.Id} balık tutabilecek bir alanda değil. Tüm Bot İşlevleri durduruluyor...");
@@ -239,7 +249,7 @@ namespace Aether.Functions
             }
 
             // =========================================================================
-            // 5. ADIM: Filtre & AutoPass Kontrolü ("Balığı Tut" / "Yakala" Durumu)
+            // 4. ADIM: Filtreleme ve Karar
             // =========================================================================
             bool isAutoPass = TemplateConstants.AutoPass.All.Contains(matchedResult.TemplatePath);
             bool isCatchEnabled = !isAutoPass && IsCatchEnabled(settings, matchedResult.TemplateName);
@@ -257,14 +267,12 @@ namespace Aether.Functions
                 BotLogger.LogSuccess(clientInfo.Id, $"✅ '{matchedResult.TemplateName}' için 'Balığı Tut' / 'Yakala' seçeneği aktif. Balık oyunu başlatılacak.");
             }
 
-            // =========================================================================
-            // 6. ADIM: FisherManSearchArea içinde FishingMenuTitle şablonunu bekle
-            // =========================================================================
-            BotLogger.LogInfo(clientInfo.Id, "Fisherman alanında 'FishingMenuTitle' başlığı aranıyor...");
-
+            // FishingMenuTitle başlığını bekle (Timeout süresi ile: 15 sn)
+            BotLogger.LogInfo(clientInfo.Id, "Fisherman alanında 'FishingMenuTitle' başlığı aranıyor (Timeout: 15 sn)...");
             bool menuTitleFound = false;
+            var titleWaitStopwatch = Stopwatch.StartNew();
 
-            while (!cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested && titleWaitStopwatch.ElapsedMilliseconds < 15000)
             {
                 using (Bitmap? searchBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.FisherManSearchArea))
                 {
@@ -284,32 +292,36 @@ namespace Aether.Functions
             }
 
             if (!menuTitleFound || cancellationToken.IsCancellationRequested)
+            {
+                BotLogger.LogWarning(clientInfo.Id, "⚠️ FishingMenuTitle zaman aşımına uğradı veya bulunamadı. 1. Adıma dönülüyor...");
                 return;
+            }
 
-            // =========================================================================
-            // 7. ADIM: Karara Göre Eylem (Çıkış Butonu Tıkla VEYA Balık Oyunu Başlat)
-            // =========================================================================
+            // Eğer Hayır / AutoPass ise:
             if (isAutoPass || !isCatchEnabled)
             {
-                // Çıkış butonuna (FishingMenuExitButtonPosition) git ve tıkla
+                // FishingMenuExitButton'a tıkla
                 int exitLocalX = RegionConstants.FishingMenuExitButtonPosition.StartX + (RegionConstants.FishingMenuExitButtonPosition.Width / 2);
                 int exitLocalY = RegionConstants.FishingMenuExitButtonPosition.StartY + (RegionConstants.FishingMenuExitButtonPosition.Height / 2);
 
-                BotLogger.LogInfo(clientInfo.Id, $"FishingMenuExitButton ({exitLocalX}, {exitLocalY}) alanına tıklanarak menü kapatılıyor...");
-
+                BotLogger.LogInfo(clientInfo.Id, $"FishingMenuExitButton ({exitLocalX}, {exitLocalY}) tıklanarak menü kapatılıyor...");
                 await HumanMouseService.Instance.LeftClickLocalAsync(clientInfo.Handle, exitLocalX, exitLocalY, fastMove: false, cancellationToken: cancellationToken);
                 await Task.Delay(Random.Shared.Next(150, 250), cancellationToken);
 
                 BotLogger.LogSuccess(clientInfo.Id, "FishingMenuExitButton tıklandı ve menü kapatıldı.");
 
-                // Animasyon İptali Yap
+                // Animasyon iptali yap
                 await PerformAnimationCancelAsync(clientInfo, settings, cancellationToken);
 
-                BotLogger.LogInfo(clientInfo.Id, "Döngü tamamlandı, yeni balık tutma adımına geçiliyor...");
+                // 1. Adıma dön
+                BotLogger.LogInfo(clientInfo.Id, "Pas geçme tamamlandı. 1. Adıma dönülüyor...");
                 return;
             }
 
-            // Normal Balık Oyunu: Eşzamanlı Balık Oyunu ve ChatArea Waypoint Taraması
+            // =========================================================================
+            // 5. ADIM: Balık Tutma (Mini-Oyun)
+            // =========================================================================
+            // Eğer Evet ise: Eşzamanlı olarak Mini-Oyun ve Chat Waypoint takibini yürüt
             using var phaseCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             TemplateMatchResult? matchedWaypoint = null;
 
@@ -329,12 +341,13 @@ namespace Aether.Functions
                 // Temiz iptal
             }
 
-            // Balık oyunu bittiğinde Animasyon İptali Yap
+            // Animasyon iptali yap
             await PerformAnimationCancelAsync(clientInfo, settings, cancellationToken);
 
             // =========================================================================
-            // 8. ADIM: Tutamazsin & YakalananBalik Durumu ve Envanter Boş Slot (EmptySlot) Kontrolü
+            // 6. ADIM: Sonuç ve Döngü
             // =========================================================================
+            // Waypoint sonucunu kontrol et:
             if (matchedWaypoint != null && (matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.Tutamazsin || matchedWaypoint.TemplateName.Equals("tutamazsin", StringComparison.OrdinalIgnoreCase)))
             {
                 BotLogger.LogError(clientInfo.Id, $"🚫 'Tutamazsin' waypoint'i tespit edildi! Client #{clientInfo.Id} balık tutabilecek bir alanda değil. Tüm Bot İşlevleri durduruluyor...");
@@ -346,44 +359,17 @@ namespace Aether.Functions
 
             if (matchedWaypoint != null && (matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.YakalananBalik || matchedWaypoint.TemplateName.Equals("yakalanan_balik", StringComparison.OrdinalIgnoreCase)))
             {
-                BotLogger.LogInfo(clientInfo.Id, "🎣 'YakalananBalik' waypoint'i tespit edildi. 100ms bekleniyor...");
+                // Balık yakalandı: 100 ms bekle ve 1. Adıma dön
+                BotLogger.LogSuccess(clientInfo.Id, "🎣 'YakalananBalik' tespit edildi! 100ms bekleniyor ve 1. Adıma dönülüyor...");
                 await Task.Delay(100, cancellationToken);
-
-                // InventoryFishArea boş slot sayısını kontrol et
-                using (Bitmap? fishAreaBmp = WindowRegionCaptureHelper.CaptureRegion(clientInfo.Handle, RegionConstants.InventoryFishArea))
-                {
-                    if (fishAreaBmp != null)
-                    {
-                        var emptySlots = TemplateConstants.MatchAll(fishAreaBmp, TemplateConstants.InventoryItems.EmptySlot, threshold: 0.80);
-                        int emptyCount = emptySlots.Count;
-
-                        BotLogger.LogInfo(clientInfo.Id, $"InventoryFishArea boş slot sayısı: {emptyCount}");
-
-                        if (emptyCount == 0)
-                        {
-                            BotLogger.LogWarning(clientInfo.Id, "🛑 InventoryFishArea içerisinde boş slot kalmadı (EmptySlot: 0)!");
-
-                            // 1. Pişirme işleminden önce öldürülecek balıklar varsa öldür
-                            BotLogger.LogInfo(clientInfo.Id, "⚔️ Çanta dolduğu için önce balık öldürme süreci başlatılıyor...");
-                            await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
-
-                            // 2. Ardından pişirme sürecini çalıştır
-                            BotLogger.LogInfo(clientInfo.Id, "🔥 Ardından balık pişirme süreci başlatılıyor...");
-                            bool cookedAny = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
-
-                            if (!cookedAny)
-                            {
-                                BotLogger.LogWarning(clientInfo.Id, "🛑 Pişirme işlemi yapılamadı veya boş slot açılamadı! Balık botu durduruluyor.");
-                                Services.FishBotService.Instance.StopFishBot(clientInfo.Id);
-                                BringMainFormToFront();
-                                return;
-                            }
-                        }
-                    }
-                }
+                return;
             }
-
-            BotLogger.LogInfo(clientInfo.Id, "Balık tutma döngüsü tamamlandı, yeni olta atma adımına geçiliyor...");
+            else
+            {
+                // Balık kaçtı veya diğer durumlar: 1. Adıma dön
+                BotLogger.LogInfo(clientInfo.Id, "Balık kaçtı veya tur tamamlandı. 1. Adıma dönülüyor...");
+                return;
+            }
         }
 
         /// <summary>
@@ -461,7 +447,6 @@ namespace Aether.Functions
             byte gScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_G, 0);
 
             // --- 1. KEZ CTRL + G ---
-            BotLogger.LogKey(0, "CTRL + G (Binek Animasyon İptali - 1/2)");
             Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);
             Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);
             await Task.Delay(35, cancellationToken);
@@ -472,7 +457,6 @@ namespace Aether.Functions
             await Task.Delay(intervalDelayMs, cancellationToken);
 
             // --- 2. KEZ CTRL + G ---
-            BotLogger.LogKey(0, "CTRL + G (Binek Animasyon İptali - 2/2)");
             Win32Native.keybd_event((byte)Win32Native.VK_CONTROL, ctrlScan, 0, 0);
             Win32Native.keybd_event((byte)Win32Native.VK_G, gScan, 0, 0);
             await Task.Delay(35, cancellationToken);

@@ -80,36 +80,69 @@ Eğer `BuyWormEnabled` veya `BuyCampfireEnabled` ayarları açıksa:
 
 ## 4. Asıl Balık Tutma Döngüsü (`FishingExecutionFunction.cs`)
 
-Her bir balık tutma döngüsünde aşağıdaki adımlar kesintisiz olarak yürütülür:
+Her bir balık tutma döngüsünde aşağıdaki 6 adım kesintisiz olarak yürütülür:
 
 ```mermaid
 graph TD
-    A[1. Envanterdeki Yemleri Tara] --> B[2. Rastgele Bir Yeme Sağ Tıkla]
-    B --> B1{2.1 Envanter Boş Slot Kontrolü}
-    B1 -- EmptySlot == 0 --► B2[Öldürme ve Pişirme Süreçlerini Çalıştır]
-    B2 -- Boş Slot Açılamadı --► B3[🛑 Botu Durdur & MainForm Öne Getir]
-    B2 -- Boş Slot Açıldı --► C[Oltalama Hızı Beklemesi Min-Max ms]
-    B1 -- Boş Slot Var --► C
-    C --> D[3. Space Tuşuna Basarak Olta At]
-    D --> E[4. ChatBox Taraması Balık Adı / AutoPass / Tutamazsin]
-    E --> F{5. Filtre Kontrolü: Balığı Tut Aktif mi?}
-    F -- Hayır / AutoPass --► G[FishingMenuExitButton Tıkla]
-    G --> H[Animasyon İptali Yap]
-    H --> A
-    F -- Evet --► I[6. FishingMenuTitle Başlığını Bekle]
-    I --> J[7. Eşzamanlı: Mini-Oyun & Chat Waypoint Takibi]
-    J --> K[Animasyon İptali Yap]
-    K --> L{8. Waypoint Kontrolü}
-    L -- Tutamazsin --► LQ[🛑 Botu Durdur & Alan Uyarısı Göster]
-    L -- Diğer / Kaçtı --► A
-    L -- YakalananBalik --► M[100ms Bekle & EmptySlot Sayısını Tara]
-    M --> N{EmptySlot == 0?}
-    N -- Hayır --► A
-    N -- Evet --► O[Öldürme ve Pişirme Süreçlerini Çalıştır]
-    O --> P{Boş Slot Açıldı mı?}
-    P -- Evet --► A
-    P -- Hayır --► Q[🛑 Botu Durdur & MainForm Öne Getir]
+    A[1. Envanter ve Slot Kontrolü] --> A1{Boş Slot Var mı?}
+    A1 -- EmptySlot == 0 --► A2[🛑 Botu Durdur & MainForm Öne Getir]
+    A1 -- Boş Slot > 0 --► B[2. Yem Kontrolü ve Hazırlık]
+
+    B --> B1{Yem Var mı?}
+    B1 -- Yem Yok & BuyWorm==false --► B2[🛑 Botu Durdur / Uyarı Ver]
+    B1 -- Yem Yok & BuyWorm==true --► B3[Balıkçı Bulma & Yem Alma]
+    B3 --> B4{Yem Alındı mı?}
+    B4 -- Hayır --► B2
+    B4 -- Evet --► B5[Rastgele Bir Yeme Sağ Tıkla]
+    B1 -- Yem Var --► B5
+
+    B5 --> B6[Oltalama Hızı Beklemesi Min-Max ms]
+    B6 --> C[3. Space Tuşuna Basarak Olta At]
+    C --> C1[ChatBox Taraması Balık / AutoPass / Tutamazsın]
+    C1 --> C2{Mesaj == Tutamazsın?}
+    C2 -- Evet --► C3[🛑 Botu Durdur & Alan Uyarısı Göster]
+    C2 -- Hayır --► D[4. Filtreleme ve Karar]
+
+    D --> D1{Hedef Balığı Tut Aktif mi?}
+    D1 -- Hayır / AutoPass --► D2[FishingMenuExitButton Tıkla]
+    D2 --> D3[Animasyon İptali Yap]
+    D3 --> A
+
+    D1 -- Evet --► E[5. Balık Tutma Mini-Oyun]
+    E --> E1[FishingMenuTitle Başlığını Bekle Timeout 15sn]
+    E1 --> E2[Eşzamanlı: Mini-Oyun & Chat Waypoint Takibi]
+    E2 --> E3[Animasyon İptali Yap]
+    E3 --> F[6. Sonuç ve Döngü]
+
+    F --> F1{Waypoint Sonucu?}
+    F1 -- Tutamazsın --► C3
+    F1 -- Balık Kaçtı / Diğer --► A
+    F1 -- Balık Yakalandı --► F2[100ms Bekle]
+    F2 --> A
 ```
+
+### 📋 Adım Detayları:
+
+1. **Envanter ve Slot Kontrolü**:
+   - Envanterdeki boş slot sayısı taranır (`InventoryFishArea` içerisindeki `EmptySlot`).
+   - Eğer boş slot yoksa (`EmptySlot == 0`): Bot durdurulur ve MainForm öne getirilir.
+   - Boş slot varsa 2. adıma geçilir.
+2. **Yem Kontrolü ve Hazırlık**:
+   - Envanterdeki yemler taranır. Yem yoksa ve `BuyWorm == false` ise bot durdurulur; `BuyWorm == true` ise balıkçıdan yem alınır.
+   - Yem varsa rastgele bir yeme sağ tıklanır, fare dışarı çekilir ve oltalama hızı süresince beklenir.
+3. **Oltayı Fırlatma ve İlk Kontroller**:
+   - Space tuşuna basılarak olta atılır.
+   - ChatBox taranır (Balık Adı / AutoPass / Tutamazsın). "Tutamazsın" mesajı geldiyse bot durdurulur ve alan uyarısı gösterilir.
+4. **Filtreleme ve Karar**:
+   - Filtre kontrolü yapılır: Hedef balık için "Balığı Tut" / "Yakala" aktif mi?
+   - Hayır veya AutoPass ise: `FishingMenuTitle` beklenir, `FishingMenuExitButton` tıklanır, animasyon iptali (`Ctrl+G`) yapılır ve 1. adıma dönülür.
+5. **Balık Tutma (Mini-Oyun)**:
+   - Evet ise: `FishingMenuTitle` başlığı beklenir (15 sn zaman aşımı).
+   - Eşzamanlı olarak Mini-Oyun (`FishingMinigameFunction`) ve Chat Waypoint takibi yürütülür.
+   - Bitiminde binek animasyon iptali (`Ctrl+G`) yapılır.
+6. **Sonuç ve Döngü**:
+   - Balık kaçtı veya diğer durumlarda doğrudan 1. adıma dönülür.
+   - Balık yakalandığında (`YakalananBalik`) 100 ms beklenir ve 1. adıma dönülür (1. adım envanter boşluğunu kontrol eder).
 
 ---
 
@@ -140,34 +173,7 @@ Balık tutma bittiğinde karakterin oltayı sudan çekme animasyonunu iptal eder
 
 ---
 
-## 7. Balık Öldürme Süreci (`FishKillingFunction.cs`)
-
-Envanter balık alanı (`InventoryFishArea`) dolduğunda (veya başlangıçta çanta doluysa), pişirme işleminden hemen önce çalıştırılır:
-
-* **Başlangıç (5x7 Slot Gezme)**: İşlem başında fare 5x7 (35 slot) ızgara boyunca yukarı-aşağı gezdirilir (`HoverAcrossInventoryFishAreaAsync`).
-* **Adım A (Tüm Şablonlarla Tarama & Canlı Balık Ayrımı)**: `InventoryFishArea` alanı **TÜM balık şablonları** (Normal, Ölü, Izgara) ile taranır. Non-Maximum Suppression (NMS) ile her slotun en yüksek benzerlikteki şablonu belirlenir.
-  - Sadece en yüksek eşleşmesi `Izgara_` veya `Ölü_` **olmayan** (yani kesin olarak Normal Canlı) ve ayarlarında "Öldür" işaretli olan balıklar listeye alınır.
-* **Adım B (Sağ Tıklama ile Öldürme)**: Öldürülmeye uygun balıklara sırayla sağ tıklanır.
-* **Adım C (Uygun Balık Yoksa)**: Eğer envanterde öldürülecek canlı balık yoksa doğrudan pişirme adımına geçilir.
-* **Adım E (5x7 Slot Gezme ve Pişirmeye Geçiş)**: Tüm balıklar öldüğünde fare 5x7 (35 slot) ızgara boyunca tekrar yukarı-aşağı gezdirilir (`HoverAcrossInventoryFishAreaAsync`), fare sol dışarı çekilir ve ardından pişirme adımına geçilir.
-
----
-
-## 8. Balık Pişirme ve Envanter Yönetimi (`FishCookingFunction.cs`)
-
-Envanter balık alanı (`InventoryFishArea`) dolduğunda veya pişirme tetiklendiğinde aşağıdaki adımlar sırayla yürütülür:
-
-* **Adım A (Tüm Şablonlarla Tarama & Pişirilebilir Balık Ayrımı)**: `InventoryFishArea` alanı **TÜM balık şablonları** (Normal, Ölü, Izgara) ile taranır. NMS ile her slotun en yüksek benzerlikteki şablonu belirlenir.
-  - En yüksek eşleşmesi `Izgara_` **olmayan** (yani `Ölü_` veya `Normal`) ve ayarlarında "Pişir" işaretli olan balıklar pişirme listesine eklenir.
-* **Adım B2 (Uygun Balık Yoksa)**: Eğer `InventoryFishArea` içerisinde pişirilecek uygun balık yoksa bot durdurulur ve ana form öne getirilir.
-* **Adım B (Kamp Ateşi Kurulumu)**: Pişirilmeye uygun balık(lar) varsa `InventoryBaitArea` içerisinden herhangi bir `ates.png` şablonuna sağ tıklanır, **100ms beklenir** ve fare envanter dışına çekilir.
-* **Adım C (Zemin Ateşi Tespiti)**: `FisherManSearchArea` bölgesinde `KampAtesiFloor` veya `KampAtesiFloor2` şablonları (**>= %60**) aranır ve konum koordinatları alınır.
-* **Adım D (Ateşe Sürükle ve Bırak)**: Pişirilmeye uygun balıklar sırayla yerdeki kamp ateşinin koordinatına sürüklenip bırakılır (`Drag & Drop`).
-* **Adım E (Boş Alan Kontrolü ve Döngü Kararı)**: Tüm balıklar piştiğinde `InventoryFishArea` alanındaki boş slot sayısı tekrar taranır. Boş yer açılmışsa (`EmptySlot > 0`) balık tutma döngüsüne devam edilir; açılamamışsa bot durdurulur.
-
----
-
-## 8. 'Tutamazsin' Waypoint Tespiti ve Alan Uyarısı
+## 7. 'Tutamazsin' Waypoint Tespiti ve Alan Uyarısı
 
 Eğer karakter uygun olmayan bir konumda olta atarsa veya sohbet alanında `tutamazsin.png` şablonu tespit edilirse:
 1. **Güvenli Durdurma**: `FishBotService.Instance.StopFishBot(clientId)` çağrılarak bot anında durdurulur.

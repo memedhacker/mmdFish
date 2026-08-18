@@ -53,7 +53,6 @@ namespace Aether.Functions
 
                 // Bulunamadıysa I tuşuna bas ve 100ms bekle
                 Debug.WriteLine($"[StartupEquipmentMenu] EquipmentMenuTitle bulunamadı, 'I' tuşuna basılıyor (Deneme #{attempt})...");
-                BotLogger.LogKey(clientInfo.Id, "I (Envanter Menüsü Aç/Kapa)");
                 byte iScan = (byte)Win32Native.MapVirtualKey(Win32Native.VK_I, 0);
                 Win32Native.keybd_event((byte)Win32Native.VK_I, iScan, 0, 0);
                 await Task.Delay(40, cancellationToken);

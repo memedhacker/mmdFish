@@ -44,22 +44,6 @@ namespace Aether.Functions
             byte scanCode = (byte)Win32Native.MapVirtualKey(vk, 0);
             var stopwatch = Stopwatch.StartNew();
 
-            string keyName = vk switch
-            {
-                Win32Native.VK_SPACE => "SPACE (Olta Atma)",
-                Win32Native.VK_F => "F (Kamera Ayarı)",
-                Win32Native.VK_G => "G (Kamera Ayarı)",
-                Win32Native.VK_I => "I (Envanter)",
-                Win32Native.VK_1 => "1",
-                Win32Native.VK_2 => "2",
-                Win32Native.VK_3 => "3",
-                Win32Native.VK_4 => "4",
-                Win32Native.VK_5 => "5",
-                Win32Native.VK_ESCAPE => "ESC",
-                _ => $"Tuş (0x{vk:X2})"
-            };
-            BotLogger.LogKey(0, $"{keyName} [{durationMs}ms basıldı]");
-
             try
             {
                 // İlk tuş basma (Key Down)
