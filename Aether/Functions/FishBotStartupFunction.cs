@@ -103,22 +103,20 @@ namespace Aether.Functions
 
             if (emptyCount == 0)
             {
-                BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] InventoryFishArea içerisinde hiç boş slot kalmadı (EmptySlot: 0)! Balık öldürme başlatılıyor...");
+                BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] InventoryFishArea içerisinde hiç boş slot kalmadı (EmptySlot: 0)! Önce balık öldürme başlatılıyor...");
 
                 var settings = FishBotSettingsRegistry.Instance.GetOrCreate(clientInfo.Id);
                 await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
 
-                emptyCount = FishingExecutionFunction.ScanEmptySlots(clientInfo.Handle);
-                if (emptyCount == 0)
+                BotLogger.LogInfo(clientInfo.Id, "🗑️ [Başlangıç] Öldürme tamamlandı, yere atma sürecine geçiliyor...");
+                await FishDropFunction.ExecuteDropProcessAsync(clientInfo, settings, cancellationToken);
+
+                BotLogger.LogInfo(clientInfo.Id, "🔥 [Başlangıç] Yere atma tamamlandı, balık pişirme sürecine geçiliyor...");
+                bool cookedSuccess = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+
+                if (!cookedSuccess)
                 {
-                    BotLogger.LogWarning(clientInfo.Id, "🛑 [Başlangıç] Öldürme sonrası da boş yer açılamadı! Balık botu durduruluyor...");
-                    FishBotService.Instance.StopFishBot(clientInfo.Id);
-                    FishingExecutionFunction.BringMainFormToFront();
                     return;
-                }
-                else
-                {
-                    BotLogger.LogSuccess(clientInfo.Id, $"🎉 [Başlangıç] Öldürme işlemiyle {emptyCount} adet boş slot açıldı. Bot devam ediyor.");
                 }
             }
 

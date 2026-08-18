@@ -310,11 +310,11 @@ namespace Aether.Functions
 
                 if (emptyFireCount > 0)
                 {
-                    int fireBuyCount = emptyFireCount * 2;
+                    int fireBuyCount = emptyFireCount;
                     int marketFireCenterX = RegionConstants.MarketFirePosition.StartX + (RegionConstants.MarketFirePosition.Width / 2);
                     int marketFireCenterY = RegionConstants.MarketFirePosition.StartY + (RegionConstants.MarketFirePosition.Height / 2);
 
-                    BotLogger.LogInfo(clientInfo.Id, $"Marketteki Kamp Ateşine ({marketFireCenterX}, {marketFireCenterY}) 1 sn aralıkla {fireBuyCount} defa sağ tıklanıyor (Boşluk: {emptyFireCount} x 2)...");
+                    BotLogger.LogInfo(clientInfo.Id, $"Marketteki Kamp Ateşine ({marketFireCenterX}, {marketFireCenterY}) 1 sn aralıkla {fireBuyCount} defa sağ tıklanıyor (Boşluk: {emptyFireCount})...");
 
                     for (int fireIdx = 1; fireIdx <= fireBuyCount; fireIdx++)
                     {

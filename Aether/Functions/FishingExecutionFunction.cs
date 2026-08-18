@@ -103,28 +103,29 @@ namespace Aether.Functions
             int emptyCount = ScanEmptySlots(clientInfo.Handle);
             BotLogger.LogInfo(clientInfo.Id, $"[Adım 1] Envanter (InventoryFishArea) boş slot sayısı: {emptyCount}");
 
-            // Eğer boş slot yoksa (EmptySlot == 0): Balık öldürme fonksiyonuna geç
+            // Eğer boş slot yoksa (EmptySlot == 0): Öldürme, yere atma ve pişirme süreçlerini sırayla çalıştır
             if (emptyCount == 0)
             {
-                BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çanta tamamen dolu (InventoryFishArea boş slot: 0)! Balık öldürme fonksiyonuna geçiliyor...");
+                BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çanta tamamen dolu (InventoryFishArea boş slot: 0)! Önce balık öldürme başlatılıyor...");
 
-                // Balık öldürme sürecini çalıştır
+                // 1. Öldürme sürecini çalıştır
                 await FishKillingFunction.ExecuteKillingProcessAsync(clientInfo, settings, cancellationToken);
 
-                // Öldürme sonrası boş slot kontrolü yap
-                emptyCount = ScanEmptySlots(clientInfo.Handle);
-                BotLogger.LogInfo(clientInfo.Id, $"[Adım 1] Öldürme işlemi sonrası güncel boş slot sayısı: {emptyCount}");
+                // 2. Yere atma sürecini çalıştır
+                BotLogger.LogInfo(clientInfo.Id, "🗑️ [Adım 1] Öldürme tamamlandı, yere atma sürecine geçiliyor...");
+                await FishDropFunction.ExecuteDropProcessAsync(clientInfo, settings, cancellationToken);
 
-                // Eğer hala boş yer açılamadıysa: Botu durdur ve MainForm'u öne getir
-                if (emptyCount == 0)
+                // 3. Pişirme sürecini çalıştır
+                BotLogger.LogInfo(clientInfo.Id, "🔥 [Adım 1] Yere atma tamamlandı, balık pişirme sürecine geçiliyor...");
+                bool cookedSuccess = await FishCookingFunction.ExecuteCookingProcessAsync(clientInfo, settings, cancellationToken);
+
+                // Pişirme fonksiyonu kendi içinde D4 (boş slot kontrolü) yapar ve açılamazsa botu durdurur
+                if (!cookedSuccess)
                 {
-                    BotLogger.LogWarning(clientInfo.Id, "🛑 [Adım 1] Çantada öldürülecek balık kalmadı ve boş yer yok! Bot durduruluyor...");
-                    FishBotService.Instance.StopFishBot(clientInfo.Id);
-                    BringMainFormToFront();
                     return;
                 }
 
-                BotLogger.LogSuccess(clientInfo.Id, $"✅ [Adım 1] Boş slot açıldı ({emptyCount} adet). 2. adıma geçiliyor.");
+                BotLogger.LogSuccess(clientInfo.Id, "✅ [Adım 1] Boş slot açıldı. 2. adıma geçiliyor.");
             }
 
             // =========================================================================
