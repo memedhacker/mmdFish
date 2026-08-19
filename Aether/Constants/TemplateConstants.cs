@@ -166,6 +166,7 @@ namespace Aether.Constants
             public const string DropItemQuestion = "window_parts/DropItemQuestion.png";
             public const string DropItemQuestionYesButton = "window_parts/DropItemQuestionYesButton.png";
             public const string FishingMenuExitButton = "window_parts/FishingMenuExitButton.png";
+            public const string OkButton = "window_parts/ok_button.png";
             
             // Envanter Sayfaları (Kapalı & Açık/Aktif Şablonları)
             public const string Page1 = "window_parts/page1.png";
@@ -194,7 +195,8 @@ namespace Aether.Constants
                 SaleExitButton,
                 DropItemQuestion,
                 DropItemQuestionYesButton,
-                FishingMenuExitButton
+                FishingMenuExitButton,
+                OkButton
             };
         }
 
@@ -207,11 +209,13 @@ namespace Aether.Constants
             public const string Yem = "inventory_items/yem.png";
             public const string Yem200 = "inventory_items/yem200.png";
             public const string Ates = "inventory_items/ates.png";
+            public const string NormalPuzzleChest = "inventory_items/normalPuzzleChest.png";
             
 
             public static readonly IReadOnlyList<string> All = new[]
             {
                 EmptySlot,
+                NormalPuzzleChest,
                 Yem,
                 Yem200,
                 Ates

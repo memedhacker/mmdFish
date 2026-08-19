@@ -60,6 +60,7 @@ namespace Aether.Pages
             selectNewPuzzlePart = new Sunny.UI.UIButton();
             selectedPuzzlePartColor = new Panel();
             dropPuzzlePart = new Sunny.UI.UIButton();
+            puzzleSolveButton = new Sunny.UI.UIButton();
             puzzleLogs = new Panel();
             panelHeader.SuspendLayout();
             puzzleSlotsPanel.SuspendLayout();
@@ -362,6 +363,17 @@ namespace Aether.Pages
             dropPuzzlePart.Text = "Parçayı At";
             dropPuzzlePart.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
             // 
+            // puzzleSolveButton
+            // 
+            puzzleSolveButton.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            puzzleSolveButton.Location = new Point(415, 237);
+            puzzleSolveButton.MinimumSize = new Size(1, 1);
+            puzzleSolveButton.Name = "puzzleSolveButton";
+            puzzleSolveButton.Size = new Size(130, 70);
+            puzzleSolveButton.TabIndex = 8;
+            puzzleSolveButton.Text = "▶ Puzzle Çöz";
+            puzzleSolveButton.TipsFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            // 
             // puzzleLogs
             // 
             puzzleLogs.Location = new Point(17, 325);
@@ -374,6 +386,7 @@ namespace Aether.Pages
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(24, 24, 27);
+            Controls.Add(puzzleSolveButton);
             Controls.Add(dropPuzzlePart);
             Controls.Add(selectedPuzzlePartColor);
             Controls.Add(selectNewPuzzlePart);
@@ -423,6 +436,7 @@ namespace Aether.Pages
         private Sunny.UI.UIButton selectNewPuzzlePart;
         private Panel selectedPuzzlePartColor;
         private Sunny.UI.UIButton dropPuzzlePart;
+        private Sunny.UI.UIButton puzzleSolveButton;
         private Panel puzzleLogs;
     }
 }

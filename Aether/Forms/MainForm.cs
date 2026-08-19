@@ -241,10 +241,11 @@ namespace Aether.Forms
             }
         }
 
-        #region Global Hotkeys (F1 Acil Durdurma & F2 Toplu Başlatma)
+        #region Global Hotkeys (F1 Acil Durdurma & F2 Toplu Başlatma & F8 Puzzle Durdurma)
 
         private const int HOTKEY_EMERGENCY_STOP_F1 = 9001;
         private const int HOTKEY_START_ALL_F2 = 9002;
+        private const int HOTKEY_PUZZLE_STOP_F8 = 9008;
 
         protected override void OnHandleCreated(EventArgs e)
         {
@@ -253,6 +254,8 @@ namespace Aether.Forms
             Native.Win32Native.RegisterHotKey(this.Handle, HOTKEY_EMERGENCY_STOP_F1, 0, Native.Win32Native.VK_F1);
             // Global F2 Toplu Başlatma Kısayolunu Kaydet (Modifier tuşu olmadan: 0, VK_F2: 0x71)
             Native.Win32Native.RegisterHotKey(this.Handle, HOTKEY_START_ALL_F2, 0, Native.Win32Native.VK_F2);
+            // Global F8 Puzzle Acil Durdurma Kısayolunu Kaydet (Modifier tuşu olmadan: 0, VK_F8: 0x77)
+            Native.Win32Native.RegisterHotKey(this.Handle, HOTKEY_PUZZLE_STOP_F8, 0, Native.Win32Native.VK_F8);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
@@ -260,6 +263,7 @@ namespace Aether.Forms
             // Global Kısayolları Temizle
             Native.Win32Native.UnregisterHotKey(this.Handle, HOTKEY_EMERGENCY_STOP_F1);
             Native.Win32Native.UnregisterHotKey(this.Handle, HOTKEY_START_ALL_F2);
+            Native.Win32Native.UnregisterHotKey(this.Handle, HOTKEY_PUZZLE_STOP_F8);
             base.OnHandleDestroyed(e);
         }
 
@@ -306,6 +310,18 @@ namespace Aether.Forms
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning);
                     }
+                }
+                else if (hotkeyId == HOTKEY_PUZZLE_STOP_F8)
+                {
+                    // F8 Puzzle Acil Durdurma: Yapboz çözüm döngüsünü anında sonlandır
+                    Pages.FishPuzzlePage.CancelSolving();
+                    try
+                    {
+                        System.Media.SystemSounds.Exclamation.Play();
+                    }
+                    catch { }
+
+                    System.Diagnostics.Debug.WriteLine("[MainForm] 🛑 F8 Puzzle Acil Durdurma tuşuna basıldı! Yapboz çözümü durduruldu.");
                 }
             }
 

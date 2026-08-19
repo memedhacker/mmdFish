@@ -61,6 +61,7 @@ namespace Aether.Native
         public const uint VK_G = 0x47;
         public const uint VK_I = 0x49;
         public const uint VK_K = 0x4B;
+        public const uint VK_F8 = 0x77;
 
         // Window Capture (PrintWindow & Rect & GDI) Sabitleri
         public const uint PW_CLIENTONLY = 0x00000001;
@@ -119,6 +120,9 @@ namespace Aether.Native
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
+
+        [DllImport("user32.dll")]
+        public static extern short GetAsyncKeyState(int vKey);
 
         [DllImport("user32.dll")]
         public static extern uint MapVirtualKey(uint uCode, uint uMapType);
