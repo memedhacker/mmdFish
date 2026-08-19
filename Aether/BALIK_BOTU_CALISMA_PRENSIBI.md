@@ -183,7 +183,7 @@ graph TD
 #### **6. Sonuç ve Döngü**
 - Chat alanında tespit edilen Waypoint kontrol edilir:
   - `Tutamazsin`: Bot durdurulur ve uyarı gösterilir.
-  - `YakalananBalik`: **100 ms beklenir** ve **1. Adıma dönülür** (1. Adım otomatik olarak yeni boş slot sayısını kontrol eder).
+  - `YakalananBalik` veya `Yapboz`: **100 ms beklenir** ve **1. Adıma dönülür** (1. Adım otomatik olarak yeni boş slot sayısını kontrol eder).
   - `Balık Kaçtı` veya diğer durumlar: **Doğrudan 1. Adıma dönülür.**
 
 ---

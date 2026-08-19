@@ -354,10 +354,14 @@ namespace Aether.Functions
                 return;
             }
 
-            if (matchedWaypoint != null && (matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.YakalananBalik || matchedWaypoint.TemplateName.Equals("yakalanan_balik", StringComparison.OrdinalIgnoreCase)))
+            if (matchedWaypoint != null && (
+                matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.YakalananBalik || 
+                matchedWaypoint.TemplateName.Equals("yakalanan_balik", StringComparison.OrdinalIgnoreCase) ||
+                matchedWaypoint.TemplatePath == TemplateConstants.Waypoints.Yapboz ||
+                matchedWaypoint.TemplateName.Equals("yapboz", StringComparison.OrdinalIgnoreCase)))
             {
-                // Balık yakalandı: 100 ms bekle ve 1. Adıma dön
-                BotLogger.LogSuccess(clientInfo.Id, "🎣 'YakalananBalik' tespit edildi! 100ms bekleniyor ve 1. Adıma dönülüyor...");
+                // Balık veya yapboz yakalandı: 100 ms bekle ve 1. Adıma dön
+                BotLogger.LogSuccess(clientInfo.Id, $"🎣 '{matchedWaypoint.TemplateName}' tespit edildi! 100ms bekleniyor ve 1. Adıma dönülüyor...");
                 await Task.Delay(100, cancellationToken);
                 return;
             }

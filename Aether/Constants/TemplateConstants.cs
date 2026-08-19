@@ -138,6 +138,8 @@ namespace Aether.Constants
             public const string SolucanTaktin = "waypoints/solucan_taktin.png";
             public const string AnkiYemi = "waypoints/anki_yemi.png";
             public const string Tutamazsin = "waypoints/tutamazsin.png";
+            public const string Yapboz = "waypoints/yapboz.png";
+
             public static readonly IReadOnlyList<string> All = new[]
             {
                 SolucanTaktin,
@@ -147,7 +149,8 @@ namespace Aether.Constants
                 AltinTonBaligi3,
                 YakalananBalik,
                 YemiKaybettin,
-                Tutamazsin
+                Tutamazsin,
+                Yapboz
             };
         }
 
