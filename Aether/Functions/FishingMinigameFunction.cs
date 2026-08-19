@@ -107,8 +107,8 @@ namespace Aether.Functions
 
                         if (isPinkPresent)
                         {
-                            // B & C ADIMI: İlk kez pembeye döndüyse VEYA 100ms boyunca hala pembeyse tekrar tıklanabilir
-                            bool canClick = !hasClickedCurrentPinkCycle || (clickStopwatch.IsRunning && clickStopwatch.ElapsedMilliseconds >= 100);
+                            // B & C ADIMI: İlk kez pembeye döndüyse VEYA 200ms boyunca hala pembeyse tekrar tıklanabilir
+                            bool canClick = !hasClickedCurrentPinkCycle || (clickStopwatch.IsRunning && clickStopwatch.ElapsedMilliseconds >= 200);
 
                             if (canClick)
                             {

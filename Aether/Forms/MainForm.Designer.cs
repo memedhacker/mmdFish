@@ -52,7 +52,7 @@ namespace Aether.Forms
             // 
             clientsControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             clientsControl1.BackColor = Color.Transparent;
-            clientsControl1.Location = new Point(9, 191);
+            clientsControl1.Location = new Point(8, 191);
             clientsControl1.Margin = new Padding(0);
             clientsControl1.Name = "clientsControl1";
             clientsControl1.Size = new Size(300, 416);

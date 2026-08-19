@@ -57,7 +57,24 @@ namespace Aether.Forms
 
                 if (btn != null)
                 {
-                    btn.Click += (sender, e) => NavigateToPage(pageKey);
+                    btn.Click += (sender, e) =>
+                    {
+                        if (pageKey.Equals("Puzzle", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var selectedClient = ClientState.Instance.SelectedClient;
+                            if (selectedClient == null || selectedClient.Handle == IntPtr.Zero || !Native.Win32Native.IsWindow(selectedClient.Handle))
+                            {
+                                MessageBox.Show(
+                                    "Lütfen önce bir oyun penceresi (HWND) seçin.",
+                                    "Oyun Penceresi Seçilmedi",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                                return;
+                            }
+                        }
+
+                        NavigateToPage(pageKey);
+                    };
                 }
             }
         }

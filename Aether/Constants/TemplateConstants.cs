@@ -165,6 +165,7 @@ namespace Aether.Constants
             public const string SaleExitButton = "window_parts/SaleExitButton.png";
             public const string DropItemQuestion = "window_parts/DropItemQuestion.png";
             public const string DropItemQuestionYesButton = "window_parts/DropItemQuestionYesButton.png";
+            public const string FishingMenuExitButton = "window_parts/FishingMenuExitButton.png";
             
             // Envanter Sayfaları (Kapalı & Açık/Aktif Şablonları)
             public const string Page1 = "window_parts/page1.png";
@@ -192,7 +193,8 @@ namespace Aether.Constants
                 FishingMenuTitle,
                 SaleExitButton,
                 DropItemQuestion,
-                DropItemQuestionYesButton
+                DropItemQuestionYesButton,
+                FishingMenuExitButton
             };
         }
 

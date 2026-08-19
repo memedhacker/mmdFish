@@ -98,6 +98,8 @@ namespace Aether.Constants
         public static readonly WindowRegion HotSaleBox = new WindowRegion(103, 406, 216, 433);
         public static readonly WindowRegion GoldenTonRanAwayOkButton = new WindowRegion(385, 241, 419, 257);
         public static readonly WindowRegion DropItemQuestionArea = new WindowRegion(270, 256, 530, 342);
+        public static readonly WindowRegion PuzzleGameSlotArea = new WindowRegion(271, 228, 469, 362);
+        public static readonly WindowRegion PuzzleGameChestArea = new WindowRegion(478, 295, 539, 359);
         /// <summary>
         /// Test pencerelerinde ve arayüz ComboBox'larında hızlı seçim yapabilmek için tüm tanımlı sabit bölgelerin listesi.
         /// </summary>
@@ -126,7 +128,9 @@ namespace Aether.Constants
             ("💬 CircleColorControlArea3 (173, 143 -> 186, 210)", CircleColorControlArea3),
             ("💬 CircleColorControlArea4 (292, 199 -> 312, 221)", CircleColorControlArea4) ,
             ("💬 GoldenTonRanAwayOkButton (385, 241 -> 419, 257)", GoldenTonRanAwayOkButton) ,
-            ("💬 DropItemQuestionArea (270, 256 -> 530, 342)", DropItemQuestionArea) 
+            ("💬 DropItemQuestionArea (270, 256 -> 530, 342)", DropItemQuestionArea) ,
+            ("💬 PuzzleGameSlotArea (271, 228 -> 469, 362)", PuzzleGameSlotArea),
+            ("💬 PuzzleGameChestArea (478, 295 -> 539, 359)", PuzzleGameChestArea)
         
         };
 

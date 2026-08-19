@@ -41,5 +41,46 @@ namespace Aether.Constants
 
         /// <summary> Çizgi Rengi (#3C3C41 - RGB: 60, 60, 65) </summary>
         public static readonly Color CizgiRengi = Color.FromArgb(60, 60, 65);
+
+        #region Yapboz / Puzzle Renkleri (Puzzle Colors)
+
+        /// <summary> Puzzle Red (#FF4326 - RGB: 255, 67, 38) </summary>
+        public static readonly Color PuzzleRed = Color.FromArgb(255, 67, 38);
+        public const string PuzzleRedHex = "#ff4326";
+
+        /// <summary> Puzzle Green (#23E221 - RGB: 35, 226, 33) </summary>
+        public static readonly Color PuzzleGreen = Color.FromArgb(35, 226, 33);
+        public const string PuzzleGreenHex = "#23e221";
+
+        /// <summary> Puzzle Yellow (#F0D431 - RGB: 240, 212, 49) </summary>
+        public static readonly Color PuzzleYellow = Color.FromArgb(240, 212, 49);
+        public const string PuzzleYellowHex = "#f0d431";
+
+        /// <summary> Puzzle Orange (#FF8B18 - RGB: 255, 139, 24) </summary>
+        public static readonly Color PuzzleOrange = Color.FromArgb(255, 139, 24);
+        public const string PuzzleOrangeHex = "#ff8b18";
+
+        /// <summary> Puzzle Cyan (#16FFFF - RGB: 22, 255, 255) </summary>
+        public static readonly Color PuzzleCyan = Color.FromArgb(22, 255, 255);
+        public const string PuzzleCyanHex = "#16ffff";
+
+        /// <summary> Puzzle Blue (#0049FC - RGB: 0, 73, 252) </summary>
+        public static readonly Color PuzzleBlue = Color.FromArgb(0, 73, 252);
+        public const string PuzzleBlueHex = "#0049fc";
+
+        /// <summary>
+        /// Tüm puzzle renklerinin listesi.
+        /// </summary>
+        public static readonly Color[] AllPuzzleColors = new[]
+        {
+            PuzzleRed,
+            PuzzleGreen,
+            PuzzleYellow,
+            PuzzleOrange,
+            PuzzleCyan,
+            PuzzleBlue
+        };
+
+        #endregion
     }
 }
